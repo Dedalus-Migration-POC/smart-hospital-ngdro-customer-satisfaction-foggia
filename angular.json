@@ -27,7 +27,9 @@
             "outputPath": "dist/customer-satisfaction-foggia",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -44,7 +46,9 @@
                 "output": "/bootstrap-italia/i18n/"
               }
             ],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -67,6 +71,34 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "admin/production": {
+              "browser": "src/main.admin.ts",
+              "styles": [
+                "src/admin/style/styles.scss"
+              ],
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kB",
+                  "maximumError": "4kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "admin/development": {
+              "browser": "src/main.admin.ts",
+              "styles": [
+                "src/admin/style/styles.scss"
+              ],
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -79,6 +111,12 @@
             },
             "development": {
               "buildTarget": "customer-satisfaction-foggia:build:development"
+            },
+            "admin/production": {
+              "buildTarget": "customer-satisfaction-foggia:build:admin/production"
+            },
+            "admin/development": {
+              "buildTarget": "customer-satisfaction-foggia:build:admin/development"
             }
           },
           "defaultConfiguration": "development"
@@ -89,7 +127,10 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -98,7 +139,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
+              "src/styles.scss"
+            ],
             "scripts": []
           }
         }
