@@ -7,6 +7,12 @@ import { AppComponent } from './app.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpBackend } from '@angular/common/http';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
+import { StoreModule } from '@ngrx/store'
+import { EffectsModule } from '@ngrx/effects'
+import { StoreDevtoolsModule } from '@ngrx/store-devtools'
+import { effects } from './store/effects';
+import { metaReducers, reducers } from './store/reducers';
+import { LayoutModule } from './layout/layout.module';
 
 @NgModule({
   declarations: [
@@ -14,9 +20,16 @@ import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
   ],
   imports: [
     BrowserModule,
+    StoreModule.forRoot(reducers, { metaReducers }),
+    EffectsModule.forRoot(effects),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: false //environment.production,
+    }),
     AppRoutingModule,
     DesignAngularKitModule,
-    TranslateModule
+    TranslateModule,
+    LayoutModule
   ],
   providers: [
     provideDesignAngularKit({

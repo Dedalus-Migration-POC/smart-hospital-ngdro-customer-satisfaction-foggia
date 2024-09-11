@@ -1,3 +1,16 @@
 {
-  "test-label": "Prova prova 123"
+  "header": {
+    "name": "Policlinico Foggia"
+  },
+  "otp": {
+    "title": "Questionario di gradimento sul ricovero",
+    "info": "Ogni tua considerazione, suggerimento o critica è per noi un'opportunità per migliorare e per costruire insieme un servizio che risponda davvero alle tue aspettative. <br><br> Il questionario è totalmente <b>anonimo</b>, non raccoglieremo i tuoi dati personali.",
+    "go-to-evaluate": "Andrai a valutare il <b>{{structureType}}</b> di <b>{{unit}}</b>.",
+    "authentication": "Autenticazione",
+    "input-label": "OTP",
+    "access-button-description": "Accedi al Questionario",
+    "access-button": "Accedi",
+    "consent": "Accetto e prendo visione dell’",
+    "consent-link": "informativa obbligatoria"
+  }
 }

@@ -1,0 +1,79 @@
+<header class="it-header-wrapper">
+  <a href="javascript:void(0);" (click)="skipToMainContent()" class="skip">{{
+    "commons.skip-to-main-content" | translate
+  }}</a>
+  <div class="it-header-slim-wrapper">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="it-header-slim-wrapper-content">
+            <a class="d-lg-block navbar-brand" href="#" target="_blank">
+              <img
+                src="assets/images/logo.png"
+                [alt]="'header.name' | translate"
+              />
+            </a>
+            <!-- se lingua solo una non facciamo vedere lingua selezionata e select -->
+            <div class="it-header-slim-right-zone">
+              <div
+                class="nav-item dropdown"
+                *ngIf="
+                  languages.length > 1 &&
+                  (selectedLang$ | async) as selectedLang
+                "
+              >
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="true"
+                >
+                  <span class="visually-hidden">
+                    {{ "header.language-selection" | translate }}
+                  </span>
+                  <span>{{ selectedLang.name }}</span>
+                  <it-icon class="d-none d-lg-block" name="expand"></it-icon>
+                </a>
+                <div class="dropdown-menu">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="link-list-wrapper">
+                        <ul
+                          class="link-list"
+                          [attr.aria-label]="'commons.languages' | translate"
+                        >
+                          <li *ngFor="let lang of languages">
+                            <a
+                              class="dropdown-item list-item"
+                              href="#"
+                              (click)="
+                                $event.preventDefault();
+                                this.switchLanguage(lang)
+                              "
+                            >
+                              <span>
+                                {{ lang.name }}
+                                <span
+                                  *ngIf="lang.code === selectedLang.code"
+                                  class="visually-hidden"
+                                >
+                                  {{ "header.selected-language" | translate }}
+                                </span>
+                              </span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<div #skipper tabindex="-1" class="skipper"></div>

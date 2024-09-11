@@ -1,13 +1,4 @@
-<main class="main">
-  <div class="content">
-    <div class="alert alert-danger" role="alert">
-      {{ "test-label" | translate }}
-    </div>
-    <it-alert color="success">
-      Questo è un alert di tipo "<b>info</b>".
-    </it-alert>
-    <div class="divider" role="separator" aria-label="Divider"></div>
-  </div>
-</main>
-
-<router-outlet />
+<it-notifications></it-notifications>
+<app-layout>
+  <router-outlet />
+</app-layout>

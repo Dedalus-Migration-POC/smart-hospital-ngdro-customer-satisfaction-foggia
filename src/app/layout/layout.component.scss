@@ -1,0 +1,10 @@
+.container-fluid {
+  min-height: calc(100vh - 48px);
+  background: url("/assets/images/bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  @media screen and (max-width: 992px) {
+    min-height: calc(100vh - 62px);
+  }
+}

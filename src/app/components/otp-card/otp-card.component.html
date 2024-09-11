@@ -1,0 +1,52 @@
+<div class="card-wrapper card-teaser-wrapper justify-content-center">
+  <div class="card card-teaser">
+    <div class="card-body">
+      <h1 class="card-title h2">{{ "otp.title" | translate }}</h1>
+      <p class="card-text fs-6" [innerHTML]="'otp.info' | translate"></p>
+
+      <div
+        class="go-to-evaluate"
+        [innerHTML]="
+          'otp.go-to-evaluate'
+            | translate : { unit: unit, structureType: structureType }
+        "
+      ></div>
+      <h2 class="h5">{{ "otp.authentication" | translate }}</h2>
+
+      <form [formGroup]="otpInputForm" class="mt-4">
+        <div class="form-field" id="it-input-description">
+          <it-input
+            id="it-input"
+            formControlName="otp"
+            [label]="'otp.input-label' | translate"
+          >
+          </it-input>
+        </div>
+        <div class="consents">
+          <it-checkbox
+            formControlName="consent"
+            [label]="'otp.consent' | translate"
+          >
+            <ng-container label
+              >{{ "otp.consent" | translate }}
+              <a
+                href="https://italia.github.io/bootstrap-italia/docs/form/checkbox/"
+                >{{ "otp.consent-link" | translate }}</a
+              >
+            </ng-container>
+          </it-checkbox>
+        </div>
+
+        <button
+          class="mt-3"
+          type="button"
+          itButton="primary"
+          (click)="submit()"
+          [attr.aria-label]="'otp.access-button-description' | translate"
+        >
+          {{ "otp.access-button" | translate }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

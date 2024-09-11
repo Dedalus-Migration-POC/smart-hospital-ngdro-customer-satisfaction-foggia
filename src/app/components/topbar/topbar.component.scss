@@ -1,0 +1,23 @@
+.it-header-slim-wrapper {
+  border-bottom: 1px solid #0066cc33;
+}
+.skip {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  background-color: #edf5fd;
+  padding: 1rem;
+}
+.skipper {
+  width: 1px;
+}
