@@ -1,50 +1,73 @@
 <div class="card-wrapper card-teaser-wrapper justify-content-center">
   <div class="card card-teaser">
     <div class="card-body">
-      <h1 class="card-title h2">{{ "otp.title" | translate }}</h1>
+      <h1 class="card-title h2">{{ 'otp.title' | translate }}</h1>
       <p class="card-text fs-6" [innerHTML]="'otp.info' | translate"></p>
 
       <div
         class="go-to-evaluate"
         [innerHTML]="
           'otp.go-to-evaluate'
-            | translate : { unit: unit, structureType: structureType }
+            | translate: { unit: unit, structureType: structureType }
         "
       ></div>
-      <h2 class="h5">{{ "otp.authentication" | translate }}</h2>
+      <h2 class="h5">{{ 'otp.authentication' | translate }}</h2>
 
-      <form [formGroup]="otpInputForm" class="mt-4">
-        <div class="form-field" id="it-input-description">
-          <it-input
-            id="it-input"
+      <form [formGroup]="otpInputForm" class="mt-3">
+        <div class="form-floating" id="it-input-description">
+          <input
+            required
+            type="text"
+            class="form-control"
             formControlName="otp"
-            [label]="'otp.input-label' | translate"
-          >
-          </it-input>
+            id="otp"
+            [placeholder]="'otp.insert-otp' | translate"
+          />
+          <label for="otp">{{ 'otp.input-label' | translate }}</label>
         </div>
-        <div class="consents">
-          <it-checkbox
+        <button
+          (click)="openFindOtpInfo()"
+          type="button"
+          class="btn p-0 ms-2 mb-3"
+        >
+          {{ 'otp.find-otp' | translate }}
+        </button>
+
+        <div class="form-check">
+          <input
+            id="consent"
+            type="checkbox"
             formControlName="consent"
-            [label]="'otp.consent' | translate"
-          >
-            <ng-container label
-              >{{ "otp.consent" | translate }}
+            required
+          />
+          <label for="consent">
+            <span id="consent-help"
+              >{{ 'otp.consent' | translate }}
               <a
                 href="https://italia.github.io/bootstrap-italia/docs/form/checkbox/"
-                >{{ "otp.consent-link" | translate }}</a
+                >{{ 'otp.consent-link' | translate }}</a
               >
-            </ng-container>
-          </it-checkbox>
+            </span></label
+          >
+        </div>
+
+        <div *ngIf="showError" class="disabled-error">
+          *{{ 'otp.access-button-disabled-description' | translate }}
         </div>
 
         <button
           class="mt-3"
           type="button"
           itButton="primary"
+          [disabled]="(questionnaireLoading$ | async)!"
           (click)="submit()"
-          [attr.aria-label]="'otp.access-button-description' | translate"
+          [attr.aria-label]="
+            otpInputForm.invalid || otpInputForm.value.consent === false
+              ? ('otp.access-button-disabled-description' | translate)
+              : ('otp.access-button-description' | translate)
+          "
         >
-          {{ "otp.access-button" | translate }}
+          {{ 'otp.access-button' | translate }}
         </button>
       </form>
     </div>

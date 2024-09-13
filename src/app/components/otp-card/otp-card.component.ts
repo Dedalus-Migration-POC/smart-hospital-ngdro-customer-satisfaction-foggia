@@ -1,8 +1,21 @@
-import { Component, Input } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { DesignAngularKitModule } from 'design-angular-kit'
-import { TranslateModule } from '@ngx-translate/core'
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
+import {
+  DesignAngularKitModule,
+  ItNotificationService,
+  NotificationPosition,
+} from 'design-angular-kit'
+import { TranslateModule, TranslateService } from '@ngx-translate/core'
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms'
+import { SmartHospitalState } from 'src/app/store/reducers'
+import { Store } from '@ngrx/store'
+import { selectQuestionnaireLoading } from 'src/app/pages/auth/state/selectors'
 
 @Component({
   selector: 'app-otp-card',
@@ -20,18 +33,41 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 export class OtpCardComponent {
   @Input() unit!: string // es: Cardiologia
   @Input() structureType!: string //es: reparto/ambulatorio
+  @Output() sendOtp = new EventEmitter()
+  showError: boolean = false
 
   otpInputForm = new FormGroup({
     otp: new FormControl<string>('', Validators.required),
     consent: new FormControl<boolean>(false, Validators.required),
   })
 
-  constructor() { }
+  constructor(
+    private readonly notificationService: ItNotificationService,
+    private translate: TranslateService,
+    private store: Store<SmartHospitalState>,
+  ) {}
 
-  submit() {
-    console.log(this.otpInputForm.value)
+  questionnaireLoading$ = this.store.select(selectQuestionnaireLoading)
+
+  openFindOtpInfo() {
+    this.notificationService.info(
+      this.translate.instant('otp.find-otp'),
+      this.translate.instant('otp.find-otp-info'),
+      true,
+      8000,
+      NotificationPosition.Top,
+    )
   }
 
-
-
+  submit() {
+    if (
+      this.otpInputForm.invalid ||
+      this.otpInputForm.value.consent === false
+    ) {
+      this.showError = true
+      return
+    }
+    this.showError = false
+    this.sendOtp.emit(this.otpInputForm.value)
+  }
 }

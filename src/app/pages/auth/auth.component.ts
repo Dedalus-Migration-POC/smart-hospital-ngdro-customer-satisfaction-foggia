@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core'
-import { ActivatedRoute, Router } from '@angular/router'
+import { ActivatedRoute } from '@angular/router'
 import { Store } from '@ngrx/store'
 import { SmartHospitalState } from 'src/app/store/reducers'
-
+import { fetchQuestionnaire } from './state/actions'
 
 @Component({
   selector: 'app-auth',
@@ -11,12 +11,21 @@ import { SmartHospitalState } from 'src/app/store/reducers'
 })
 export class AuthComponent implements OnInit {
   constructor(
-    private store: Store<SmartHospitalState>,
-    private router: Router,
     private activatedRoute: ActivatedRoute,
-  ) {
+    private store: Store<SmartHospitalState>,
+  ) {}
+
+  structureType: string = ''
+  unit: string = ''
+  ngOnInit(): void {
+    this.activatedRoute.params.subscribe((params) => {
+      this.structureType = params['structureType']
+      this.unit = params['unit']
+    })
   }
 
-  ngOnInit(): void {
+  sendOtp(form: any) {
+    this.store.dispatch(fetchQuestionnaire({ payload: form }))
+    console.log(form)
   }
 }

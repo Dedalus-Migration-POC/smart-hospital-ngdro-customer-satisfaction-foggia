@@ -1,4 +1,6 @@
 {
+  "attention": "Attenzione",
+  "skip-to-main-content": "Vai al contenuto principale",
   "header": {
     "name": "Policlinico Foggia"
   },
@@ -9,8 +11,12 @@
     "authentication": "Autenticazione",
     "input-label": "OTP",
     "access-button-description": "Accedi al Questionario",
+    "access-button-disabled-description": "Per Accedere al Questionario inserisci OTP ed accetta Informativa obbligatoria",
     "access-button": "Accedi",
     "consent": "Accetto e prendo visione dell’",
-    "consent-link": "informativa obbligatoria"
+    "consent-link": "informativa obbligatoria",
+    "find-otp": "Dove trovo l’OTP?",
+    "find-otp-info": "Trovi OTP (One-Time Password) nel foglio cartaceo consegnato dalla struttura",
+    "insert-otp": "Inserisci OTP"
   }
 }

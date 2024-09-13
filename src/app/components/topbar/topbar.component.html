@@ -1,6 +1,6 @@
 <header class="it-header-wrapper">
   <a href="javascript:void(0);" (click)="skipToMainContent()" class="skip">{{
-    "commons.skip-to-main-content" | translate
+    'skip-to-main-content' | translate
   }}</a>
   <div class="it-header-slim-wrapper">
     <div class="container">
@@ -30,7 +30,7 @@
                   aria-expanded="true"
                 >
                   <span class="visually-hidden">
-                    {{ "header.language-selection" | translate }}
+                    {{ 'header.language-selection' | translate }}
                   </span>
                   <span>{{ selectedLang.name }}</span>
                   <it-icon class="d-none d-lg-block" name="expand"></it-icon>
@@ -58,7 +58,7 @@
                                   *ngIf="lang.code === selectedLang.code"
                                   class="visually-hidden"
                                 >
-                                  {{ "header.selected-language" | translate }}
+                                  {{ 'header.selected-language' | translate }}
                                 </span>
                               </span>
                             </a>
