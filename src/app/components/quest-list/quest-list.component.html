@@ -1,0 +1,74 @@
+<form [formGroup]="formGroup">
+  <ul
+    [attr.aria-label]="'quest.ul-area-label' | translate: { title: title }"
+    class="ps-0 mt-4"
+  >
+    <li *ngFor="let question of questionsList" class="quest-row">
+      <div class="quest-section-title">{{ question.title }}</div>
+      <div class="quest-options">
+        <div class="form-check form-check-inline" *ngFor="let vote of votes">
+          <input
+            type="radio"
+            [formControlName]="question.id"
+            [id]="question.id + '-' + vote"
+            [value]="vote"
+          />
+          <label [for]="question.id + '-' + vote">{{
+            'quest.vote.' + vote | translate
+          }}</label>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <div class="buttons-container">
+    <button
+      itButton="outline-primary"
+      type="button"
+      class="ms-5"
+      [disabled]="activeStep === 0"
+      (click)="goBack()"
+      [attr.aria-label]="'back' | translate"
+    >
+      <it-icon
+        name="arrow-left"
+        [color]="'primary'"
+        class="back-button-arrow"
+      ></it-icon>
+      {{ 'back' | translate }}
+    </button>
+    <button
+      itButton="outline-primary"
+      *ngIf="!showConfirmButton"
+      type="button"
+      class="me-5"
+      (click)="goForward()"
+      [attr.aria-label]="
+        formGroup.invalid
+          ? ('quest.forward-button-disabled-description' | translate)
+          : ('forward' | translate)
+      "
+    >
+      {{ 'forward' | translate }}
+      <it-icon
+        name="arrow-right"
+        [color]="'primary'"
+        class="forward-button-arrow"
+      ></it-icon>
+    </button>
+    <button
+      itButton="primary"
+      *ngIf="showConfirmButton"
+      type="button"
+      class="me-5"
+      (click)="onSubmit()"
+      [attr.aria-label]="
+        formGroup.invalid
+          ? ('quest.forward-button-disabled-description' | translate)
+          : ('quest.send-button-description' | translate)
+      "
+    >
+      {{ 'send' | translate }}
+    </button>
+  </div>
+</form>

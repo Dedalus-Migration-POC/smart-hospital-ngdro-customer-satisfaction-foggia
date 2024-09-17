@@ -1,6 +1,9 @@
 {
   "attention": "Attenzione",
   "skip-to-main-content": "Vai al contenuto principale",
+  "forward": "Avanti",
+  "back": "Indietro",
+  "send": "Invia",
   "header": {
     "name": "Policlinico Foggia"
   },
@@ -18,5 +21,20 @@
     "find-otp": "Dove trovo l’OTP?",
     "find-otp-info": "Trovi OTP (One-Time Password) nel foglio cartaceo consegnato dalla struttura",
     "insert-otp": "Inserisci OTP"
+  },
+  "quest": {
+    "title": "Questionario di gradimento sul ricovero",
+    "arrival-at-hospital": "Arrivo in ospedale",
+    "required-tag": "*tutti i campi sono obbligatori",
+    "ul-area-label": "Questionario sul {{title}}",
+    "vote": {
+      "1": "Pessimo",
+      "2": "Mediocre",
+      "3": "Neutro",
+      "4": "Buono",
+      "5": "Eccellente"
+    },
+    "forward-button-disabled-description": "Per procedere compila il questionario",
+    "send-button-description": "Invia il questionario"
   }
 }

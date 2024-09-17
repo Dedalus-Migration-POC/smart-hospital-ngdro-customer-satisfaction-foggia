@@ -1,0 +1,33 @@
+<h1 class="h2 mt-5 mb-3" *ngIf="questionnaire$ | async as questionnaire">
+  {{ questionnaire.title }}
+</h1>
+
+<it-steppers-container
+  [activeStep]="activeStep"
+  [showForwardButton]="false"
+  [showConfirmButton]="false"
+  showBackButton="false"
+>
+  <it-steppers-item
+    *ngFor="let section of (questionnaire$ | async)?.sections; index as i"
+    [label]="'0' + (i + 1) + '. ' + section.title"
+  >
+    <div class="container">
+      <h2 class="h3">{{ section.title }}</h2>
+      <div class="required-tag">{{ 'quest.required-tag' | translate }}</div>
+      <app-quest-list
+        [title]="(questionnaire$ | async).title"
+        [id]="(questionnaire$ | async).id"
+        [questionsList]="section.questionsList"
+        [sectionTitle]="section.title"
+        [sectionId]="section.id"
+        [activeStep]="activeStep"
+        [showConfirmButton]="
+          activeStep === (questionnaire$ | async)?.sections.length - 1
+        "
+        (onForwardClick)="onForwardClick()"
+        (onBackClick)="onBackClick($event)"
+      ></app-quest-list>
+    </div>
+  </it-steppers-item>
+</it-steppers-container>

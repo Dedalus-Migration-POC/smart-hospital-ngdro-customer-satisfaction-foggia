@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core'
+import { RouterModule, Routes } from '@angular/router'
 
 const routes: Routes = [
   {
@@ -7,10 +7,17 @@ const routes: Routes = [
     loadChildren: () =>
       import('src/app/pages/auth/auth.module').then((m) => m.AuthModule),
   },
-];
+  {
+    path: 'questionnaire',
+    loadChildren: () =>
+      import('src/app/pages/questionnaire/quest.module').then(
+        (m) => m.QuestModule,
+      ),
+  },
+]
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
