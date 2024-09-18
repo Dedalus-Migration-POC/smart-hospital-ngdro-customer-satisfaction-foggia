@@ -1,10 +1,11 @@
 import { createReducer, on } from '@ngrx/store'
 import * as QuestionnaireActions from './actions'
+import { IQuestionnaire } from '../../questionnaire/state/service'
 
 export const featureKey = 'authState'
 
 export interface State {
-  questionnaire: any
+  questionnaire: IQuestionnaire | null
   questionnaireLoading: boolean
   questionnaireError: boolean
 }

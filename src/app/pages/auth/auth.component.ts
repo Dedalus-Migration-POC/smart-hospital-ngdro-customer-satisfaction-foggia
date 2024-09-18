@@ -24,7 +24,7 @@ export class AuthComponent implements OnInit {
     })
   }
 
-  sendOtp(form: any) {
+  sendOtp(form: { otp: string; consent: boolean }) {
     this.store.dispatch(fetchQuestionnaire({ payload: form }))
     console.log(form)
   }

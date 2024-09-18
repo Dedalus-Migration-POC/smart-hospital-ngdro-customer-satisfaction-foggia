@@ -1,6 +1,8 @@
 <form [formGroup]="formGroup">
   <ul
-    [attr.aria-label]="'quest.ul-area-label' | translate: { title: title }"
+    [attr.aria-label]="
+      'quest.ul-area-label' | translate: { title: sectionTitle }
+    "
     class="ps-0 mt-4"
   >
     <li *ngFor="let question of questionsList" class="quest-row">
@@ -57,6 +59,7 @@
       ></it-icon>
     </button>
     <button
+      [disabled]="(sendQuestionnaireLoading$ | async)!"
       itButton="primary"
       *ngIf="showConfirmButton"
       type="button"

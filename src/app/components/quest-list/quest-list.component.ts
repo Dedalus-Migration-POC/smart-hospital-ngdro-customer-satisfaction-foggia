@@ -20,11 +20,18 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms'
-import { setQuestionnaire } from 'src/app/pages/questionnaire/state/actions'
+import {
+  sendQuestionnaire,
+  setQuestionnaire,
+} from 'src/app/pages/questionnaire/state/actions'
 import { Store } from '@ngrx/store'
 import { SmartHospitalState } from 'src/app/store/reducers'
-import { selectQuestionnaireForm } from 'src/app/pages/questionnaire/state/selectors'
+import {
+  selectQuestionnaireForm,
+  selectSendQuestionnaireLoading,
+} from 'src/app/pages/questionnaire/state/selectors'
 import { map, take } from 'rxjs'
+import { IQuestionnaireQuestionsList } from 'src/app/pages/questionnaire/state/service'
 
 @Component({
   selector: 'app-quest-list',
@@ -43,7 +50,7 @@ import { map, take } from 'rxjs'
 export class QuestListComponent implements OnInit {
   @Input() title!: string
   @Input() id!: string
-  @Input() questionsList!: any[]
+  @Input() questionsList!: IQuestionnaireQuestionsList[]
   @Input() sectionTitle!: string
   @Input() sectionId!: string
   @Input() activeStep!: number
@@ -60,7 +67,7 @@ export class QuestListComponent implements OnInit {
 
   votes = ['1', '2', '3', '4', '5']
 
-  createGroup(questionsList: any[]): FormGroup {
+  createGroup(questionsList: IQuestionnaireQuestionsList[]): FormGroup {
     const form = new FormGroup({})
     questionsList.forEach((x) => {
       form.addControl(x.id, new FormControl('', Validators.required))
@@ -68,7 +75,7 @@ export class QuestListComponent implements OnInit {
 
     return form
   }
-
+  sendQuestionnaireLoading$ = this.store.select(selectSendQuestionnaireLoading)
   ngOnInit() {
     this.formGroup = this.createGroup(this.questionsList)
   }
@@ -131,13 +138,22 @@ export class QuestListComponent implements OnInit {
       .select(selectQuestionnaireForm)
       .pipe(
         take(1),
-        map((questionnaire) =>
-          console.log('+++submit', {
-            title: this.title,
-            id: this.id,
-            sections: questionnaire,
-          }),
-        ),
+        map((questionnaire) => {
+          this.store.dispatch(
+            sendQuestionnaire({
+              payload: {
+                title: this.title,
+                id: this.id,
+                sections: questionnaire,
+              },
+            }),
+          ),
+            console.log('+++submit', {
+              title: this.title,
+              id: this.id,
+              sections: questionnaire,
+            })
+        }),
       )
       .subscribe()
   }

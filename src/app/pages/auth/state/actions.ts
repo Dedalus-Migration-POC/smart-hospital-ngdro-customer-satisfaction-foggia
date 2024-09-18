@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store'
+import { IQuestionnaire } from '../../questionnaire/state/service'
 
 export const fetchQuestionnaire = createAction(
   '[Auth] Fetch Questionnaire',
@@ -7,7 +8,7 @@ export const fetchQuestionnaire = createAction(
 
 export const fetchQuestionnaireSuccess = createAction(
   '[Auth] Fetch Questionnaire Success',
-  props<{ data: any }>(),
+  props<{ data: IQuestionnaire }>(),
 )
 
 export const fetchQuestionnaireFailure = createAction(

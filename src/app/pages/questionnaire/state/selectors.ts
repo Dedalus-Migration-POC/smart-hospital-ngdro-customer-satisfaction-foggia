@@ -9,3 +9,12 @@ export const selectQuestionnaireForm = createSelector(
   selectquestState,
   (state) => state.questionnaire,
 )
+
+export const selectSendQuestionnaireLoading = createSelector(
+  selectquestState,
+  (state) => state.sendQuestionnaireLoading,
+)
+export const selectSendQuestionnaireError = createSelector(
+  selectquestState,
+  (state) => state.sendQuestionnaireError,
+)

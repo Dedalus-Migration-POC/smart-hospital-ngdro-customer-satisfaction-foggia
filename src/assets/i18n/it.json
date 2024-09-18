@@ -35,6 +35,11 @@
       "5": "Eccellente"
     },
     "forward-button-disabled-description": "Per procedere compila il questionario",
-    "send-button-description": "Invia il questionario"
+    "send-button-description": "Invia il questionario",
+    "send-quest-error": "Ci dispiace, è avvenuto un'errore. Chiediamo di riprovare"
+  },
+  "feedback": {
+    "title": "Questionario inviato!",
+    "info": "Grazie per averci dedicato del tempo prezioso per compilare il nostro questionario. <br> <br>Le tue risposte ci aiuteranno a comprendere meglio le tue esigenze e a migliorare i nostri servizi per offrirti un'esperienza sempre più soddisfacente."
   }
 }
