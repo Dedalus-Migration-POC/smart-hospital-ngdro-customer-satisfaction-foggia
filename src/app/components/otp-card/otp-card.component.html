@@ -1,7 +1,9 @@
 <div class="card-wrapper card-teaser-wrapper justify-content-center">
   <div class="card card-teaser">
     <div class="card-body">
-      <h1 class="card-title h2">{{ 'otp.title' | translate }}</h1>
+      <h1 class="card-title h2">
+        {{ 'otp.title' | translate: { questType: questType } }}
+      </h1>
       <p class="card-text fs-6" [innerHTML]="'otp.info' | translate"></p>
 
       <div
@@ -14,7 +16,7 @@
       <h2 class="h5">{{ 'otp.authentication' | translate }}</h2>
 
       <form [formGroup]="otpInputForm" class="mt-3">
-        <div class="form-floating" id="it-input-description">
+        <div class="form-floating mb-3" id="it-input-description">
           <input
             required
             type="text"
@@ -25,13 +27,6 @@
           />
           <label for="otp">{{ 'otp.input-label' | translate }}</label>
         </div>
-        <button
-          (click)="openFindOtpInfo()"
-          type="button"
-          class="btn p-0 ms-2 mb-3"
-        >
-          {{ 'otp.find-otp' | translate }}
-        </button>
 
         <div class="form-check">
           <input
@@ -43,10 +38,13 @@
           <label for="consent">
             <span id="consent-help"
               >{{ 'otp.consent' | translate }}
-              <a
-                href="https://italia.github.io/bootstrap-italia/docs/form/checkbox/"
-                >{{ 'otp.consent-link' | translate }}</a
+              <button
+                type="button"
+                class="btn p-0 consent-info-button"
+                (click)="consentMadal.toggle()"
               >
+                {{ 'otp.consent-link' | translate }}
+              </button>
             </span></label
           >
         </div>
@@ -72,4 +70,34 @@
       </form>
     </div>
   </div>
+
+  <it-modal #consentMadal="itModal" size="xl">
+    <ng-container modalTitle>{{
+      'otp.consent-modal-title' | translate
+    }}</ng-container>
+
+    <p class="consent-body">{{ 'otp.consent-modal-body' | translate }}</p>
+
+    <ng-container footer>
+      <button
+        itButton="outline-primary"
+        size="sm"
+        type="button"
+        data-bs-dismiss="modal"
+        [attr.aria-label]="'otp.consent-modal-close-description' | translate"
+      >
+        {{ 'otp.consent-modal-close' | translate }}
+      </button>
+      <button
+        itButton="primary"
+        size="sm"
+        [attr.aria-label]="'otp.consent-modal-accept-description' | translate"
+        type="button"
+        data-bs-dismiss="modal"
+        (click)="onAccept()"
+      >
+        {{ 'otp.consent-modal-accept' | translate }}
+      </button>
+    </ng-container>
+  </it-modal>
 </div>

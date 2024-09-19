@@ -1,11 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import {
-  DesignAngularKitModule,
-  ItNotificationService,
-  NotificationPosition,
-} from 'design-angular-kit'
-import { TranslateModule, TranslateService } from '@ngx-translate/core'
+import { DesignAngularKitModule } from 'design-angular-kit'
+import { TranslateModule } from '@ngx-translate/core'
 import {
   FormControl,
   FormGroup,
@@ -33,6 +29,7 @@ import { selectQuestionnaireLoading } from 'src/app/pages/auth/state/selectors'
 export class OtpCardComponent {
   @Input() unit!: string // es: Cardiologia
   @Input() structureType!: string //es: reparto/ambulatorio
+  @Input() questType!: string //es: ricovero
   @Output() sendOtp = new EventEmitter()
   showError: boolean = false
 
@@ -41,24 +38,15 @@ export class OtpCardComponent {
     consent: new FormControl<boolean>(false, Validators.required),
   })
 
-  constructor(
-    private readonly notificationService: ItNotificationService,
-    private translate: TranslateService,
-    private store: Store<SmartHospitalState>,
-  ) {}
+  constructor(private store: Store<SmartHospitalState>) {}
 
   questionnaireLoading$ = this.store.select(selectQuestionnaireLoading)
 
-  openFindOtpInfo() {
-    this.notificationService.info(
-      this.translate.instant('otp.find-otp'),
-      this.translate.instant('otp.find-otp-info'),
-      true,
-      8000,
-      NotificationPosition.Top,
-    )
+  onAccept() {
+    if (this.otpInputForm.value.consent === false) {
+      document.getElementById('consent')?.click()
+    }
   }
-
   submit() {
     if (
       this.otpInputForm.invalid ||

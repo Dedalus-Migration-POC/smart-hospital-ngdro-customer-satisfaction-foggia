@@ -17,10 +17,12 @@ export class AuthComponent implements OnInit {
 
   structureType: string = ''
   unit: string = ''
+  questType: string = ''
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
       this.structureType = params['structureType']
       this.unit = params['unit']
+      this.questType = params['questType']
     })
   }
 

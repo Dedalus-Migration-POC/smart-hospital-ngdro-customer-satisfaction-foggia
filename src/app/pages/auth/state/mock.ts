@@ -7,7 +7,8 @@ export const QUEST_LIST = {
       id: 'Arrivo_in_ospedale',
       questionsList: [
         {
-          title: 'Chiarezza della segnaletica per arrivare all’ospedale',
+          title:
+            'Chiarezza della segnaletica per arrivare all’ospedalea segnaletica per arrivare all’ospedale',
           id: '111',
         },
         {

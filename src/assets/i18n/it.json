@@ -8,19 +8,23 @@
     "name": "Policlinico Foggia"
   },
   "otp": {
-    "title": "Questionario di gradimento sul ricovero",
+    "title": "Questionario di gradimento sul {{questType}}",
     "info": "Ogni tua considerazione, suggerimento o critica è per noi un'opportunità per migliorare e per costruire insieme un servizio che risponda davvero alle tue aspettative. <br><br> Il questionario è totalmente <b>anonimo</b>, non raccoglieremo i tuoi dati personali.",
     "go-to-evaluate": "Andrai a valutare il <b>{{structureType}}</b> di <b>{{unit}}</b>.",
     "authentication": "Autenticazione",
-    "input-label": "OTP",
+    "input-label": "Codice OTP",
     "access-button-description": "Accedi al Questionario",
     "access-button-disabled-description": "Per Accedere al Questionario inserisci OTP ed accetta Informativa obbligatoria",
     "access-button": "Accedi",
     "consent": "Accetto e prendo visione dell’",
     "consent-link": "informativa obbligatoria",
-    "find-otp": "Dove trovo l’OTP?",
-    "find-otp-info": "Trovi OTP (One-Time Password) nel foglio cartaceo consegnato dalla struttura",
-    "insert-otp": "Inserisci OTP"
+    "insert-otp": "Inserisci OTP",
+    "consent-modal-title": "Informativa obbligatoria",
+    "consent-modal-body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ",
+    "consent-modal-close": "Chiudi",
+    "consent-modal-close-description": "Chiudi Informativa obbligatoria",
+    "consent-modal-accept": "Accetto e prendo visione",
+    "consent-modal-accept-description": "Accetto e prendo visione dell'informativa obbligatoria"
   },
   "quest": {
     "title": "Questionario di gradimento sul ricovero",
@@ -36,7 +40,8 @@
     },
     "forward-button-disabled-description": "Per procedere compila il questionario",
     "send-button-description": "Invia il questionario",
-    "send-quest-error": "Ci dispiace, è avvenuto un'errore. Chiediamo di riprovare"
+    "send-quest-error": "Ci dispiace, è avvenuto un'errore. Chiediamo di riprovare",
+    "quest-error-required": "*Campo obbligatorio"
   },
   "feedback": {
     "title": "Questionario inviato!",

@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router'
 
 const routes: Routes = [
   {
-    path: ':unit/:structureType',
+    path: ':unit/:structureType/:questType',
     loadChildren: () =>
       import('src/app/pages/auth/auth.module').then((m) => m.AuthModule),
   },

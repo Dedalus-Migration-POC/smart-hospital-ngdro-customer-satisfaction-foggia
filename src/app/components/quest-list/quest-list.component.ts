@@ -80,19 +80,44 @@ export class QuestListComponent implements OnInit {
     this.formGroup = this.createGroup(this.questionsList)
   }
 
+  error = false
+  getError(id: string) {
+    if (!this.formGroup.get(id)?.value && this.error) {
+      return true
+    }
+    return false
+  }
+  private scrollToFirstError() {
+    const firstInvalidControl: HTMLElement = document.querySelector(
+      '.quest-error',
+    ) as HTMLElement
+
+    if (firstInvalidControl) {
+      firstInvalidControl.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      })
+      firstInvalidControl.focus()
+    }
+  }
+
   goBack() {
     this.onBackClick.emit(this.activeStep)
     this.scrollToFirstElement()
   }
   goForward() {
     if (this.formGroup.invalid) {
-      this.notificationService.info(
-        this.translate.instant('attention'),
-        this.translate.instant('quest.forward-button-disabled-description'),
-        true,
-        8000,
-        NotificationPosition.Top,
-      )
+      this.error = true
+      setTimeout(() => {
+        this.scrollToFirstError()
+      }, 500)
+      // this.notificationService.info(
+      //   this.translate.instant('attention'),
+      //   this.translate.instant('quest.forward-button-disabled-description'),
+      //   true,
+      //   8000,
+      //   NotificationPosition.Top,
+      // )
       return
     }
     this.store.dispatch(
@@ -113,13 +138,18 @@ export class QuestListComponent implements OnInit {
 
   onSubmit() {
     if (this.formGroup.invalid) {
-      this.notificationService.info(
-        this.translate.instant('attention'),
-        this.translate.instant('quest.forward-button-disabled-description'),
-        true,
-        8000,
-        NotificationPosition.Top,
-      )
+      this.error = true
+      setTimeout(() => {
+        this.scrollToFirstError()
+      }, 500)
+
+      // this.notificationService.info(
+      //   this.translate.instant('attention'),
+      //   this.translate.instant('quest.forward-button-disabled-description'),
+      //   true,
+      //   8000,
+      //   NotificationPosition.Top,
+      // )
       return
     }
     this.store.dispatch(

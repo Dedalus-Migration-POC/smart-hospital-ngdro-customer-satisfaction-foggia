@@ -1,7 +1,15 @@
-li {
+.quest-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  .question-title {
+    font-weight: 600;
+    max-width: 455px;
+  }
+  .quest-error {
+    color: #cc334d;
+    font-size: 13px;
+  }
 }
 
 .buttons-container {
@@ -28,17 +36,14 @@ li {
   }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1200px) {
   .quest-row {
     flex-direction: column;
     align-items: baseline;
   }
-  .quest-section-title {
-    font-weight: 600;
-  }
 }
 
-@media screen and (max-width: 540px) {
+@media screen and (max-width: 768px) {
   .quest-row {
     margin-top: 1rem;
     .quest-options {

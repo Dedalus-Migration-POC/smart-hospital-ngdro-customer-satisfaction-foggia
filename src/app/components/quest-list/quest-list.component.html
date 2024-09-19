@@ -1,27 +1,27 @@
-<form [formGroup]="formGroup">
-  <ul
-    [attr.aria-label]="
-      'quest.ul-area-label' | translate: { title: sectionTitle }
-    "
-    class="ps-0 mt-4"
-  >
-    <li *ngFor="let question of questionsList" class="quest-row">
-      <div class="quest-section-title">{{ question.title }}</div>
-      <div class="quest-options">
-        <div class="form-check form-check-inline" *ngFor="let vote of votes">
-          <input
-            type="radio"
-            [formControlName]="question.id"
-            [id]="question.id + '-' + vote"
-            [value]="vote"
-          />
-          <label [for]="question.id + '-' + vote">{{
-            'quest.vote.' + vote | translate
-          }}</label>
-        </div>
+<form [formGroup]="formGroup" class="ps-0 mt-4">
+  <div *ngFor="let question of questionsList" class="quest-row">
+    <div class="question-title">
+      {{ question.title }}
+      <div *ngIf="getError(question.id)" class="quest-error">
+        {{ 'quest.quest-error-required' | translate }}
       </div>
-    </li>
-  </ul>
+    </div>
+    <fieldset [id]="question.id" class="quest-options">
+      <legend class="d-none">{{ question.title }}</legend>
+      <div class="form-check form-check-inline" *ngFor="let vote of votes">
+        <input
+          type="radio"
+          [formControlName]="question.id"
+          [attr.name]="question.id"
+          [id]="question.id + '-' + vote"
+          [value]="vote"
+        />
+        <label [for]="question.id + '-' + vote">{{
+          'quest.vote.' + vote | translate
+        }}</label>
+      </div>
+    </fieldset>
+  </div>
 
   <div class="buttons-container">
     <button
