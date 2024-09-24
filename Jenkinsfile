@@ -1,1 +1,1 @@
-buildAngular(['foggia-citizen'], 'foggia-citizen')
+buildAngular(['customer-satisfaction-foggia'], 'customer-satisfaction-foggia')
