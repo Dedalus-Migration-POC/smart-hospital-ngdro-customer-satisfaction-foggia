@@ -5,5 +5,5 @@ buildAngular(
   null,
   null,
   null,
-  [legacyPeerDeps: false]
+  [skipOutputPath: true, legacyPeerDeps: false, useBaseHref: true]
 )
