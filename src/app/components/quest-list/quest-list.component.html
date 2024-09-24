@@ -3,6 +3,7 @@
     <div class="question-title">
       {{ question.title }}
       <div *ngIf="getError(question.id)" class="quest-error">
+        <it-icon name="error" [color]="'danger'"></it-icon>
         {{ 'quest.quest-error-required' | translate }}
       </div>
     </div>

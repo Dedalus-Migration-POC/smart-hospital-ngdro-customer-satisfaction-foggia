@@ -111,13 +111,13 @@ export class QuestListComponent implements OnInit {
       setTimeout(() => {
         this.scrollToFirstError()
       }, 500)
-      // this.notificationService.info(
-      //   this.translate.instant('attention'),
-      //   this.translate.instant('quest.forward-button-disabled-description'),
-      //   true,
-      //   8000,
-      //   NotificationPosition.Top,
-      // )
+      this.notificationService.error(
+        this.translate.instant('quest.quest-error-required-title'),
+        this.translate.instant('quest.quest-error-required-info'),
+        true,
+        8000,
+        NotificationPosition.Top,
+      )
       return
     }
     this.store.dispatch(
@@ -143,13 +143,13 @@ export class QuestListComponent implements OnInit {
         this.scrollToFirstError()
       }, 500)
 
-      // this.notificationService.info(
-      //   this.translate.instant('attention'),
-      //   this.translate.instant('quest.forward-button-disabled-description'),
-      //   true,
-      //   8000,
-      //   NotificationPosition.Top,
-      // )
+      this.notificationService.error(
+        this.translate.instant('quest.quest-error-required-title'),
+        this.translate.instant('quest.quest-error-required-info'),
+        true,
+        8000,
+        NotificationPosition.Top,
+      )
       return
     }
     this.store.dispatch(

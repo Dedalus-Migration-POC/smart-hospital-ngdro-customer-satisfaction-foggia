@@ -9,7 +9,17 @@
 }
 
 .disabled-error {
+  display: flex;
+  align-items: center;
   color: #cc334d;
+  font-size: 14px;
+  font-weight: 600;
+  ::ng-deep it-icon {
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
 }
 
 .consent-info-button {

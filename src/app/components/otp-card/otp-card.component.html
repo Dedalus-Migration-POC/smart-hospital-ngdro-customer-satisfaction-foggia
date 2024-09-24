@@ -26,6 +26,13 @@
             [placeholder]="'otp.insert-otp' | translate"
           />
           <label for="otp">{{ 'otp.input-label' | translate }}</label>
+          <div
+            *ngIf="!this.otpInputForm.value.otp && showError"
+            class="disabled-error"
+          >
+            <it-icon name="error" [color]="'danger'"></it-icon>
+            {{ 'otp.otp-error' | translate }}
+          </div>
         </div>
 
         <div class="form-check">
@@ -35,7 +42,7 @@
             formControlName="consent"
             required
           />
-          <label for="consent">
+          <label for="consent" class="mb-0">
             <span id="consent-help"
               >{{ 'otp.consent' | translate }}
               <button
@@ -47,10 +54,13 @@
               </button>
             </span></label
           >
-        </div>
-
-        <div *ngIf="showError" class="disabled-error">
-          *{{ 'otp.access-button-disabled-description' | translate }}
+          <div
+            *ngIf="this.otpInputForm.value.consent === false && showError"
+            class="disabled-error"
+          >
+            <it-icon name="error" [color]="'danger'"></it-icon>
+            {{ 'otp.consent-error' | translate }}
+          </div>
         </div>
 
         <button

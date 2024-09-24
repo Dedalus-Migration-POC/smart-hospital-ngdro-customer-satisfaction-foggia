@@ -9,6 +9,12 @@
   .quest-error {
     color: #cc334d;
     font-size: 13px;
+    ::ng-deep it-icon {
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
   }
 }
 
