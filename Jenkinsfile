@@ -1,0 +1,1 @@
+buildAngular(['foggia-citizen'], 'foggia-citizen')
