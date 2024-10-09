@@ -1,0 +1,21 @@
+.head {
+  display: flex;
+}
+
+.min-400 {
+  min-width: 400px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card {
+  max-width: 768px;
+  padding: 16px;
+}
+
+.remove-qst {
+  cursor: pointer;
+}

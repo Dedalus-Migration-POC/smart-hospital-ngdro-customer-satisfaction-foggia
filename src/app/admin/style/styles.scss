@@ -1,0 +1,67 @@
+@import "../../../../node_modules/@angular/material/prebuilt-themes/azure-blue.css";
+@import "fonts/roboto.css";
+@import "fonts/material-icons.css";
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+mat-table {
+  border: 1px solid #CAC4D0 !important;
+  border-collapse: collapse !important;
+  border-radius: 0.5em !important;
+  background-color: transparent !important;
+}
+
+mat-header-cell {
+  background-color: #fff !important;
+  border-bottom-color: #CAC4D0 !important;
+}
+
+mat-header-cell:first-child {
+  border-top-left-radius: 0.5em !important;
+}
+
+mat-header-cell:last-child {
+  border-top-right-radius: 0.5em !important;
+}
+
+mat-cell {
+  background-color: #fff !important;
+  border-bottom-color: #CAC4D0 !important;
+}
+
+//.mdc-data-table__row:last-child .mat-mdc-cell:first-child {
+//  border-bottom-left-radius: 0.5em !important;
+//}
+//
+//.mdc-data-table__row:last-child .mat-mdc-cell:last-child {
+//  border-bottom-right-radius: 0.5em !important;
+//}
+
+mat-paginator {
+  //margin-top: 2.5px;
+  background-color: #fff !important;
+  border-bottom: none !important;
+  border-bottom: 1px solid #CAC4D0 !important;
+  border-left: 1px solid #CAC4D0 !important;
+  border-right: 1px solid #CAC4D0 !important;
+  border-bottom-left-radius: 0.5em !important;
+  border-bottom-right-radius: 0.5em !important;
+  box-shadow: var(--mat-app-elevation-shadow-level-8, none);
+}
+
+.mat-mdc-card-header {
+  font: 400 1.5rem / 2rem Roboto, sans-serif;
+  letter-spacing: 0;
+}
+
+mat-card {
+  border: 1px solid #CAC4D0 !important;
+}
+

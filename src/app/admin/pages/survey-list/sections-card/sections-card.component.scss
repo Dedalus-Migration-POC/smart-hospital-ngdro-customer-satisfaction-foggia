@@ -1,0 +1,16 @@
+mat-card {
+  width: 100%;
+}
+
+mat-card-content {
+  display: flex;
+  align-items: center;
+}
+
+.description-content {
+  font-size: 14px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

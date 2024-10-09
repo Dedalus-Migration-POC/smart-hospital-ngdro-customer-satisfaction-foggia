@@ -1,0 +1,16 @@
+.head {
+  display: flex;
+  align-items: center;
+
+  button {
+    margin-left: 32px;
+  }
+
+  h6 {
+    margin: 0 !important;
+  }
+}
+
+.min-400 {
+  min-width: 400px;
+}

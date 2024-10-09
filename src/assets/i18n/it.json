@@ -3,7 +3,10 @@
   "skip-to-main-content": "Vai al contenuto principale",
   "forward": "Avanti",
   "back": "Indietro",
+  "go-back": "Torna indietro",
   "send": "Invia",
+  "retry": "Riprova",
+  "cancel": "Annulla",
   "header": {
     "name": "Policlinico Foggia"
   },
@@ -50,5 +53,68 @@
   "feedback": {
     "title": "Questionario inviato!",
     "info": "Grazie per averci dedicato del tempo prezioso per compilare il nostro questionario. <br> <br>Le tue risposte ci aiuteranno a comprendere meglio le tue esigenze e a migliorare i nostri servizi per offrirti un'esperienza sempre più soddisfacente."
+  },
+  "admin": {
+    "mat-paginator-intl": {
+      "firstPageLabel": "Prima pagina",
+      "itemsPerPageLabel": "Righe per pagina",
+      "lastPageLabel": "Ultima pagina",
+      "nextPageLabel": "Successiva",
+      "previousPageLabel": "Precedente",
+      "rangeLabel": "di"
+    },
+    "survey-list": {
+      "title": "Qustionari pubblicati",
+      "create-survey-btn": "Nuovo questionario",
+      "view-analytics-btn": "Vedi analitiche",
+      "table-headers": {
+        "name": "Nome questionario",
+        "date": "Data pubblicazione",
+        "version": "Versione attuale",
+        "actions": "Azioni"
+      }
+    },
+    "sections-card": {
+      "title": "Sezioni questionario",
+      "description": "Visualizza, modifica o rimuovi le sezioni condivise tra i questionari.",
+      "button-label": "Vai alla lista sezioni"
+    },
+    "print-card": {
+      "title": "Stampa fogli sondaggio",
+      "select-survey-label": "Questionario",
+      "select-unit-label": "Unità operativa",
+      "units": {
+        "cardio": "Cardiologia"
+      },
+      "structure-type-label": "Tipologia struttura",
+      "structure-type-radio": {
+        "department": "Reparto",
+        "ambulatory": "Ambulatorio"
+      },
+      "copies-to-print": "Copie da stampare",
+      "button": "Stampa"
+    },
+    "section-list": {
+      "title": "Sezioni questionario",
+      "create-section-btn": "Nuova",
+      "search-section-label": "Cerca una sezione",
+      "table-headers": {
+        "name": "Nome sezione",
+        "presence": "Presente in",
+        "version": "Versione attuale",
+        "actions": "Azioni"
+      }
+    },
+    "section-form": {
+      "title-new": "Nuova sezione",
+      "title-edit": "Modifica sezione",
+      "publish-section-btn": "Pubblica",
+      "edit-section-btn": "Salva modifiche",
+      "section-name-field": "Nome sezione",
+      "section-description-field": "Descrizione sezione",
+      "question-item": "Domanda {{index}}",
+      "add-question-item": "Aggiungi domanda",
+      "required-field": "Campo obbligatorio"
+    }
   }
 }

@@ -1,0 +1,42 @@
+<app-scaffold [loading]="loading$" [error]="error$">
+  <div class="head min-400">
+    <h6>{{ getTitlePlaceholder() | translate }}</h6>
+    <button mat-flat-button (click)="publish()">
+      <span>{{ ('admin.section-form.' + (editMode ? 'edit' : 'publish') + '-section-btn') | translate }}</span>
+    </button>
+  </div>
+
+  <form class="min-400" [formGroup]="sectionForm" (ngSubmit)="publish()">
+    <mat-form-field appearance="outline" class="min-400">
+      <mat-label>{{ 'admin.section-form.section-name-field' | translate }}</mat-label>
+      <input matInput type="text" [formControl]="sectionForm.controls.name">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="min-400">
+      <mat-label>{{ 'admin.section-form.section-description-field' | translate }}</mat-label>
+      <input matInput type="text" [formControl]="sectionForm.controls.description">
+    </mat-form-field>
+
+    <mat-card>
+      <mat-form-field appearance="outline" class="min-400"
+                      *ngFor="let control of sectionForm.controls.questions.controls; let i = index"
+                      [formGroupName]="'questions'">
+        <mat-label>{{ 'admin.section-form.question-item' | translate : {index: i + 1} }}</mat-label>
+        <input matInput type="text" [formControl]="control">
+        <mat-icon *ngIf="i > 0" class="remove-qst" matSuffix (click)="removeQuestion(i)">remove</mat-icon>
+        <mat-error
+          *ngIf="control.untouched && control.hasError('required')">{{ 'admin.section-form.required-field' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <span>
+        <button mat-stroked-button (click)="addQuestion()">
+          <mat-icon>add</mat-icon>
+          <span>{{ 'admin.section-form.add-question-item' | translate }}</span>
+        </button>
+      </span>
+
+    </mat-card>
+
+  </form>
+</app-scaffold>

@@ -1,0 +1,53 @@
+<ng-container *ngIf="!(error | async); else errorTemplate">
+  <h1 *ngIf="pageTitle" class="page-title">{{ pageTitle }}</h1>
+  <div *ngIf="loading | async" class="full-screen-spinner">
+    <mat-spinner></mat-spinner>
+    <h4 class="mt-3" *ngIf="loadingText">
+      {{ loadingText }}
+    </h4>
+  </div>
+  <div class="scaffold-content">
+    <div class="back-btn" *ngIf="canGoBack$ | async" routerLink="..">
+      <img alt="Back" ngSrc="assets/images/arrow-left.svg" width="20" height="20">
+      <span>{{ 'go-back' | translate }}</span>
+    </div>
+    <ng-content></ng-content>
+  </div>
+</ng-container>
+
+<ng-template #errorTemplate>
+  <div class="d-flex flex-column align-items-center justify-content-center">
+    <div class="d-flex flex-column align-items-center justify-content-center">
+      <img
+        alt="error"
+        ngSrc="assets/images/icon_popup_warning.svg"
+        width="60" height="60"
+      />
+      <h2 class="mt-3">{{ errorTitle ?? "Ooops" }}</h2>
+    </div>
+    <div mat-dialog-content class="mt-1">
+      <h3>{{ errorText ?? "E' avvenuto un errore" }}</h3>
+    </div>
+    <div mat-dialog-actions class="mt-5">
+      <button
+        mat-flat-button
+        mat-dialog-close
+        class="mx-2"
+        size="sm"
+        [itButton]="'primary'"
+        (click)="onErrorRetryCallback.emit()"
+      >
+        {{ "retry" | translate }}
+      </button>
+      <button
+        [itButton]="'outline-primary'"
+        mat-dialog-close
+        mat-stroked-button
+        size="sm"
+        (click)="onErrorCancelCallback.emit()"
+      >
+        {{ "cancel" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

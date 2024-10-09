@@ -1,0 +1,32 @@
+<mat-table [dataSource]="surveys" class="mat-elevation-z8">
+  @for (column of columns; track column) {
+    <ng-container *ngIf="column !== 'actions'" [matColumnDef]="column">
+      <mat-header-cell *matHeaderCellDef>
+        {{ 'admin.survey-list.table-headers.' + column | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element[column] }}
+      </mat-cell>
+    </ng-container>
+  }
+
+  <ng-container *ngIf="columns.includes('actions')" [matColumnDef]="'actions'">
+    <mat-header-cell *matHeaderCellDef>
+      {{ 'admin.survey-list.table-headers.actions' | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <button mat-icon-button (click)="onEdit.emit(element)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button (click)="onDelete.emit(element)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: columns"></mat-row>
+</mat-table>
+
+
+<mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>

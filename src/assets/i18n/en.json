@@ -1,5 +1,10 @@
 {
   "header": {
     "name": "Policlinico Foggia"
+  },
+  "admin": {
+    "survey-list": {
+      "title": "Surveys published"
+    }
   }
 }

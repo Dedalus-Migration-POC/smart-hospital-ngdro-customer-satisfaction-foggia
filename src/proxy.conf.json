@@ -1,0 +1,14 @@
+{
+  "/api": {
+    "target": "http://192.168.10.6:8085",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3Mjc2ODIzMTAsImV4cCI6MTc1OTIxODMxMCwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIlJPTEVfQURNSU4iLCJNYW5hZ2VyIl19.xYVDKPBo4L-i300ar74d90a2VayA8-5iYmgvAPhXETQ"
+    },
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": null
+  }
+}
+

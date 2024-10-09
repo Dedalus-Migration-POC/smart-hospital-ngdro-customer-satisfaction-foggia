@@ -1,0 +1,28 @@
+<app-scaffold
+  [loading]="loading$" [error]="error$">
+  <div class="content">
+    <div class="left">
+      <div class="left-content">
+        <h6>{{ 'admin.survey-list.title' | translate }}</h6>
+        <span class="spacer"></span>
+        <span class="qst-buttons">
+          <button mat-stroked-button (click)="viewAnalytics()">
+            <mat-icon>query_stats</mat-icon>
+            <span>{{ 'admin.survey-list.view-analytics-btn' | translate }}</span>
+          </button>
+          <button mat-flat-button routerLink="./form">
+            <mat-icon>add</mat-icon>
+            <span>{{ 'admin.survey-list.create-survey-btn' | translate }}</span>
+          </button>
+        </span>
+      </div>
+
+      <app-survey-list-table [list]="(surveys$ | async)!" (onEdit)="onEdit($event)"
+                             (onDelete)="onDelete($event)"></app-survey-list-table>
+      <app-sections-card></app-sections-card>
+    </div>
+    <div class="right">
+      <app-print-card [surveys]="(surveys$ | async)!"></app-print-card>
+    </div>
+  </div>
+</app-scaffold>
