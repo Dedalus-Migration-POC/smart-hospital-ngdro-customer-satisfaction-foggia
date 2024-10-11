@@ -15,6 +15,10 @@
       </button>
     </mat-form-field>
   </div>
-  <app-section-list-table [list]="(sections$ | async)!" (onEdit)="onEdit($event)"
-                          (onDelete)="onDelete($event)"></app-section-list-table>
+  <app-section-list-table
+    [sections]="sections$"
+    (onEdit)="onEdit($event)"
+    (onDelete)="onDelete($event)"
+    (onRestore)="onRestore($event)"
+  ></app-section-list-table>
 </app-scaffold>

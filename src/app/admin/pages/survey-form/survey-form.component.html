@@ -1,0 +1,64 @@
+<app-scaffold [loading]="of(false)" [error]="of(false)">
+  <form class="min-400" [formGroup]="surveyForm" (ngSubmit)="publish()">
+    <div class="head min-400">
+      <h6>{{ getTitlePlaceholder() | translate }}</h6>
+      <button type="submit" mat-flat-button [disabled]="creating$ | async">
+        <mat-spinner [diameter]="20" *ngIf="creating$ | async; else idle"></mat-spinner>
+        <ng-template #idle>
+          <span>{{ ('admin.survey-form.' + (editMode ? 'edit' : 'publish') + '-survey-btn') | translate }}</span>
+        </ng-template>
+      </button>
+    </div>
+
+
+    <mat-form-field appearance="outline" class="min-400">
+      <mat-label>{{ 'admin.survey-form.survey-name-field' | translate }}</mat-label>
+      <input matInput type="text" [formControl]="surveyForm.controls.name">
+      <mat-error
+        *ngIf="surveyForm.controls.name.hasError('required')">{{ 'admin.survey-form.required-field' | translate }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="min-400">
+      <mat-label>{{ 'admin.survey-form.survey-description-field' | translate }}</mat-label>
+      <input matInput type="text" [formControl]="surveyForm.controls.description">
+    </mat-form-field>
+
+    @for (control of surveyForm.controls.sections.controls; track control; let i = $index) {
+      <mat-card>
+        <div class="mat-section-select">
+          <mat-form-field appearance="outline" class="min-400" [formGroupName]="'sections'">
+            <mat-label>{{ 'admin.survey-form.section-field-label' | translate : {index: i + 1} }}</mat-label>
+            <mat-select [formControl]="control">
+              @for (section of (selectableSections$ | async); track section) {
+                <mat-option [value]="section">{{ section.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <button type="button" *ngIf="i > 0" mat-stroked-button class="remove-qst" color="warn"
+                  (click)="removeQuestion(i)">
+            <mat-icon>remove</mat-icon>
+            <span>{{ 'admin.survey-form.remove-section-btn' | translate }}</span>
+          </button>
+        </div>
+        @for (q of (control.value?.questions ?? []); track q; let j = $index) {
+          <div class="section-questions">
+            <span>{{ 'admin.survey-form.section-question-label' | translate : {index: j + 1} }}</span>
+            <span>{{ q.name }}</span>
+          </div>
+        }
+      </mat-card>
+    }
+
+    <span>
+        <button type="button" mat-stroked-button (click)="addSection()"
+                [disabled]="!(sections$ | async)?.length ||  surveyForm.controls.sections.length >= (sections$ | async)!.length">
+          <mat-icon>add</mat-icon>
+          <span>{{ 'admin.survey-form.add-section-item' | translate }}</span>
+        </button>
+      </span>
+
+
+  </form>
+</app-scaffold>

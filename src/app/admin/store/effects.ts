@@ -1,17 +1,41 @@
 import {Injectable} from '@angular/core'
 import {Actions, createEffect, ofType} from '@ngrx/effects'
-import {catchError, concatMap, map} from 'rxjs/operators'
-import {of} from 'rxjs'
-import {SurveyService} from "../repository/SurveyService";
+import {catchError, concatMap, map, withLatestFrom} from 'rxjs/operators'
+import {forkJoin, of} from 'rxjs'
+import {SurveyService} from "../repository/survey-service";
 import {SurveyActions} from "./actions";
+import {CreateSectionRequest} from "../repository/dto/create-section-request";
+import {Survey} from "../repository/dto/survey";
+import {Store} from "@ngrx/store";
+import {selectSectionList, SurveyAdminState} from "./reducer";
 
 @Injectable()
 export class SurveyEffects {
   constructor(
+    private store: Store<SurveyAdminState>,
     private actions$: Actions,
     private surveyService: SurveyService,
   ) {
   }
+
+  initialize$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SurveyActions.initialize),
+      concatMap(() =>
+        forkJoin([
+          this.surveyService.getSurveyList(),
+          this.surveyService.getSectionList()
+        ]).pipe(
+          map(([surveys, sections]) =>
+            SurveyActions.initializeSucceeded({surveys, sections})
+          ),
+          catchError(() =>
+            of(SurveyActions.initializeFailed())
+          )
+        ),
+      ),
+    )
+  })
 
   fetchSurveys$ = createEffect(() => {
     return this.actions$.pipe(
@@ -21,6 +45,20 @@ export class SurveyEffects {
           map((surveys) => SurveyActions.fetchSurveysSucceeded({surveys})),
           catchError(() =>
             of(SurveyActions.fetchSurveysFailed()),
+          ),
+        ),
+      ),
+    )
+  })
+
+  fetchSurveyById$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SurveyActions.fetchSurveyById),
+      concatMap(({surveyId}) =>
+        this.surveyService.getSurveyById(surveyId).pipe(
+          map((survey) => SurveyActions.fetchSurveyByIdSucceeded({survey})),
+          catchError(() =>
+            of(SurveyActions.fetchSurveyByIdFailed()),
           ),
         ),
       ),
@@ -49,6 +87,103 @@ export class SurveyEffects {
           map((section) => SurveyActions.fetchSectionByIdSucceeded({section})),
           catchError(() =>
             of(SurveyActions.fetchSectionByIdFailed()),
+          ),
+        ),
+      ),
+    )
+  })
+
+  submitSurvey$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SurveyActions.submitSurvey),
+      concatMap(({surveyForm}) => {
+          if (!surveyForm.sections) {
+            throw new Error("Cannot submit surveyForm because section list is not valid: " + surveyForm.sections)
+          }
+          const section: Survey = {
+            id: surveyForm.id ? Number(surveyForm.id) : undefined,
+            name: surveyForm.name!,
+            description: surveyForm.description ?? undefined,
+            //@ts-ignore
+            sections: surveyForm.sections!,
+            results: []
+          }
+          const api = !section.id
+            ? this.surveyService.createSurvey(section)
+            : this.surveyService.updateSurvey(section)
+          return api.pipe(
+            map((survey) => SurveyActions.submitSurveySucceeded({survey})),
+            catchError(() =>
+              of(SurveyActions.submitSurveyFailed()),
+            ),
+          )
+        },
+      ),
+    )
+  })
+
+  submitSection$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SurveyActions.submitSection),
+      concatMap(({sectionForm}) => {
+          if (!sectionForm.questions) {
+            throw new Error("Cannot submit sectionForm because question list is not valid: " + sectionForm.questions)
+          }
+          const section: CreateSectionRequest = {
+            id: sectionForm.id ? Number(sectionForm.id) : undefined,
+            name: sectionForm.name!,
+            description: sectionForm.description ?? undefined,
+            questions: sectionForm.questions.map(q => ({
+              answerType: 'RATE',
+              name: q!
+            }))
+          }
+          const api = !section.id
+            ? this.surveyService.createSection(section)
+            : this.surveyService.updateSection(section)
+          return api.pipe(
+            map((section) => SurveyActions.submitSectionSucceeded({section})),
+            catchError(() =>
+              of(SurveyActions.submitSectionFailed()),
+            ),
+          )
+        },
+      ),
+    )
+  })
+
+  deleteSection$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SurveyActions.deleteSection),
+      withLatestFrom(this.store.select(selectSectionList)),
+      concatMap(([{sectionId}, {sections}]) =>
+        this.surveyService.deleteSection(sectionId).pipe(
+          map(() => {
+            const deletedSection = {...sections.find(({id}) => id!.toString() === sectionId)!, deleted: true}
+            const newSections = sections.filter(({id}) => id!.toString() !== sectionId)
+            return SurveyActions.deleteSectionSucceeded({updatedSections: [...newSections, deletedSection]})
+          }),
+          catchError(() =>
+            of(SurveyActions.deleteSectionFailed()),
+          ),
+        ),
+      ),
+    )
+  })
+
+  restoreSection$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SurveyActions.restoreSection),
+      withLatestFrom(this.store.select(selectSectionList)),
+      concatMap(([{sectionId}, {sections}]) =>
+        this.surveyService.restoreSection(sectionId).pipe(
+          map(() => {
+            const restoredSection = {...sections.find(({id}) => id!.toString() === sectionId)!, deleted: false}
+            const newSections = sections.filter(({id}) => id!.toString() !== sectionId)
+            return SurveyActions.restoreSectionSucceeded({updatedSections: [...newSections, restoredSection]})
+          }),
+          catchError(() =>
+            of(SurveyActions.restoreSectionFailed()),
           ),
         ),
       ),

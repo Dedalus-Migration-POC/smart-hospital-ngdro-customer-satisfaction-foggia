@@ -9,6 +9,10 @@ import {MatSelect} from "@angular/material/select";
 import {TranslateModule} from "@ngx-translate/core";
 import {FormsModule} from "@angular/forms";
 import {Survey} from "../../../repository/dto/survey";
+import {Store} from "@ngrx/store";
+import {selectSurveyState, SurveyAdminState} from "../../../store/reducer";
+import {map, Observable} from "rxjs";
+import {AsyncPipe} from "@angular/common";
 
 @Component({
   selector: 'app-print-card',
@@ -27,13 +31,21 @@ import {Survey} from "../../../repository/dto/survey";
     MatSelect,
     TranslateModule,
     FormsModule,
-    MatFormField
+    MatFormField,
+    AsyncPipe
   ],
   templateUrl: './print-card.component.html',
   styleUrl: './print-card.component.scss'
 })
 export class PrintCardComponent {
   @Input({alias: "surveys", required: true}) surveys!: Array<Survey>;
+
+  constructor(private store: Store<SurveyAdminState>,
+  ) {
+  }
+
+  state$ = this.store.select(selectSurveyState)
+  disabled$: Observable<boolean> = this.state$.pipe(map(({surveys}) => !surveys.length));
 
   selectedSurveyId: string | number | null = null
   selectedUnit: string | null = null

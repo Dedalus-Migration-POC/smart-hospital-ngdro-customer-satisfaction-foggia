@@ -1,12 +1,17 @@
-<mat-table [dataSource]="sections" class="mat-elevation-z8">
+<div class="deleted-toggler">
+  <mat-checkbox (change)="changeShowDeleted($event)">{{ 'admin.section-list.show-deleted' | translate }}</mat-checkbox>
+</div>
+<mat-table [dataSource]="(datasource$ | async)!" class="mat-elevation-z8">
   @for (column of columns; track column) {
     <ng-container *ngIf="column !== 'actions'" [matColumnDef]="column">
       <mat-header-cell *matHeaderCellDef>
         {{ 'admin.section-list.table-headers.' + column | translate }}
       </mat-header-cell>
-      <mat-cell *matCellDef="let element">
-        {{ element[column] }}
-      </mat-cell>
+      <ng-container *matCellDef="let element">
+        <mat-cell [class.deleted]="element.deleted">
+          {{ element[column] }}
+        </mat-cell>
+      </ng-container>
     </ng-container>
   }
 
@@ -18,9 +23,12 @@
       <button mat-icon-button (click)="onEdit.emit(element)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-icon-button (click)="onDelete.emit(element)">
-        <mat-icon>delete</mat-icon>
-      </button>
+      <ng-template #idle>
+        <button mat-icon-button (click)="changeDeletedStatus(element)">
+          <mat-icon>{{ element.deleted ? 'restore' : 'delete' }}</mat-icon>
+        </button>
+      </ng-template>
+      <mat-spinner *ngIf="(deletingId$ | async) === element.id?.toString(); else idle" diameter="20"></mat-spinner>
     </mat-cell>
   </ng-container>
 

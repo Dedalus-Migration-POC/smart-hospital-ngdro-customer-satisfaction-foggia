@@ -4,25 +4,52 @@ import {SurveyActions} from "./actions";
 import {Section} from "../repository/dto/section";
 
 type SurveyState = {
+  initializing: boolean
+  initializeError: boolean
   fetchingSurveys: boolean
   fetchSurveysError: boolean
+  creatingSurvey: boolean
   surveys: Array<Survey>
   fetchingSections: boolean
   fetchSectionsError: boolean
   sections: Array<Section>
+  creatingSection: boolean
+  editingSectionId: string | null
 }
 
 const initialState: SurveyState = {
+  initializing: false,
+  initializeError: false,
   fetchingSurveys: false,
   fetchSurveysError: false,
+  creatingSurvey: false,
   surveys: [],
   fetchingSections: false,
   fetchSectionsError: false,
-  sections: []
+  sections: [],
+  creatingSection: false,
+  editingSectionId: null
 }
 
 export const reducer = createReducer(
   initialState,
+  on(SurveyActions.initialize, (state) => ({
+    ...state,
+    initializing: true,
+    initializeError: false,
+  })),
+  on(SurveyActions.initializeSucceeded, (state, action) => ({
+    ...state,
+    initializing: false,
+    initializeError: false,
+    surveys: action.surveys,
+    sections: action.sections,
+  })),
+  on(SurveyActions.initializeFailed, (state) => ({
+    ...state,
+    initializing: false,
+    initializeError: true,
+  })),
   on(SurveyActions.fetchSurveys, (state) => ({
     ...state,
     fetchingSurveys: true,
@@ -38,6 +65,32 @@ export const reducer = createReducer(
     ...state,
     fetchingSurveys: false,
     fetchSurveysError: true,
+  })),
+  on(SurveyActions.fetchSurveyById, (state) => ({
+    ...state,
+    fetchingSurveys: true,
+  })),
+  on(SurveyActions.fetchSurveyByIdSucceeded, (state, action) => ({
+    ...state,
+    fetchingSurveys: false,
+    surveys: [...state.surveys, action.survey]
+  })),
+  on(SurveyActions.fetchSurveyByIdFailed, (state) => ({
+    ...state,
+    fetchingSurveys: false,
+  })),
+  on(SurveyActions.submitSurvey, (state) => ({
+    ...state,
+    creatingSurvey: true,
+  })),
+  on(SurveyActions.submitSurveySucceeded, (state, action) => ({
+    ...state,
+    creatingSurvey: false,
+    surveys: [...state.surveys, action.survey]
+  })),
+  on(SurveyActions.submitSurveyFailed, (state) => ({
+    ...state,
+    creatingSurvey: false,
   })),
   on(SurveyActions.fetchSections, (state) => ({
     ...state,
@@ -64,9 +117,48 @@ export const reducer = createReducer(
     fetchingSections: false,
     sections: [...state.sections, action.section]
   })),
-  on(SurveyActions.fetchSectionsFailed, (state) => ({
+  on(SurveyActions.fetchSectionByIdFailed, (state) => ({
     ...state,
     fetchingSections: false,
+  })),
+  on(SurveyActions.submitSection, (state) => ({
+    ...state,
+    creatingSection: true,
+  })),
+  on(SurveyActions.submitSectionSucceeded, (state, action) => ({
+    ...state,
+    creatingSection: false,
+    sections: [...state.sections, action.section]
+  })),
+  on(SurveyActions.submitSectionFailed, (state) => ({
+    ...state,
+    creatingSection: false,
+  })),
+  on(SurveyActions.deleteSection, (state, action) => ({
+    ...state,
+    editingSectionId: action.sectionId,
+  })),
+  on(SurveyActions.deleteSectionSucceeded, (state, action) => ({
+    ...state,
+    sections: action.updatedSections,
+    editingSectionId: null
+  })),
+  on(SurveyActions.deleteSectionFailed, (state) => ({
+    ...state,
+    editingSectionId: null
+  })),
+  on(SurveyActions.restoreSection, (state, action) => ({
+    ...state,
+    editingSectionId: action.sectionId,
+  })),
+  on(SurveyActions.restoreSectionSucceeded, (state, action) => ({
+    ...state,
+    sections: action.updatedSections,
+    editingSectionId: null
+  })),
+  on(SurveyActions.restoreSectionFailed, (state) => ({
+    ...state,
+    editingSectionId: null
   })),
 )
 

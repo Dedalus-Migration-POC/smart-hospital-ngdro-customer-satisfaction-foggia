@@ -1,11 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {TranslateModule} from "@ngx-translate/core";
 import {MatButton} from "@angular/material/button";
 import {Store} from "@ngrx/store";
-import {selectSurveyList, SurveyAdminState} from "../../store/reducer";
-import {SurveyActions} from "../../store/actions";
-import {map, Observable, of} from "rxjs";
-import {AsyncPipe} from "@angular/common";
+import {selectSurveyState, SurveyAdminState} from "../../store/reducer";
+import {map, Observable} from "rxjs";
+import {AsyncPipe, NgIf, NgTemplateOutlet} from "@angular/common";
 import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
@@ -19,6 +18,7 @@ import {SurveyListTableComponent} from "./survey-list-table/survey-list-table.co
 import {Survey} from "../../repository/dto/survey";
 import {MatDialog} from "@angular/material/dialog";
 import {ScaffoldComponent} from "../../components/scaffold/scaffold.component";
+import {Section} from "../../repository/dto/section";
 
 @Component({
   selector: 'app-survey-list',
@@ -43,11 +43,13 @@ import {ScaffoldComponent} from "../../components/scaffold/scaffold.component";
     SectionsCardComponent,
     RouterLink,
     ScaffoldComponent,
+    NgIf,
+    NgTemplateOutlet,
   ],
   templateUrl: './survey-list.component.html',
   styleUrl: './survey-list.component.scss'
 })
-export class SurveyListComponent implements OnInit {
+export class SurveyListComponent {
   constructor(private store: Store<SurveyAdminState>,
               private router: Router,
               private activatedRoute: ActivatedRoute,
@@ -55,12 +57,9 @@ export class SurveyListComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {
-    this.store.dispatch(SurveyActions.fetchSurveys());
-  }
-
-  state$ = this.store.select(selectSurveyList)
+  state$ = this.store.select(selectSurveyState)
   surveys$: Observable<Array<Survey>> = this.state$.pipe(map(({surveys}) => surveys));
+  sections$: Observable<Array<Section>> = this.state$.pipe(map(({sections}) => sections));
   loading$ = this.state$.pipe(map(s => s.fetchingSurveys));
   error$ = this.state$.pipe(map(s => s.fetchSurveysError));
 
@@ -69,7 +68,7 @@ export class SurveyListComponent implements OnInit {
   }
 
   async onEdit(survey: Survey) {
-    await this.router.navigate([`./${survey.id}`], {relativeTo: this.activatedRoute})
+    await this.router.navigate(['form', survey.id], {relativeTo: this.activatedRoute})
   }
 
   onDelete(survey: Survey) {
@@ -77,5 +76,4 @@ export class SurveyListComponent implements OnInit {
     //this.dialog.open();
   }
 
-  protected readonly of = of;
 }

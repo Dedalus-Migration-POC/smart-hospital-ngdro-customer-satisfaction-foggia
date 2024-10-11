@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ScaffoldComponent} from "../../components/scaffold/scaffold.component";
 import {map, of, tap} from "rxjs";
 import {ActivatedRoute, RouterLink} from "@angular/router";
@@ -17,11 +17,22 @@ import {
 } from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
 import {Store} from "@ngrx/store";
-import {selectSectionList, SurveyAdminState} from "../../store/reducer";
-import {SurveyActions} from "../../store/actions";
-import {Actions, ofType} from "@ngrx/effects";
-import {NgForOf, NgIf} from "@angular/common";
+import {selectSurveyState, SurveyAdminState} from "../../store/reducer";
+import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {MatCard} from "@angular/material/card";
+import {Section} from "../../repository/dto/section";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {Actions, ofType} from "@ngrx/effects";
+import {SurveyActions} from "../../store/actions";
+import {DialogService} from "../../support/dialog-service";
+import {WithSubscriptionsComponent} from "../../support/with-subscriptions-component";
+
+export type SectionForm = FormGroup<{
+  id: FormControl<string | null>;
+  name: FormControl<string | null>;
+  description: FormControl<string | null>;
+  questions: FormArray<FormControl<string | null>>
+}>
 
 @Component({
   selector: 'app-section-form',
@@ -40,76 +51,94 @@ import {MatCard} from "@angular/material/card";
     TranslateModule,
     FormsModule,
     NgForOf,
-    NgIf, MatError, MatCard
+    NgIf, MatError, MatCard, AsyncPipe, MatProgressSpinner
   ],
   templateUrl: './section-form.component.html',
   styleUrl: './section-form.component.scss'
 })
-export class SectionFormComponent implements OnInit {
+export class SectionFormComponent extends WithSubscriptionsComponent implements OnInit, OnDestroy {
   editMode = false;
 
-  sectionForm!: FormGroup<{
-    id: FormControl<string | null>;
-    name: FormControl<string | null>;
-    description: FormControl<string | null>;
-    questions: FormArray<FormControl<string | null>>
-  }>;
+  sectionForm!: SectionForm;
 
-  state$ = this.store.select(selectSectionList)
+  state$ = this.store.select(selectSurveyState)
+  surveys$ = this.state$.pipe(map(({surveys}) => surveys));
   sections$ = this.state$.pipe(map(({sections}) => sections));
-  loading$ = this.state$.pipe(map(({fetchingSections}) => fetchingSections))
-  error$ = this.state$.pipe(map(({fetchSectionsError}) => fetchSectionsError))
+  creating$ = this.state$.pipe(map(({creatingSection}) => creatingSection))
+  error$ = this.state$.pipe(map(({fetchSurveysError, fetchSectionsError}) => fetchSurveysError || fetchSectionsError))
+
+  protected readonly of = of;
 
   constructor(
     private store: Store<SurveyAdminState>,
     private actions: Actions,
     private activatedRoute: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dialog: DialogService
   ) {
+    super();
   }
 
   ngOnInit() {
+    this.startActionsSubscription()
+
     this.sectionForm = this.fb.group({
-      id: new FormControl<string | null>(null, Validators.required),
+      id: new FormControl<string | null>(null),
       name: new FormControl<string | null>(null, Validators.required),
-      description: new FormControl<string | null>(null, Validators.required),
+      description: new FormControl<string | null>(null),
       questions: this.fb.array<string | null>([])
     });
 
     const sectionId = this.activatedRoute.snapshot.paramMap.get('sectionId');
     if (sectionId) {
       this.editMode = true
-      this.store.dispatch(SurveyActions.fetchSectionById({sectionId}))
+      this.subscriptions.push(this.sections$.subscribe(sections => {
+        const section = sections.find(({id}) => id?.toString() === sectionId);
+        if (section) {
+          this.initializeForm(section);
+        } else {
+          const text = `Section with id [${sectionId}] not found`
+          this.dialog.error({text})
+          throw new Error(text);
+        }
+      }))
     } else {
       this.sectionForm.controls.questions.push(
         new FormControl<string | null>(null, Validators.required)
       )
     }
+  }
 
-    this.actions.pipe(
-      ofType(SurveyActions.fetchSectionByIdSucceeded),
-      tap(({section}) => {
-        console.log({section})
-        this.sectionForm.patchValue({
-          id: section.id!.toString(),
-          name: section.name,
-          description: section.description,
-        })
+  private initializeForm(section: Section) {
+    this.sectionForm.patchValue({
+      id: section.id!.toString(),
+      name: section.name,
+      description: section.description,
+    })
 
-        section.questions?.map(({name}) => {
-          this.sectionForm.controls.questions.push(
-            new FormControl(name, [Validators.required])
-          )
-        })
-      })).subscribe()
-
-    this.sectionForm.valueChanges.subscribe(value => {
-      console.log('form:', value)
-      console.log(this.sectionForm)
+    section.questions?.map(({name}) => {
+      this.sectionForm.controls.questions.push(
+        new FormControl(name, [Validators.required])
+      )
     })
   }
 
-  protected readonly of = of;
+  private startActionsSubscription() {
+    this.addSubscriptions(
+      this.actions.pipe(
+        ofType(SurveyActions.submitSectionSucceeded),
+        tap((action) => {
+          this.initializeForm(action.section)
+          //FIXME
+          this.dialog.success({text: "Le modifiche sono state salvate correttamente"})
+        })
+      ).subscribe(),
+
+      this.actions.pipe(
+        ofType(SurveyActions.submitSectionFailed),
+        tap(() => this.dialog.error())
+      ).subscribe())
+  }
 
   protected getTitlePlaceholder() {
     const prefix = 'admin.section-form.title'
@@ -132,6 +161,10 @@ export class SectionFormComponent implements OnInit {
     this.sectionForm.markAllAsTouched()
     if (this.sectionForm.valid) {
       console.log('VALID', this.sectionForm.value)
+      this.store.dispatch(SurveyActions.submitSection({
+        sectionForm: this.sectionForm.value
+      }))
     }
   }
+
 }

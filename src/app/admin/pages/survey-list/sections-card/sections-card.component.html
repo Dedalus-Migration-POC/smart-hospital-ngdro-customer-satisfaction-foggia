@@ -1,11 +1,21 @@
+<ng-template #btn>
+  <button mat-flat-button routerLink="./section/form"
+          [style]="{width: createSurveyBtn ? createSurveyBtn.clientWidth + 'px' : undefined}">
+    <mat-icon>add</mat-icon>
+    <span>{{ 'admin.survey-list.create-section-btn' | translate }}</span>
+  </button>
+</ng-template>
+
 <mat-card>
   <mat-card-header>
     {{ 'admin.sections-card.title' | translate }}
   </mat-card-header>
 
   <mat-card-content>
-    <span class="description-content">{{ 'admin.sections-card.description' | translate }}</span>
+    <span class="description-content">{{ ('admin.sections-card.' + 'sections-empty') | translate }}</span>
     <span class="spacer"></span>
-    <button mat-stroked-button routerLink="/section">{{ 'admin.sections-card.button-label' | translate }}</button>
+    <button *ngIf="(sections$ | async)?.length; else btn" mat-stroked-button
+            routerLink="/section">{{ 'admin.sections-card.button-label' | translate }}
+    </button>
   </mat-card-content>
 </mat-card>

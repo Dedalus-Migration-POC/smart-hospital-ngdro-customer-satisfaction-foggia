@@ -1,0 +1,42 @@
+.head {
+  display: flex;
+}
+
+.min-400 {
+  min-width: 400px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card {
+  max-width: 768px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.mat-section-select {
+  display: flex;
+  justify-content: space-between;
+
+  > button {
+    margin-left: 12px;
+  }
+}
+
+.section-questions {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+
+  > span:first-child {
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  > span:last-child {
+    font-size: 16px;
+  }
+}

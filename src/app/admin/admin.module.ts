@@ -20,6 +20,7 @@ import {reducer} from "./store/reducer";
 import {SurveyEffects} from "./store/effects";
 import {CsrfInterceptor} from "./repository/http_interceptors";
 import {MatPaginatorIntl} from "@angular/material/paginator";
+import {ScaffoldComponent} from "./components/scaffold/scaffold.component";
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import {MatPaginatorIntl} from "@angular/material/paginator";
     MatSlideToggleModule,
     HeaderComponent,
     SurveyListComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    ScaffoldComponent
   ],
   providers: [
     MatPaginatorIntl,

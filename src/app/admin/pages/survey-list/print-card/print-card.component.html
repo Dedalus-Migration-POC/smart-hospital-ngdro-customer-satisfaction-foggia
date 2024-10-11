@@ -1,10 +1,10 @@
-<mat-card>
+<mat-card [style]="{opacity: (disabled$ | async) ? 0.75 : 1}">
   <mat-card-header>{{ 'admin.print-card.title' | translate }}</mat-card-header>
   <div class="divider"></div>
   <mat-card-content>
     <mat-form-field appearance="outline">
       <mat-label>{{ 'admin.print-card.select-unit-label' | translate }}</mat-label>
-      <mat-select [(ngModel)]="selectedUnit">
+      <mat-select [(ngModel)]="selectedUnit" [disabled]="(disabled$ | async) ?? false">
         @for (unit of units; track unit) {
           <mat-option [value]="unit.value">{{ 'admin.print-card.units.' + unit.viewValue | translate }}</mat-option>
         }
@@ -14,7 +14,7 @@
     <div class="divider"></div>
 
     <div class="structure-type-label">{{ 'admin.print-card.structure-type-label' | translate }}</div>
-    <mat-radio-group aria-label="Select an option">
+    <mat-radio-group aria-label="Select an option" [disabled]="(disabled$ | async) ?? false">
       <mat-radio-button value="1">{{ 'admin.print-card.structure-type-radio.department' | translate }}
       </mat-radio-button>
       <mat-radio-button value="2">{{ 'admin.print-card.structure-type-radio.ambulatory' | translate }}
@@ -25,7 +25,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>{{ 'admin.print-card.select-survey-label' | translate }}</mat-label>
-      <mat-select [(ngModel)]="selectedSurveyId">
+      <mat-select [(ngModel)]="selectedSurveyId" [disabled]="(disabled$ | async) ?? false">
         @for (survey of surveys; track survey) {
           <mat-option [value]="survey.id">{{ survey.name }}</mat-option>
         }
@@ -39,7 +39,8 @@
         <mat-button-toggle [disabled]="printCount < 1" [value]="false" (click)="setPrintCount(printCount-1)">&nbsp;&#8212;&nbsp;
         </mat-button-toggle>
         <mat-button-toggle [disabled]="true">&nbsp;{{ printCount }}&nbsp;</mat-button-toggle>
-        <mat-button-toggle [value]="false" (click)="setPrintCount(printCount+1)">&nbsp;&#43;&nbsp;</mat-button-toggle>
+        <mat-button-toggle [value]="false" (click)="setPrintCount(printCount+1)"
+                           [disabled]="(disabled$ | async) ?? false">&nbsp;&#43;&nbsp;</mat-button-toggle>
     </mat-button-toggle-group>
     </span>
 

@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {CommonModule, NgOptimizedImage} from "@angular/common";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {CommonModule, Location, NgOptimizedImage} from "@angular/common";
 import {TranslateModule} from "@ngx-translate/core";
 import {DesignAngularKitModule} from "design-angular-kit";
 import {map, Observable} from "rxjs";
@@ -28,7 +28,7 @@ import {MatIcon} from "@angular/material/icon";
   templateUrl: './scaffold.component.html',
   styleUrl: './scaffold.component.scss'
 })
-export class ScaffoldComponent {
+export class ScaffoldComponent implements OnInit {
   @Input({alias: 'initializing', required: false}) initializing?: boolean;
   @Input({alias: 'pageTitle', required: false}) pageTitle?: string;
   @Input({alias: 'loading', required: true}) loading?: Observable<boolean> | null;
@@ -36,14 +36,21 @@ export class ScaffoldComponent {
   @Input({alias: 'error', required: true}) error?: Observable<boolean> | null;
   @Input({alias: 'errorTitle', required: false}) errorTitle?: string;
   @Input({alias: 'errorText', required: false}) errorText?: string;
-  @Output('onErrorRetryCallback') onErrorRetryCallback = new EventEmitter();
-  @Output('onErrorCancelCallback') onErrorCancelCallback = new EventEmitter();
+  @Output('onErrorRetryCallback') onErrorRetryCallback: EventEmitter<any> = new EventEmitter();
+  @Output('onErrorCancelCallback') onErrorCancelCallback: EventEmitter<any> | undefined;
 
-  constructor(private activatedRoute: ActivatedRoute) {
-    console.log(this.activatedRoute)
-    this.activatedRoute.url.subscribe((event) => {
-      console.log(event)
-    })
+  window = window
+
+  constructor(private activatedRoute: ActivatedRoute, protected location: Location) {
+    //FIXME remove if not used
+    // this.activatedRoute.url.subscribe((event) => {
+    // })
+  }
+
+  ngOnInit() {
+    if (this.onErrorCancelCallback) {
+      this.onErrorCancelCallback = new EventEmitter()
+    }
   }
 
   canGoBack$ = this.activatedRoute.url.pipe(map(url => url.length));

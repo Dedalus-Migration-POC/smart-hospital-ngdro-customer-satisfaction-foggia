@@ -10,6 +10,15 @@ const routes: Routes = [
     component: SurveyListComponent
   },
   {
+    path: 'form',
+    loadComponent: () => import('./pages/survey-form/survey-form.component').then(module => module.SurveyFormComponent),
+  },
+  {
+    path: 'form/:surveyId',
+    pathMatch: 'full',
+    loadComponent: () => import('./pages/survey-form/survey-form.component').then(module => module.SurveyFormComponent),
+  },
+  {
     path: 'section',
     loadComponent: () => import('./pages/section-list/section-list.component').then(module => module.SectionListComponent),
   },

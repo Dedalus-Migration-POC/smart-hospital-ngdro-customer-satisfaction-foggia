@@ -28,3 +28,15 @@ app-survey-list-table {
 .right {
   flex: 1 0 auto;
 }
+
+.empty-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  > span {
+    font-size: 20px;
+    font-style: italic;
+  }
+}
+

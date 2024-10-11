@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ScaffoldComponent} from "../../components/scaffold/scaffold.component";
-import {map} from "rxjs";
-import {TranslateModule} from "@ngx-translate/core";
+import {map, take, tap} from "rxjs";
+import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
@@ -10,10 +10,13 @@ import {FormsModule} from "@angular/forms";
 import {MatLabel} from "@angular/material/form-field";
 import {SectionListTableComponent} from "./section-list-table/section-list-table.component";
 import {Store} from "@ngrx/store";
-import {selectSectionList, SurveyAdminState} from "../../store/reducer";
+import {selectSectionList, selectSurveyList, SurveyAdminState} from "../../store/reducer";
 import {SurveyActions} from "../../store/actions";
-import {AsyncPipe} from "@angular/common";
+import {AsyncPipe, NgIf} from "@angular/common";
 import {Section} from "../../repository/dto/section";
+import {DialogService} from "../../support/dialog-service";
+import {WithSubscriptionsComponent} from "../../support/with-subscriptions-component";
+import {Actions, ofType} from "@ngrx/effects";
 
 @Component({
   selector: 'app-section-list',
@@ -32,18 +35,23 @@ import {Section} from "../../repository/dto/section";
     MatSuffix,
     SectionListTableComponent,
     AsyncPipe,
+    NgIf,
   ],
   templateUrl: './section-list.component.html',
   styleUrl: './section-list.component.scss'
 })
-export class SectionListComponent implements OnInit {
+export class SectionListComponent extends WithSubscriptionsComponent {
 
-  constructor(private store: Store<SurveyAdminState>, private activatedRoute: ActivatedRoute, private router: Router,
+  constructor(
+    private store: Store<SurveyAdminState>,
+    private actions: Actions,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private dialog: DialogService,
+    private translate: TranslateService
   ) {
-  }
-
-  ngOnInit() {
-    this.store.dispatch(SurveyActions.fetchSections())
+    super();
+    this.startSubscriptions();
   }
 
   state$ = this.store.select(selectSectionList)
@@ -62,6 +70,41 @@ export class SectionListComponent implements OnInit {
   }
 
   protected onDelete(section: Section) {
-    console.log("onDelete", section);
+    console.log(section)
+    this.addSubscription(this.store.select(selectSurveyList).pipe(
+      take(1),
+      map(({surveys}) => {
+        console.log(surveys)
+        if (surveys.some(({sections}) => !!sections.find(({id}) => id === section.id))) {
+          console.log('found')
+          this.dialog.error({text: this.translate.instant('admin.section-list.dialog-cannot-delete')})
+        } else {
+          this.dialog.attention({
+            text: this.translate.instant('admin.section-list.dialog-confirm-delete'),
+            onConfirm: () => this.store.dispatch(SurveyActions.deleteSection({sectionId: section.id!.toString()}))
+          })
+        }
+      })).subscribe())
+  }
+
+  protected onRestore({id}: Section) {
+    this.dialog.attention({
+      text: this.translate.instant('admin.section-list.dialog-confirm-restore'),
+      onConfirm: () => this.store.dispatch(SurveyActions.restoreSection({sectionId: id!.toString()}))
+    })
+  }
+
+  private startSubscriptions() {
+    this.addSubscriptions(
+      this.actions.pipe(
+        ofType(SurveyActions.deleteSectionFailed),
+        tap(() => this.dialog.error())
+      ).subscribe(),
+
+      this.actions.pipe(
+        ofType(SurveyActions.restoreSectionFailed),
+        tap(() => this.dialog.error())
+      ).subscribe()
+    )
   }
 }
