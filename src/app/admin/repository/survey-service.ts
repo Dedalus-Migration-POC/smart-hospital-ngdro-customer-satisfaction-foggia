@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Survey} from "./dto/survey";
 import {Section} from "./dto/section";
 import {CreateSectionRequest} from "./dto/create-section-request";
+import {CreateSurveyRequest} from "./dto/create-survey-request";
 
 const baseUrl = '/api/v1'
 
@@ -16,11 +17,11 @@ export class SurveyService {
     return this.http.get<Array<Survey>>(`${baseUrl}/survey`)
   }
 
-  public createSurvey(survey: Survey) {
+  public createSurvey(survey: CreateSurveyRequest) {
     return this.http.post<Survey>(`${baseUrl}/survey/create`, survey)
   }
 
-  public updateSurvey(survey: Survey) {
+  public updateSurvey(survey: CreateSurveyRequest) {
     return this.http.post<Survey>(`${baseUrl}/survey/update`, survey)
   }
 

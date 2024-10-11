@@ -1,11 +1,11 @@
-<mat-table [dataSource]="surveys" class="mat-elevation-z8">
-  @for (column of columns; track column) {
-    <ng-container *ngIf="column !== 'actions'" [matColumnDef]="column">
+<mat-table [dataSource]="datasource" class="mat-elevation-z8">
+  @for (surveyProperty of columns; track surveyProperty) {
+    <ng-container *ngIf="surveyProperty !== 'actions'" [matColumnDef]="surveyProperty">
       <mat-header-cell *matHeaderCellDef>
-        {{ 'admin.survey-list.table-headers.' + column | translate }}
+        {{ 'admin.survey-list.table-headers.' + surveyProperty | translate }}
       </mat-header-cell>
-      <mat-cell *matCellDef="let element">
-        {{ element[column] }}
+      <mat-cell *matCellDef="let survey" [class]="survey.status">
+        {{ handleColumn(survey, surveyProperty) }}
       </mat-cell>
     </ng-container>
   }

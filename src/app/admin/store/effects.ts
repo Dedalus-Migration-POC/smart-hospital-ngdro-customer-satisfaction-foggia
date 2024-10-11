@@ -5,9 +5,9 @@ import {forkJoin, of} from 'rxjs'
 import {SurveyService} from "../repository/survey-service";
 import {SurveyActions} from "./actions";
 import {CreateSectionRequest} from "../repository/dto/create-section-request";
-import {Survey} from "../repository/dto/survey";
 import {Store} from "@ngrx/store";
 import {selectSectionList, SurveyAdminState} from "./reducer";
+import {CreateSurveyRequest} from "../repository/dto/create-survey-request";
 
 @Injectable()
 export class SurveyEffects {
@@ -100,19 +100,19 @@ export class SurveyEffects {
           if (!surveyForm.sections) {
             throw new Error("Cannot submit surveyForm because section list is not valid: " + surveyForm.sections)
           }
-          const section: Survey = {
+          const survey: CreateSurveyRequest = {
             id: surveyForm.id ? Number(surveyForm.id) : undefined,
             name: surveyForm.name!,
             description: surveyForm.description ?? undefined,
-            //@ts-ignore
-            sections: surveyForm.sections!,
-            results: []
+            startDate: surveyForm.startDate!,
+            endDate: surveyForm.endDate ?? undefined,
+            sections: surveyForm.sections,
           }
-          const api = !section.id
-            ? this.surveyService.createSurvey(section)
-            : this.surveyService.updateSurvey(section)
+          const api = !survey.id
+            ? this.surveyService.createSurvey(survey)
+            : this.surveyService.updateSurvey(survey)
           return api.pipe(
-            map((survey) => SurveyActions.submitSurveySucceeded({survey})),
+            map((survey) => SurveyActions.submitSurveySucceeded({survey, editMode: !!survey.id})),
             catchError(() =>
               of(SurveyActions.submitSurveyFailed()),
             ),

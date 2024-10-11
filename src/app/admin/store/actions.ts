@@ -51,7 +51,7 @@ const submitSurvey = createAction(
 
 const submitSurveySucceeded = createAction(
   '[Survey] Submit Survey Succeeded',
-  props<{ survey: Survey }>()
+  props<{ survey: Survey, editMode: boolean }>()
 )
 
 const submitSurveyFailed = createAction(

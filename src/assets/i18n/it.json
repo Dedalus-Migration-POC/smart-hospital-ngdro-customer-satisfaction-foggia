@@ -8,6 +8,7 @@
   "send": "Invia",
   "retry": "Riprova",
   "cancel": "Annulla",
+  "date-hint": "GG/MM/AAAA",
   "header": {
     "name": "Policlinico Foggia"
   },
@@ -67,6 +68,11 @@
     }
   },
   "admin": {
+    "survey-status": {
+      "ACTIVE": "Pubblicato",
+      "INACTIVE": "Bozza",
+      "EXPIRED": "Scaduto"
+    },
     "mat-paginator-intl": {
       "firstPageLabel": "Prima pagina",
       "itemsPerPageLabel": "Righe per pagina",
@@ -82,7 +88,9 @@
       "view-analytics-btn": "Vedi analitiche",
       "table-headers": {
         "name": "Nome questionario",
-        "date": "Data pubblicazione",
+        "startDate": "Data inizio",
+        "endDate": "Data fine",
+        "status": "Stato",
         "version": "Versione attuale",
         "actions": "Azioni"
       },
@@ -96,11 +104,15 @@
       "edit-survey-btn": "Salva modifiche",
       "survey-name-field": "Nome questionario",
       "survey-description-field": "Descrizione questionario",
+      "survey-start-date-field": "Data inizio",
+      "survey-end-date-field": "Data fine",
       "section-field-label": "Sezione {{index}}",
       "add-section-item": "Aggiungi sezione",
       "required-field": "Campo obbligatorio",
       "remove-section-btn": "Rimuovi sezione",
-      "section-question-label": "Domanda {{index}}"
+      "section-question-label": "Domanda {{index}}",
+      "survey-created-dialog": "Il questionario è stato creato correttamente",
+      "survey-edited-dialog": "Il questionario è stato aggiornato correttamente"
     },
     "sections-card": {
       "title": "Sezioni questionario",

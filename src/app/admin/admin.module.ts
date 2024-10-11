@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AdminRoutingModule} from './admin-routing.module';
 import {AdminComponent} from './admin.component';
@@ -21,6 +21,9 @@ import {SurveyEffects} from "./store/effects";
 import {CsrfInterceptor} from "./repository/http_interceptors";
 import {MatPaginatorIntl} from "@angular/material/paginator";
 import {ScaffoldComponent} from "./components/scaffold/scaffold.component";
+import {provideAnimations} from "@angular/platform-browser/animations";
+import {DateAdapter, MAT_DATE_FORMATS} from "@angular/material/core";
+import {AppDateAdapter, MY_FORMATS} from "./config/date-adapter";
 
 @NgModule({
   declarations: [
@@ -46,6 +49,10 @@ import {ScaffoldComponent} from "./components/scaffold/scaffold.component";
   ],
   providers: [
     MatPaginatorIntl,
+    provideAnimations(),
+    {provide: DateAdapter, useClass: AppDateAdapter},
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    {provide: LOCALE_ID, useValue: 'it'},
     {provide: APP_BASE_HREF, useValue: window.location.origin + '/ui/'},
     provideDesignAngularKit({
       translateLoader: (itPrefix: string, itSuffix: string) => ({

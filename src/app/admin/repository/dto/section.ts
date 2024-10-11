@@ -5,10 +5,10 @@ export type Section = BaseDTO & DeletableDTO & VersionableDTO & {
 }
 
 export type Question = BaseDTO & DeletableDTO & {
-  answerType: 'RATE' | 'MULTI'
-  answers?: Array<Answer>
+  answerType: 'RATE' | 'MULTI';
+  answers?: Array<Answer>;
 }
 
 export type Answer = BaseDTO & DeletableDTO & {
-  value: number
+  value: string;
 }

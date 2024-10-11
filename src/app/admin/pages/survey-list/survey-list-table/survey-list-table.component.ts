@@ -13,14 +13,15 @@ import {
 } from "@angular/material/table";
 import {MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatPaginator} from "@angular/material/paginator";
 import {Survey} from "../../../repository/dto/survey";
-import {NgIf} from "@angular/common";
+import {DatePipe, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-survey-list-table',
   standalone: true,
+  providers: [DatePipe],
   imports: [
     MatTable,
     MatColumnDef,
@@ -42,10 +43,28 @@ import {NgIf} from "@angular/common";
   styleUrl: './survey-list-table.component.scss'
 })
 export class SurveyListTableComponent {
-  @Input({alias: "list", required: true}) surveys!: Array<Survey>;
+  @Input({alias: "surveys", required: true}) datasource!: Array<Survey>;
   @Output() onEdit: EventEmitter<Survey> = new EventEmitter();
   @Output() onDelete: EventEmitter<Survey> = new EventEmitter();
 
-  columns: string[] = ['name', 'date', 'version', 'actions']
+  constructor(private datePipe: DatePipe, private translate: TranslateService) {
+  }
+
+  columns: string[] = ['name', 'startDate', 'endDate', 'status', 'version', 'actions']
+
+  protected handleColumn(survey: Survey, propertyName: string): string {
+    const key = propertyName as keyof Survey
+    switch (key) {
+      case 'createdAt':
+      case 'startDate':
+      case 'endDate':
+        return this.datePipe.transform(survey[key], 'dd/MM/yyyy HH:mm') as string;
+      case 'status':
+        if (survey[key] === null) return '';
+        return this.translate.instant('admin.survey-status.' + survey[key]);
+      default:
+        return survey[key] as string;
+    }
+  }
 
 }
