@@ -95,7 +95,10 @@
         "actions": "Azioni"
       },
       "surveys-empty": "Non ci sono questionari",
-      "show-deleted": "Mostra elementi eliminati"
+      "show-deleted": "Mostra elementi eliminati",
+      "dialog-cannot-delete": "Non è possibile eliminare il questionario perchè risulta pubblicato.",
+      "dialog-confirm-delete": "Vuoi davvero eliminare il questionario?",
+      "dialog-confirm-restore": "Vuoi davvero ripristinare il questionario?"
     },
     "survey-form": {
       "title-new": "Nuovo questionario",
@@ -148,7 +151,6 @@
       "show-deleted": "Mostra elementi eliminati",
       "dialog-cannot-delete": "Non è possibile eliminare la Sezione perchè è associata ad uno o più questionari.",
       "dialog-confirm-delete": "Vuoi davvero eliminare la sezione?",
-      "dialog-delete-failed": "Non ",
       "dialog-confirm-restore": "Vuoi davvero ripristinare la sezione?"
     },
     "section-form": {
@@ -160,7 +162,9 @@
       "section-description-field": "Descrizione sezione",
       "question-item": "Domanda {{index}}",
       "add-question-item": "Aggiungi domanda",
-      "required-field": "Campo obbligatorio"
+      "required-field": "Campo obbligatorio",
+      "section-created-dialog": "La sezione è stata creata correttamente",
+      "section-edited-dialog": "La sezione è stata aggiornata correttamente"
     }
   }
 }

@@ -4,11 +4,11 @@ export type Section = BaseDTO & DeletableDTO & VersionableDTO & {
   questions?: Array<Question>;
 }
 
-export type Question = BaseDTO & DeletableDTO & {
+export type Question = BaseDTO & {
   answerType: 'RATE' | 'MULTI';
   answers?: Array<Answer>;
 }
 
-export type Answer = BaseDTO & DeletableDTO & {
+export type Answer = BaseDTO & {
   value: string;
 }

@@ -1,10 +1,13 @@
-<mat-table [dataSource]="datasource" class="mat-elevation-z8">
+<div class="deleted-toggler">
+  <mat-checkbox (change)="changeShowDeleted($event)">{{ 'admin.section-list.show-deleted' | translate }}</mat-checkbox>
+</div>
+<mat-table [dataSource]="(datasource$ | async)!" class="mat-elevation-z8">
   @for (surveyProperty of columns; track surveyProperty) {
     <ng-container *ngIf="surveyProperty !== 'actions'" [matColumnDef]="surveyProperty">
       <mat-header-cell *matHeaderCellDef>
         {{ 'admin.survey-list.table-headers.' + surveyProperty | translate }}
       </mat-header-cell>
-      <mat-cell *matCellDef="let survey" [class]="survey.status">
+      <mat-cell *matCellDef="let survey" [class]="survey.status" [class.deleted]="survey.deleted">
         {{ handleColumn(survey, surveyProperty) }}
       </mat-cell>
     </ng-container>
@@ -15,12 +18,15 @@
       {{ 'admin.survey-list.table-headers.actions' | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <button mat-icon-button (click)="onEdit.emit(element)">
+      <button mat-icon-button (click)="editSurvey.emit(element)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-icon-button (click)="onDelete.emit(element)">
-        <mat-icon>delete</mat-icon>
-      </button>
+      <ng-template #idle>
+        <button mat-icon-button (click)="changeDeletedStatus(element)">
+          <mat-icon>{{ element.deleted ? 'restore' : 'delete' }}</mat-icon>
+        </button>
+      </ng-template>
+      <mat-spinner *ngIf="(deletingId$ | async) === element.id?.toString(); else idle" diameter="20"></mat-spinner>
     </mat-cell>
   </ng-container>
 

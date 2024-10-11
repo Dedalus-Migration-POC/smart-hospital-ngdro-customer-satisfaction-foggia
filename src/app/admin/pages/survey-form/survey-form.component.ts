@@ -162,8 +162,8 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
     this.addSubscriptions(
       this.actions.pipe(
         ofType(SurveyActions.submitSurveySucceeded),
-        tap(({editMode, survey}) => {
-          const translation = editMode ? 'edited' : 'created'
+        tap(({survey}) => {
+          const translation = this.editMode ? 'edited' : 'created'
           this.initializeForm(survey)
           this.dialog.success({text: this.translate.instant(`admin.survey-form.survey-${translation}-dialog`)})
             .afterClosed().subscribe(() => this.router.navigate(['/']))

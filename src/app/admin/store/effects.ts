@@ -6,7 +6,7 @@ import {SurveyService} from "../repository/survey-service";
 import {SurveyActions} from "./actions";
 import {CreateSectionRequest} from "../repository/dto/create-section-request";
 import {Store} from "@ngrx/store";
-import {selectSectionList, SurveyAdminState} from "./reducer";
+import {selectSectionList, selectSurveyList, SurveyAdminState} from "./reducer";
 import {CreateSurveyRequest} from "../repository/dto/create-survey-request";
 
 @Injectable()
@@ -112,12 +112,50 @@ export class SurveyEffects {
             ? this.surveyService.createSurvey(survey)
             : this.surveyService.updateSurvey(survey)
           return api.pipe(
-            map((survey) => SurveyActions.submitSurveySucceeded({survey, editMode: !!survey.id})),
+            map((survey) => SurveyActions.submitSurveySucceeded({survey})),
             catchError(() =>
               of(SurveyActions.submitSurveyFailed()),
             ),
           )
         },
+      ),
+    )
+  })
+
+  deleteSurvey$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SurveyActions.deleteSurvey),
+      withLatestFrom(this.store.select(selectSurveyList)),
+      concatMap(([{surveyId}, {surveys}]) =>
+        this.surveyService.deleteSurvey(surveyId).pipe(
+          map(() => {
+            const deletedSurvey = {...surveys.find(({id}) => id!.toString() === surveyId)!, deleted: true}
+            const newSurveys = surveys.filter(({id}) => id!.toString() !== surveyId)
+            return SurveyActions.deleteSurveySucceeded({updatedSurveys: [...newSurveys, deletedSurvey]})
+          }),
+          catchError(() =>
+            of(SurveyActions.deleteSurveyFailed()),
+          ),
+        ),
+      ),
+    )
+  })
+
+  restoreSurvey$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SurveyActions.restoreSurvey),
+      withLatestFrom(this.store.select(selectSurveyList)),
+      concatMap(([{surveyId}, {surveys}]) =>
+        this.surveyService.restoreSurvey(surveyId).pipe(
+          map(() => {
+            const restoredSurvey = {...surveys.find(({id}) => id!.toString() === surveyId)!, deleted: false}
+            const newSurveys = surveys.filter(({id}) => id!.toString() !== surveyId)
+            return SurveyActions.restoreSurveySucceeded({updatedSurveys: [...newSurveys, restoredSurvey]})
+          }),
+          catchError(() =>
+            of(SurveyActions.restoreSurveyFailed()),
+          ),
+        ),
       ),
     )
   })

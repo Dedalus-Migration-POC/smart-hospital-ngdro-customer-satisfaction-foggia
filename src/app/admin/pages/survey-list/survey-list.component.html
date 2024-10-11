@@ -32,9 +32,10 @@
 
       <app-survey-list-table
         *ngIf="(surveys$ | async)!.length; else listEmptyTemplate"
-        [surveys]="(surveys$ | async)!"
+        [surveys]="surveys$"
         (onEdit)="onEdit($event)"
         (onDelete)="onDelete($event)"
+        (onRestore)="onRestore($event)"
       ></app-survey-list-table>
       <app-sections-card></app-sections-card>
     </div>

@@ -16,7 +16,13 @@ import {MatIcon} from "@angular/material/icon";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatPaginator} from "@angular/material/paginator";
 import {Survey} from "../../../repository/dto/survey";
-import {DatePipe, NgIf} from "@angular/common";
+import {AsyncPipe, DatePipe, NgIf} from "@angular/common";
+import {DeletableEntityService} from "../../../support/deletable-entity-service";
+import {map, Observable} from "rxjs";
+import {MatCheckbox} from "@angular/material/checkbox";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {selectSurveyState, SurveyAdminState} from "../../../store/reducer";
+import {Store} from "@ngrx/store";
 
 @Component({
   selector: 'app-survey-list-table',
@@ -37,20 +43,37 @@ import {DatePipe, NgIf} from "@angular/common";
     MatRow,
     MatPaginator,
     TranslateModule,
-    NgIf
+    NgIf,
+    AsyncPipe,
+    MatCheckbox,
+    MatProgressSpinner
   ],
   templateUrl: './survey-list-table.component.html',
   styleUrl: './survey-list-table.component.scss'
 })
-export class SurveyListTableComponent {
-  @Input({alias: "surveys", required: true}) datasource!: Array<Survey>;
-  @Output() onEdit: EventEmitter<Survey> = new EventEmitter();
-  @Output() onDelete: EventEmitter<Survey> = new EventEmitter();
+export class SurveyListTableComponent extends DeletableEntityService<Survey> {
+  @Input({alias: "surveys", required: true}) surveys$!: Observable<Array<Survey>>;
+  @Output("onEdit") editSurvey: EventEmitter<Survey> = new EventEmitter();
+  @Output("onDelete") deleteSurvey: EventEmitter<Survey> = new EventEmitter();
+  @Output("onRestore") restoreSurvey: EventEmitter<Survey> = new EventEmitter();
 
-  constructor(private datePipe: DatePipe, private translate: TranslateService) {
+  constructor(
+    private store: Store<SurveyAdminState>,
+    private datePipe: DatePipe,
+    private translate: TranslateService) {
+    super();
+  }
+
+  override ngOnInit() {
+    this.entityList$ = this.surveys$
+    this.onDelete = this.deleteSurvey
+    this.onRestore = this.restoreSurvey
+    super.ngOnInit();
   }
 
   columns: string[] = ['name', 'startDate', 'endDate', 'status', 'version', 'actions']
+
+  deletingId$ = this.store.select(selectSurveyState).pipe(map(s => s.editingSurveyId))
 
   protected handleColumn(survey: Survey, propertyName: string): string {
     const key = propertyName as keyof Survey

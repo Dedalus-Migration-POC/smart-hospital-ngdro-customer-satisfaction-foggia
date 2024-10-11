@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -24,6 +24,7 @@ import {map, Observable} from "rxjs";
 import {MatInput} from "@angular/material/input";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {FormsModule} from "@angular/forms";
+import {DeletableEntityService} from "../../../support/deletable-entity-service";
 
 @Component({
   selector: 'app-section-list-table',
@@ -53,32 +54,25 @@ import {FormsModule} from "@angular/forms";
   templateUrl: './section-list-table.component.html',
   styleUrl: './section-list-table.component.scss'
 })
-export class SectionListTableComponent implements OnInit {
+export class SectionListTableComponent extends DeletableEntityService<Section> {
   @Input({alias: "sections", required: true}) sections$!: Observable<Array<Section>>;
-  @Output() onEdit: EventEmitter<Section> = new EventEmitter();
-  @Output() onDelete: EventEmitter<Section> = new EventEmitter();
-  @Output() onRestore: EventEmitter<Section> = new EventEmitter();
-
-  datasource$!: Observable<Array<Section>>;
+  @Output("onEdit") onEdit: EventEmitter<Section> = new EventEmitter();
+  @Output("onDelete") deleteSection: EventEmitter<Section> = new EventEmitter();
+  @Output("onRestore") restoreSection: EventEmitter<Section> = new EventEmitter();
 
   constructor(private store: Store<SurveyAdminState>) {
+    super();
   }
 
-  ngOnInit() {
-    this.datasource$ = this.sections$.pipe(map(s => s.filter(sec => !sec.deleted)))
+  override ngOnInit() {
+    this.entityList$ = this.sections$
+    this.onDelete = this.deleteSection
+    this.onRestore = this.restoreSection
+    super.ngOnInit();
   }
 
   deletingId$ = this.store.select(selectSurveyState).pipe(map(s => s.editingSectionId))
 
   columns: string[] = ['name', 'presence', 'version', 'actions']
-
-  changeShowDeleted(event: any) {
-    this.datasource$ = this.sections$.pipe(map(s => s.filter(sec => event.checked ? true : !sec.deleted)))
-  }
-
-  protected changeDeletedStatus(section: Section) {
-    if (section.deleted) this.onRestore.emit(section)
-    else this.onDelete.emit(section)
-  }
 
 }

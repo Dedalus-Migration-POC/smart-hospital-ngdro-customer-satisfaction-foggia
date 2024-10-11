@@ -51,11 +51,39 @@ const submitSurvey = createAction(
 
 const submitSurveySucceeded = createAction(
   '[Survey] Submit Survey Succeeded',
-  props<{ survey: Survey, editMode: boolean }>()
+  props<{ survey: Survey }>()
 )
 
 const submitSurveyFailed = createAction(
   '[Survey] Submit Survey Failed',
+)
+
+const deleteSurvey = createAction(
+  '[Survey] Delete Survey',
+  props<{ surveyId: string }>()
+)
+
+const deleteSurveySucceeded = createAction(
+  '[Survey] Delete Survey Succeeded',
+  props<{ updatedSurveys: Array<Survey> }>()
+)
+
+const deleteSurveyFailed = createAction(
+  '[Survey] Delete Survey Failed',
+)
+
+const restoreSurvey = createAction(
+  '[Survey] Restore Survey',
+  props<{ surveyId: string }>()
+)
+
+const restoreSurveySucceeded = createAction(
+  '[Survey] Restore Survey Succeeded',
+  props<{ updatedSurveys: Array<Survey> }>()
+)
+
+const restoreSurveyFailed = createAction(
+  '[Survey] Restore Survey Failed',
 )
 
 const fetchSections = createAction(
@@ -140,6 +168,12 @@ export const SurveyActions = {
   submitSurvey,
   submitSurveySucceeded,
   submitSurveyFailed,
+  deleteSurvey,
+  deleteSurveySucceeded,
+  deleteSurveyFailed,
+  restoreSurvey,
+  restoreSurveySucceeded,
+  restoreSurveyFailed,
   fetchSections,
   fetchSectionsSucceeded,
   fetchSectionsFailed,
@@ -170,6 +204,12 @@ export type SurveyActionTypes =
   | typeof submitSurvey
   | typeof submitSurveySucceeded
   | typeof submitSurveyFailed
+  | typeof deleteSurvey
+  | typeof deleteSurveySucceeded
+  | typeof deleteSurveyFailed
+  | typeof restoreSurvey
+  | typeof restoreSurveySucceeded
+  | typeof restoreSurveyFailed
   | typeof fetchSections
   | typeof fetchSectionsSucceeded
   | typeof fetchSectionsFailed

@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ScaffoldComponent} from "../../components/scaffold/scaffold.component";
 import {map, of, tap} from "rxjs";
-import {ActivatedRoute, RouterLink} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatError, MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatIcon} from "@angular/material/icon";
@@ -15,7 +15,7 @@ import {
   ReactiveFormsModule,
   Validators
 } from "@angular/forms";
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {Store} from "@ngrx/store";
 import {selectSurveyState, SurveyAdminState} from "../../store/reducer";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
@@ -74,7 +74,9 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
     private actions: Actions,
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
-    private dialog: DialogService
+    private dialog: DialogService,
+    private router: Router,
+    private translate: TranslateService
   ) {
     super();
   }
@@ -127,10 +129,11 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
     this.addSubscriptions(
       this.actions.pipe(
         ofType(SurveyActions.submitSectionSucceeded),
-        tap((action) => {
-          this.initializeForm(action.section)
-          //FIXME
-          this.dialog.success({text: "Le modifiche sono state salvate correttamente"})
+        tap(({section}) => {
+          const translation = this.editMode ? 'edited' : 'created'
+          this.initializeForm(section)
+          this.dialog.success({text: this.translate.instant(`admin.section-form.section-${translation}-dialog`)})
+            .afterClosed().subscribe(() => this.router.navigate(['/section']))
         })
       ).subscribe(),
 

@@ -9,6 +9,7 @@ type SurveyState = {
   fetchingSurveys: boolean
   fetchSurveysError: boolean
   creatingSurvey: boolean
+  editingSurveyId: string | null
   surveys: Array<Survey>
   fetchingSections: boolean
   fetchSectionsError: boolean
@@ -23,6 +24,7 @@ const initialState: SurveyState = {
   fetchingSurveys: false,
   fetchSurveysError: false,
   creatingSurvey: false,
+  editingSurveyId: null,
   surveys: [],
   fetchingSections: false,
   fetchSectionsError: false,
@@ -91,6 +93,32 @@ export const reducer = createReducer(
   on(SurveyActions.submitSurveyFailed, (state) => ({
     ...state,
     creatingSurvey: false,
+  })),
+  on(SurveyActions.deleteSurvey, (state, action) => ({
+    ...state,
+    editingSurveyId: action.surveyId,
+  })),
+  on(SurveyActions.deleteSurveySucceeded, (state, action) => ({
+    ...state,
+    sections: action.updatedSurveys,
+    editingSurveyId: null
+  })),
+  on(SurveyActions.deleteSurveyFailed, (state) => ({
+    ...state,
+    editingSurveyId: null
+  })),
+  on(SurveyActions.restoreSurvey, (state, action) => ({
+    ...state,
+    editingSurveyId: action.surveyId,
+  })),
+  on(SurveyActions.restoreSurveySucceeded, (state, action) => ({
+    ...state,
+    sections: action.updatedSurveys,
+    editingSurveyId: null
+  })),
+  on(SurveyActions.restoreSurveyFailed, (state) => ({
+    ...state,
+    editingSurveyId: null
   })),
   on(SurveyActions.fetchSections, (state) => ({
     ...state,

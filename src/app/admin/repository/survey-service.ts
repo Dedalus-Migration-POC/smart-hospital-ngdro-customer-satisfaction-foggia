@@ -17,6 +17,10 @@ export class SurveyService {
     return this.http.get<Array<Survey>>(`${baseUrl}/survey`)
   }
 
+  public getSurveyById(id: string) {
+    return this.http.get<Survey>(`${baseUrl}/survey/${id}`)
+  }
+
   public createSurvey(survey: CreateSurveyRequest) {
     return this.http.post<Survey>(`${baseUrl}/survey/create`, survey)
   }
@@ -25,8 +29,12 @@ export class SurveyService {
     return this.http.post<Survey>(`${baseUrl}/survey/update`, survey)
   }
 
-  public getSurveyById(id: string) {
-    return this.http.get<Survey>(`${baseUrl}/survey/${id}`)
+  public deleteSurvey(surveyId: string) {
+    return this.http.delete(`${baseUrl}/survey/section/${surveyId}`)
+  }
+
+  public restoreSurvey(surveyId: string) {
+    return this.http.patch(`${baseUrl}/survey/section/restore/${surveyId}`, null)
   }
 
   public getSectionList() {
