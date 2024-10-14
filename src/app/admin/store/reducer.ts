@@ -85,11 +85,20 @@ export const reducer = createReducer(
     ...state,
     creatingSurvey: true,
   })),
-  on(SurveyActions.submitSurveySucceeded, (state, action) => ({
-    ...state,
-    creatingSurvey: false,
-    surveys: [...state.surveys, action.survey]
-  })),
+  on(SurveyActions.submitSurveySucceeded, (state, action) => {
+    if (state.surveys.some(s => s.id === action.survey.id)) {
+      return {
+        ...state,
+        creatingSurvey: false,
+        surveys: [...state.surveys.filter(s => s.id !== action.survey.id), action.survey]
+      }
+    }
+    return {
+      ...state,
+      creatingSurvey: false,
+      surveys: [...state.surveys, action.survey]
+    }
+  }),
   on(SurveyActions.submitSurveyFailed, (state) => ({
     ...state,
     creatingSurvey: false,
@@ -113,10 +122,23 @@ export const reducer = createReducer(
   })),
   on(SurveyActions.restoreSurveySucceeded, (state, action) => ({
     ...state,
-    sections: action.updatedSurveys,
+    surveys: action.updatedSurveys,
     editingSurveyId: null
   })),
   on(SurveyActions.restoreSurveyFailed, (state) => ({
+    ...state,
+    editingSurveyId: null
+  })),
+  on(SurveyActions.publishSurvey, (state, action) => ({
+    ...state,
+    editingSurveyId: action.surveyId,
+  })),
+  on(SurveyActions.publishSurveySucceeded, (state, action) => ({
+    ...state,
+    surveys: action.updatedSurveys,
+    editingSurveyId: null
+  })),
+  on(SurveyActions.publishSurveyFailed, (state) => ({
     ...state,
     editingSurveyId: null
   })),
@@ -153,11 +175,20 @@ export const reducer = createReducer(
     ...state,
     creatingSection: true,
   })),
-  on(SurveyActions.submitSectionSucceeded, (state, action) => ({
-    ...state,
-    creatingSection: false,
-    sections: [...state.sections, action.section]
-  })),
+  on(SurveyActions.submitSectionSucceeded, (state, action) => {
+    if (state.sections.some(s => s.id === action.section.id)) {
+      return {
+        ...state,
+        creatingSection: false,
+        sections: [...state.sections.filter(s => s.id !== action.section.id), action.section]
+      }
+    }
+    return {
+      ...state,
+      creatingSection: false,
+      sections: [...state.sections, action.section]
+    }
+  }),
   on(SurveyActions.submitSectionFailed, (state) => ({
     ...state,
     creatingSection: false,

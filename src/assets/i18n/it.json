@@ -94,16 +94,22 @@
         "version": "Versione attuale",
         "actions": "Azioni"
       },
+      "actions-hints": {
+        "edit": "Modifica",
+        "delete": "Elimina",
+        "publish": "Pubblica"
+      },
       "surveys-empty": "Non ci sono questionari",
       "show-deleted": "Mostra elementi eliminati",
       "dialog-cannot-delete": "Non è possibile eliminare il questionario perchè risulta pubblicato.",
       "dialog-confirm-delete": "Vuoi davvero eliminare il questionario?",
-      "dialog-confirm-restore": "Vuoi davvero ripristinare il questionario?"
+      "dialog-confirm-restore": "Vuoi davvero ripristinare il questionario?",
+      "dialog-confirm-publish": "Vuoi davvero pubblicare il questionario?"
     },
     "survey-form": {
       "title-new": "Nuovo questionario",
       "title-edit": "Modifica questionario",
-      "publish-survey-btn": "Pubblica",
+      "save-survey-btn": "Salva",
       "edit-survey-btn": "Salva modifiche",
       "survey-name-field": "Nome questionario",
       "survey-description-field": "Descrizione questionario",
@@ -148,6 +154,10 @@
         "version": "Versione attuale",
         "actions": "Azioni"
       },
+      "actions-hints": {
+        "edit": "Modifica",
+        "delete": "Elimina"
+      },
       "show-deleted": "Mostra elementi eliminati",
       "dialog-cannot-delete": "Non è possibile eliminare la Sezione perchè è associata ad uno o più questionari.",
       "dialog-confirm-delete": "Vuoi davvero eliminare la sezione?",
@@ -156,7 +166,7 @@
     "section-form": {
       "title-new": "Nuova sezione",
       "title-edit": "Modifica sezione",
-      "publish-section-btn": "Pubblica",
+      "save-section-btn": "Salva",
       "edit-section-btn": "Salva modifiche",
       "section-name-field": "Nome sezione",
       "section-description-field": "Descrizione sezione",

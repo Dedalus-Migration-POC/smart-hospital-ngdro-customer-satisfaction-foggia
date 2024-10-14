@@ -25,6 +25,7 @@ import {MatInput} from "@angular/material/input";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {FormsModule} from "@angular/forms";
 import {DeletableEntityService} from "../../../support/deletable-entity-service";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-section-list-table',
@@ -49,7 +50,8 @@ import {DeletableEntityService} from "../../../support/deletable-entity-service"
     AsyncPipe,
     MatInput,
     MatCheckbox,
-    FormsModule
+    FormsModule,
+    MatTooltip
   ],
   templateUrl: './section-list-table.component.html',
   styleUrl: './section-list-table.component.scss'

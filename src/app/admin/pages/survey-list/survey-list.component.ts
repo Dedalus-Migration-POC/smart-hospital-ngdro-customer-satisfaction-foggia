@@ -79,7 +79,7 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
     await this.router.navigate(['form', survey.id], {relativeTo: this.activatedRoute})
   }
 
-  onDelete(survey: Survey) {
+  protected onDelete(survey: Survey) {
     console.log(survey)
     if (survey.status === 'ACTIVE') {
       //FIXME
@@ -96,6 +96,13 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
     this.dialog.attention({
       text: this.translate.instant('admin.survey-list.dialog-confirm-restore'),
       onConfirm: () => this.store.dispatch(SurveyActions.restoreSurvey({surveyId: id!.toString()}))
+    })
+  }
+
+  protected onPublish({id}: Section) {
+    this.dialog.attention({
+      text: this.translate.instant('admin.survey-list.dialog-confirm-publish'),
+      onConfirm: () => this.store.dispatch(SurveyActions.publishSurvey({surveyId: id!.toString()}))
     })
   }
 

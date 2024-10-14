@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ScaffoldComponent} from "../../components/scaffold/scaffold.component";
-import {map, of, tap} from "rxjs";
+import {map, of, take, tap} from "rxjs";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatError, MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
@@ -94,16 +94,18 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
     const sectionId = this.activatedRoute.snapshot.paramMap.get('sectionId');
     if (sectionId) {
       this.editMode = true
-      this.subscriptions.push(this.sections$.subscribe(sections => {
-        const section = sections.find(({id}) => id?.toString() === sectionId);
-        if (section) {
-          this.initializeForm(section);
-        } else {
-          const text = `Section with id [${sectionId}] not found`
-          this.dialog.error({text})
-          throw new Error(text);
-        }
-      }))
+      this.subscriptions.push(this.sections$.pipe(
+        take(1),
+        map(sections => {
+          const section = sections.find(({id}) => id?.toString() === sectionId);
+          if (section) {
+            this.initializeForm(section);
+          } else {
+            const text = `Section with id [${sectionId}] not found`
+            this.dialog.error({text})
+            throw new Error(text);
+          }
+        })).subscribe())
     } else {
       this.sectionForm.controls.questions.push(
         new FormControl<string | null>(null, Validators.required)
@@ -129,9 +131,9 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
     this.addSubscriptions(
       this.actions.pipe(
         ofType(SurveyActions.submitSectionSucceeded),
-        tap(({section}) => {
+        tap(() => {
+          console.log('submitSectionSucceeded subscription')
           const translation = this.editMode ? 'edited' : 'created'
-          this.initializeForm(section)
           this.dialog.success({text: this.translate.instant(`admin.section-form.section-${translation}-dialog`)})
             .afterClosed().subscribe(() => this.router.navigate(['/section']))
         })
@@ -158,6 +160,7 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
 
   protected removeQuestion(index: number) {
     this.sectionForm.controls.questions.removeAt(index)
+    this.sectionForm.markAsDirty()
   }
 
   protected publish() {

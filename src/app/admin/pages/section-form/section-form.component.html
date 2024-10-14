@@ -2,10 +2,10 @@
   <form class="min-400" [formGroup]="sectionForm" (ngSubmit)="publish()">
     <div class="head min-400">
       <h6>{{ getTitlePlaceholder() | translate }}</h6>
-      <button type="submit" mat-flat-button [disabled]="creating$ | async">
+      <button type="submit" mat-flat-button [disabled]="(creating$ | async) || !sectionForm.dirty">
         <mat-spinner [diameter]="20" *ngIf="creating$ | async; else idle"></mat-spinner>
         <ng-template #idle>
-          <span>{{ ('admin.section-form.' + (editMode ? 'edit' : 'publish') + '-section-btn') | translate }}</span>
+          <span>{{ ('admin.section-form.' + (editMode ? 'edit' : 'save') + '-section-btn') | translate }}</span>
         </ng-template>
       </button>
     </div>

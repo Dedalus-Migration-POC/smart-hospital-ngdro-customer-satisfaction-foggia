@@ -2,10 +2,10 @@
   <form class="min-400" [formGroup]="surveyForm" (ngSubmit)="publish()">
     <div class="head min-400">
       <h6>{{ getTitlePlaceholder() | translate }}</h6>
-      <button type="submit" mat-flat-button [disabled]="creating$ | async">
+      <button type="submit" mat-flat-button [disabled]="(creating$ | async) || !surveyForm.dirty">
         <mat-spinner [diameter]="20" *ngIf="creating$ | async; else idle"></mat-spinner>
         <ng-template #idle>
-          <span>{{ ('admin.survey-form.' + (editMode ? 'edit' : 'publish') + '-survey-btn') | translate }}</span>
+          <span>{{ ('admin.survey-form.' + (editMode ? 'edit' : 'save') + '-survey-btn') | translate }}</span>
         </ng-template>
       </button>
     </div>

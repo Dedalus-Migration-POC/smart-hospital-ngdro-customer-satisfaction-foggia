@@ -23,6 +23,7 @@ import {MatCheckbox} from "@angular/material/checkbox";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {selectSurveyState, SurveyAdminState} from "../../../store/reducer";
 import {Store} from "@ngrx/store";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-survey-list-table',
@@ -46,7 +47,8 @@ import {Store} from "@ngrx/store";
     NgIf,
     AsyncPipe,
     MatCheckbox,
-    MatProgressSpinner
+    MatProgressSpinner,
+    MatTooltip
   ],
   templateUrl: './survey-list-table.component.html',
   styleUrl: './survey-list-table.component.scss'
@@ -56,6 +58,7 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
   @Output("onEdit") editSurvey: EventEmitter<Survey> = new EventEmitter();
   @Output("onDelete") deleteSurvey: EventEmitter<Survey> = new EventEmitter();
   @Output("onRestore") restoreSurvey: EventEmitter<Survey> = new EventEmitter();
+  @Output("onPublish") publishSurvey: EventEmitter<Survey> = new EventEmitter();
 
   constructor(
     private store: Store<SurveyAdminState>,

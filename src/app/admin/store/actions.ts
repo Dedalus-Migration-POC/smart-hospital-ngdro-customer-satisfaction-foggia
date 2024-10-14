@@ -86,6 +86,20 @@ const restoreSurveyFailed = createAction(
   '[Survey] Restore Survey Failed',
 )
 
+const publishSurvey = createAction(
+  '[Survey] Publish Survey',
+  props<{ surveyId: string }>()
+)
+
+const publishSurveySucceeded = createAction(
+  '[Survey] Publish Survey Succeeded',
+  props<{ updatedSurveys: Array<Survey> }>()
+)
+
+const publishSurveyFailed = createAction(
+  '[Survey] Publish Survey Failed',
+)
+
 const fetchSections = createAction(
   '[Survey] Fetch Sections',
 )
@@ -174,6 +188,9 @@ export const SurveyActions = {
   restoreSurvey,
   restoreSurveySucceeded,
   restoreSurveyFailed,
+  publishSurvey,
+  publishSurveySucceeded,
+  publishSurveyFailed,
   fetchSections,
   fetchSectionsSucceeded,
   fetchSectionsFailed,
@@ -210,6 +227,9 @@ export type SurveyActionTypes =
   | typeof restoreSurvey
   | typeof restoreSurveySucceeded
   | typeof restoreSurveyFailed
+  | typeof publishSurvey
+  | typeof publishSurveySucceeded
+  | typeof publishSurveyFailed
   | typeof fetchSections
   | typeof fetchSectionsSucceeded
   | typeof fetchSectionsFailed

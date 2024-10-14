@@ -30,11 +30,15 @@ export class SurveyService {
   }
 
   public deleteSurvey(surveyId: string) {
-    return this.http.delete(`${baseUrl}/survey/section/${surveyId}`)
+    return this.http.delete<void>(`${baseUrl}/survey/${surveyId}`)
   }
 
   public restoreSurvey(surveyId: string) {
-    return this.http.patch(`${baseUrl}/survey/section/restore/${surveyId}`, null)
+    return this.http.patch<void>(`${baseUrl}/survey/restore/${surveyId}`, null)
+  }
+
+  public publishSurvey(surveyId: string) {
+    return this.http.patch<void>(`${baseUrl}/survey/publish/${surveyId}`, null)
   }
 
   public getSectionList() {
@@ -50,14 +54,14 @@ export class SurveyService {
   }
 
   public updateSection(section: CreateSectionRequest) {
-    return this.http.post<Section>(`${baseUrl}/survey/section/update/${section.id}`, section)
+    return this.http.post<Section>(`${baseUrl}/survey/section/update`, section)
   }
 
   public deleteSection(sectionId: string) {
-    return this.http.delete(`${baseUrl}/survey/section/${sectionId}`)
+    return this.http.delete<void>(`${baseUrl}/survey/section/${sectionId}`)
   }
 
   public restoreSection(sectionId: string) {
-    return this.http.patch(`${baseUrl}/survey/section/restore/${sectionId}`, null)
+    return this.http.patch<void>(`${baseUrl}/survey/section/restore/${sectionId}`, null)
   }
 }

@@ -8,6 +8,7 @@ import {CreateSectionRequest} from "../repository/dto/create-section-request";
 import {Store} from "@ngrx/store";
 import {selectSectionList, selectSurveyList, SurveyAdminState} from "./reducer";
 import {CreateSurveyRequest} from "../repository/dto/create-survey-request";
+import {Survey} from "../repository/dto/survey";
 
 @Injectable()
 export class SurveyEffects {
@@ -154,6 +155,25 @@ export class SurveyEffects {
           }),
           catchError(() =>
             of(SurveyActions.restoreSurveyFailed()),
+          ),
+        ),
+      ),
+    )
+  })
+
+  publishSurvey$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SurveyActions.publishSurvey),
+      withLatestFrom(this.store.select(selectSurveyList)),
+      concatMap(([{surveyId}, {surveys}]) =>
+        this.surveyService.publishSurvey(surveyId).pipe(
+          map(() => {
+            let survey = {...surveys.find(s => s.id!.toString() === surveyId), status: 'ACTIVE'} as Survey
+            const updatedSurveys = [...surveys.filter(s => s.id!.toString() !== surveyId), survey]
+            return SurveyActions.publishSurveySucceeded({updatedSurveys})
+          }),
+          catchError(() =>
+            of(SurveyActions.publishSurveyFailed()),
           ),
         ),
       ),

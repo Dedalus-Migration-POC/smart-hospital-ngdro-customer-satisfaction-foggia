@@ -18,15 +18,24 @@
       {{ 'admin.survey-list.table-headers.actions' | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <button mat-icon-button (click)="editSurvey.emit(element)">
-        <mat-icon>edit</mat-icon>
+      <button mat-icon-button (click)="editSurvey.emit(element)" [disabled]="element.deleted">
+        <mat-icon
+          [matTooltip]="'admin.survey-list.actions-hints.edit' | translate"
+          [style]="{visibility: element.deleted ? 'hidden' : undefined}"
+        >edit
+        </mat-icon>
       </button>
       <ng-template #idle>
         <button mat-icon-button (click)="changeDeletedStatus(element)">
-          <mat-icon>{{ element.deleted ? 'restore' : 'delete' }}</mat-icon>
+          <mat-icon
+            [matTooltip]="'admin.survey-list.actions-hints.delete' | translate">{{ element.deleted ? 'restore' : 'delete' }}
+          </mat-icon>
         </button>
       </ng-template>
       <mat-spinner *ngIf="(deletingId$ | async) === element.id?.toString(); else idle" diameter="20"></mat-spinner>
+      <button mat-icon-button *ngIf="element.status === 'INACTIVE'" (click)="publishSurvey.emit(element)">
+        <mat-icon [matTooltip]="'admin.survey-list.actions-hints.publish' | translate">public</mat-icon>
+      </button>
     </mat-cell>
   </ng-container>
 

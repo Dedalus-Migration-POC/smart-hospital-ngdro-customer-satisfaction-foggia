@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {selectSurveyState, SurveyAdminState} from "../../store/reducer";
-import {combineLatest, map, of, Subject, tap} from "rxjs";
+import {combineLatest, map, of, Subject, take, tap} from "rxjs";
 import {Store} from "@ngrx/store";
 import {Actions, ofType} from "@ngrx/effects";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -127,16 +127,19 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
     const surveyId = this.activatedRoute.snapshot.paramMap.get('surveyId');
     if (surveyId) {
       this.editMode = true
-      this.subscriptions.push(this.surveys$.subscribe(surveys => {
-        const survey = surveys.find(({id}) => id?.toString() === surveyId);
-        if (survey) {
-          this.initializeForm(survey);
-        } else {
-          const text = `Survey with id [${survey}] not found`
-          this.dialog.error({text})
-          throw new Error(text);
-        }
-      }))
+      this.subscriptions.push(this.surveys$.pipe(
+        take(1),
+        map(surveys => {
+          const survey = surveys.find(({id}) => id?.toString() === surveyId);
+          if (survey) {
+            this.initializeForm(survey);
+          } else {
+            const text = `Survey with id [${survey}] not found`
+            this.dialog.error({text})
+            throw new Error(text);
+          }
+        })
+      ).subscribe())
     } else {
       this.surveyForm.controls.sections.push(
         new FormControl<Section | null>(null, Validators.required)
@@ -149,6 +152,8 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
       id: survey.id!.toString(),
       name: survey.name,
       description: survey.description,
+      startDate: survey.startDate,
+      endDate: survey.endDate,
     })
 
     survey.sections?.map((section) => {
@@ -162,9 +167,8 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
     this.addSubscriptions(
       this.actions.pipe(
         ofType(SurveyActions.submitSurveySucceeded),
-        tap(({survey}) => {
+        tap(() => {
           const translation = this.editMode ? 'edited' : 'created'
-          this.initializeForm(survey)
           this.dialog.success({text: this.translate.instant(`admin.survey-form.survey-${translation}-dialog`)})
             .afterClosed().subscribe(() => this.router.navigate(['/']))
         })
@@ -197,6 +201,7 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
 
   protected removeQuestion(index: number) {
     this.surveyForm.controls.sections.removeAt(index)
+    this.surveyForm.markAsDirty()
   }
 
   protected publish() {
