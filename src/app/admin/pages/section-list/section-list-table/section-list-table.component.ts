@@ -19,13 +19,14 @@ import {TranslateModule} from "@ngx-translate/core";
 import {Section} from "../../../repository/dto/section";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {Store} from "@ngrx/store";
-import {selectSurveyState, SurveyAdminState} from "../../../store/reducer";
 import {map, Observable} from "rxjs";
 import {MatInput} from "@angular/material/input";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {FormsModule} from "@angular/forms";
 import {DeletableEntityService} from "../../../support/deletable-entity-service";
 import {MatTooltip} from "@angular/material/tooltip";
+import {SurveyAdminState} from "../../../store/store";
+import {selectSectionState} from "../../../store/section/reducer";
 
 @Component({
   selector: 'app-section-list-table',
@@ -73,7 +74,7 @@ export class SectionListTableComponent extends DeletableEntityService<Section> {
     super.ngOnInit();
   }
 
-  deletingId$ = this.store.select(selectSurveyState).pipe(map(s => s.editingSectionId))
+  deletingId$ = this.store.select(selectSectionState).pipe(map(s => s.editingSectionId))
 
   columns: string[] = ['name', 'presence', 'version', 'actions']
 

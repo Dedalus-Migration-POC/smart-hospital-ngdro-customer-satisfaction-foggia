@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {Store} from "@ngrx/store";
-import {selectSurveyState, SurveyAdminState} from "./store/reducer";
-import {SurveyActions} from "./store/actions";
 import {map} from "rxjs";
+import {AppActions} from "./store/application/actions";
+import {SurveyAdminState} from "./store/store";
+import {selectApplicationState} from "./store/application/reducer";
 
 @Component({
   selector: 'app-root',
@@ -19,10 +20,10 @@ export class AdminComponent implements OnInit {
   }
 
   protected initialize() {
-    this.store.dispatch(SurveyActions.initialize())
+    this.store.dispatch(AppActions.initialize())
   }
 
-  state$ = this.store.select(selectSurveyState)
+  state$ = this.store.select(selectApplicationState)
   initializing$ = this.state$.pipe(map(({initializing}) => initializing))
   initializeError$ = this.state$.pipe(map(({initializeError}) => initializeError))
 }

@@ -16,14 +16,13 @@ import {HTTP_INTERCEPTORS, HttpBackend} from "@angular/common/http";
 import {MultiTranslateHttpLoader} from "ngx-translate-multi-http-loader";
 import {SurveyListComponent} from "./pages/survey-list/survey-list.component";
 import {NotFoundComponent} from "./pages/not-found/not-found.component";
-import {reducer} from "./store/reducer";
-import {SurveyEffects} from "./store/effects";
 import {CsrfInterceptor} from "./repository/http_interceptors";
 import {MatPaginatorIntl} from "@angular/material/paginator";
 import {ScaffoldComponent} from "./components/scaffold/scaffold.component";
 import {provideAnimations} from "@angular/platform-browser/animations";
 import {DateAdapter, MAT_DATE_FORMATS} from "@angular/material/core";
 import {AppDateAdapter, MY_FORMATS} from "./config/date-adapter";
+import {effects, reducers} from "./store/store";
 
 @NgModule({
   declarations: [
@@ -31,8 +30,8 @@ import {AppDateAdapter, MY_FORMATS} from "./config/date-adapter";
   ],
   imports: [
     BrowserModule,
-    StoreModule.forRoot({'survey': reducer}),
-    EffectsModule.forRoot(SurveyEffects),
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot(effects),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: false, //environment.production,

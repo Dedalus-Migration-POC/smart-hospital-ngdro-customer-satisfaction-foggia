@@ -10,13 +10,15 @@ import {FormsModule} from "@angular/forms";
 import {MatLabel} from "@angular/material/form-field";
 import {SectionListTableComponent} from "./section-list-table/section-list-table.component";
 import {Store} from "@ngrx/store";
-import {selectSectionList, selectSurveyList, SurveyAdminState} from "../../store/reducer";
-import {SurveyActions} from "../../store/actions";
 import {AsyncPipe, NgIf} from "@angular/common";
 import {Section} from "../../repository/dto/section";
 import {DialogService} from "../../support/dialog-service";
 import {WithSubscriptionsComponent} from "../../support/with-subscriptions-component";
 import {Actions, ofType} from "@ngrx/effects";
+import {SectionActions} from "../../store/section/actions";
+import {SurveyAdminState} from "../../store/store";
+import {selectSectionList} from "../../store/section/reducer";
+import {selectSurveyList} from "../../store/survey/reducer";
 
 @Component({
   selector: 'app-section-list',
@@ -81,7 +83,7 @@ export class SectionListComponent extends WithSubscriptionsComponent {
         } else {
           this.dialog.attention({
             text: this.translate.instant('admin.section-list.dialog-confirm-delete'),
-            onConfirm: () => this.store.dispatch(SurveyActions.deleteSection({sectionId: section.id!.toString()}))
+            onConfirm: () => this.store.dispatch(SectionActions.deleteSection({sectionId: section.id!.toString()}))
           })
         }
       })).subscribe())
@@ -90,19 +92,19 @@ export class SectionListComponent extends WithSubscriptionsComponent {
   protected onRestore({id}: Section) {
     this.dialog.attention({
       text: this.translate.instant('admin.section-list.dialog-confirm-restore'),
-      onConfirm: () => this.store.dispatch(SurveyActions.restoreSection({sectionId: id!.toString()}))
+      onConfirm: () => this.store.dispatch(SectionActions.restoreSection({sectionId: id!.toString()}))
     })
   }
 
   private startSubscriptions() {
     this.addSubscriptions(
       this.actions.pipe(
-        ofType(SurveyActions.deleteSectionFailed),
+        ofType(SectionActions.deleteSectionFailed),
         tap(() => this.dialog.error())
       ).subscribe(),
 
       this.actions.pipe(
-        ofType(SurveyActions.restoreSectionFailed),
+        ofType(SectionActions.restoreSectionFailed),
         tap(() => this.dialog.error())
       ).subscribe()
     )

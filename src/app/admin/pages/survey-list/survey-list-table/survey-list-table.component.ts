@@ -21,9 +21,10 @@ import {DeletableEntityService} from "../../../support/deletable-entity-service"
 import {map, Observable} from "rxjs";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {selectSurveyState, SurveyAdminState} from "../../../store/reducer";
 import {Store} from "@ngrx/store";
 import {MatTooltip} from "@angular/material/tooltip";
+import {SurveyAdminState} from "../../../store/store";
+import {selectSurveyState} from "../../../store/survey/reducer";
 
 @Component({
   selector: 'app-survey-list-table',

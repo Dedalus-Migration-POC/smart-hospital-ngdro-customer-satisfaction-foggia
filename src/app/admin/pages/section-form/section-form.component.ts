@@ -17,15 +17,16 @@ import {
 } from "@angular/forms";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {Store} from "@ngrx/store";
-import {selectSurveyState, SurveyAdminState} from "../../store/reducer";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {MatCard} from "@angular/material/card";
 import {Section} from "../../repository/dto/section";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {Actions, ofType} from "@ngrx/effects";
-import {SurveyActions} from "../../store/actions";
 import {DialogService} from "../../support/dialog-service";
 import {WithSubscriptionsComponent} from "../../support/with-subscriptions-component";
+import {SectionActions} from "../../store/section/actions";
+import {SurveyAdminState} from "../../store/store";
+import {selectSectionState} from "../../store/section/reducer";
 
 export type SectionForm = FormGroup<{
   id: FormControl<string | null>;
@@ -61,11 +62,9 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
 
   sectionForm!: SectionForm;
 
-  state$ = this.store.select(selectSurveyState)
-  surveys$ = this.state$.pipe(map(({surveys}) => surveys));
+  state$ = this.store.select(selectSectionState)
   sections$ = this.state$.pipe(map(({sections}) => sections));
   creating$ = this.state$.pipe(map(({creatingSection}) => creatingSection))
-  error$ = this.state$.pipe(map(({fetchSurveysError, fetchSectionsError}) => fetchSurveysError || fetchSectionsError))
 
   protected readonly of = of;
 
@@ -130,7 +129,7 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
   private startActionsSubscription() {
     this.addSubscriptions(
       this.actions.pipe(
-        ofType(SurveyActions.submitSectionSucceeded),
+        ofType(SectionActions.submitSectionSucceeded),
         tap(() => {
           console.log('submitSectionSucceeded subscription')
           const translation = this.editMode ? 'edited' : 'created'
@@ -140,7 +139,7 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
       ).subscribe(),
 
       this.actions.pipe(
-        ofType(SurveyActions.submitSectionFailed),
+        ofType(SectionActions.submitSectionFailed),
         tap(() => this.dialog.error())
       ).subscribe())
   }
@@ -167,7 +166,7 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
     this.sectionForm.markAllAsTouched()
     if (this.sectionForm.valid) {
       console.log('VALID', this.sectionForm.value)
-      this.store.dispatch(SurveyActions.submitSection({
+      this.store.dispatch(SectionActions.submitSection({
         sectionForm: this.sectionForm.value
       }))
     }

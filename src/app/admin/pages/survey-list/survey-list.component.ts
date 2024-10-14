@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatButton} from "@angular/material/button";
 import {Store} from "@ngrx/store";
-import {selectSurveyState, SurveyAdminState} from "../../store/reducer";
 import {map, Observable, tap} from "rxjs";
 import {AsyncPipe, NgIf, NgTemplateOutlet} from "@angular/common";
 import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
@@ -19,9 +18,12 @@ import {Survey} from "../../repository/dto/survey";
 import {ScaffoldComponent} from "../../components/scaffold/scaffold.component";
 import {Section} from "../../repository/dto/section";
 import {WithSubscriptionsComponent} from "../../support/with-subscriptions-component";
-import {SurveyActions} from "../../store/actions";
+import {SurveyActions} from "../../store/survey/actions";
 import {DialogService} from "../../support/dialog-service";
 import {Actions, ofType} from "@ngrx/effects";
+import {SurveyAdminState} from "../../store/store";
+import {selectSectionState} from "../../store/section/reducer";
+import {selectSurveyState} from "../../store/survey/reducer";
 
 @Component({
   selector: 'app-survey-list',
@@ -67,7 +69,7 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
 
   state$ = this.store.select(selectSurveyState)
   surveys$: Observable<Array<Survey>> = this.state$.pipe(map(({surveys}) => surveys));
-  sections$: Observable<Array<Section>> = this.state$.pipe(map(({sections}) => sections));
+  sections$: Observable<Array<Section>> = this.store.select(selectSectionState).pipe(map(({sections}) => sections));
   loading$ = this.state$.pipe(map(s => s.fetchingSurveys));
   error$ = this.state$.pipe(map(s => s.fetchSurveysError));
 
