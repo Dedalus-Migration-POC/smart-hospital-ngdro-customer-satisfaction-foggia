@@ -85,6 +85,20 @@ const publishSurveyFailed = createAction(
   '[Survey] Publish Survey Failed',
 )
 
+const unpublishSurvey = createAction(
+  '[Survey] Unpublish Survey',
+  props<{ surveyId: string }>()
+)
+
+const unpublishSurveySucceeded = createAction(
+  '[Survey] Unpublish Survey Succeeded',
+  props<{ updatedSurveys: Array<Survey> }>()
+)
+
+const unpublishSurveyFailed = createAction(
+  '[Survey] Unpublish Survey Failed',
+)
+
 export const SurveyActions = {
   fetchSurveys,
   fetchSurveysSucceeded,
@@ -104,6 +118,9 @@ export const SurveyActions = {
   publishSurvey,
   publishSurveySucceeded,
   publishSurveyFailed,
+  unpublishSurvey,
+  unpublishSurveySucceeded,
+  unpublishSurveyFailed,
 }
 
 export type SurveyActionTypes =
@@ -125,3 +142,6 @@ export type SurveyActionTypes =
   | typeof publishSurvey
   | typeof publishSurveySucceeded
   | typeof publishSurveyFailed
+  | typeof unpublishSurvey
+  | typeof unpublishSurveySucceeded
+  | typeof unpublishSurveyFailed

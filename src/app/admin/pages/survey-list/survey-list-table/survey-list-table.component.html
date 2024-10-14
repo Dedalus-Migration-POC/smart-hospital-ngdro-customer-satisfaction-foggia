@@ -1,3 +1,41 @@
+<ng-template
+  #publishStatusButton
+  let-survey="survey"
+  let-operatingStatus="operatingStatus"
+>
+  <mat-spinner *ngIf="operatingStatus && operatingStatus.surveyId === survey.id!.toString() && operatingStatus.status === SurveyOperatingStatus.PUBLISHING_UNPUBLISHING;
+      else notPublishing" diameter="20"></mat-spinner>
+  <ng-template #notPublishing>
+    <ng-container [ngSwitch]="survey.status">
+      <button mat-icon-button *ngSwitchCase="'ACTIVE'" (click)="unpublishSurvey.emit(survey)">
+        <mat-icon [matTooltip]="'admin.survey-list.actions-hints.unpublish' | translate">public_off</mat-icon>
+      </button>
+      <button mat-icon-button *ngSwitchCase="'INACTIVE'" (click)="publishSurvey.emit(survey)">
+        <mat-icon [matTooltip]="'admin.survey-list.actions-hints.publish' | translate">public</mat-icon>
+      </button>
+    </ng-container>
+  </ng-template>
+</ng-template>
+
+<ng-template
+  #deleteStatusButton
+  let-survey="survey"
+  let-operatingStatus="operatingStatus"
+>
+  <mat-spinner *ngIf="operatingStatus && operatingStatus.surveyId === survey.id!.toString() && operatingStatus.status === SurveyOperatingStatus.DELETING_RESTORING;
+      else notDeleting" diameter="20"></mat-spinner>
+  <ng-template #notDeleting>
+    <button
+      mat-icon-button
+      [style]="{visibility: survey.status === 'ACTIVE' ? 'hidden' : undefined}"
+      (click)="changeDeletedStatus(survey)">
+      <mat-icon
+        [matTooltip]="'admin.survey-list.actions-hints.delete' | translate">{{ survey.deleted ? 'restore' : 'delete' }}
+      </mat-icon>
+    </button>
+  </ng-template>
+</ng-template>
+
 <div class="deleted-toggler">
   <mat-checkbox (change)="changeShowDeleted($event)">{{ 'admin.section-list.show-deleted' | translate }}</mat-checkbox>
 </div>
@@ -25,17 +63,21 @@
         >edit
         </mat-icon>
       </button>
-      <ng-template #idle>
-        <button mat-icon-button (click)="changeDeletedStatus(element)">
-          <mat-icon
-            [matTooltip]="'admin.survey-list.actions-hints.delete' | translate">{{ element.deleted ? 'restore' : 'delete' }}
-          </mat-icon>
-        </button>
-      </ng-template>
-      <mat-spinner *ngIf="(deletingId$ | async) === element.id?.toString(); else idle" diameter="20"></mat-spinner>
-      <button mat-icon-button *ngIf="element.status === 'INACTIVE'" (click)="publishSurvey.emit(element)">
-        <mat-icon [matTooltip]="'admin.survey-list.actions-hints.publish' | translate">public</mat-icon>
-      </button>
+
+      <ng-container
+        *ngTemplateOutlet="
+        deleteStatusButton;
+        context: { survey: element, operatingStatus: operatingStatus$ | async }"
+      ></ng-container>
+
+      <ng-container [ngSwitch]="element.status">
+        <ng-container
+          *ngTemplateOutlet="
+          publishStatusButton;
+          context: { survey: element, operatingStatus: operatingStatus$ | async }"
+        ></ng-container>
+      </ng-container>
+
     </mat-cell>
   </ng-container>
 

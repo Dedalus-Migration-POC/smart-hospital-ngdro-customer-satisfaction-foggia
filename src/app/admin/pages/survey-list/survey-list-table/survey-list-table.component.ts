@@ -16,7 +16,7 @@ import {MatIcon} from "@angular/material/icon";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatPaginator} from "@angular/material/paginator";
 import {Survey} from "../../../repository/dto/survey";
-import {AsyncPipe, DatePipe, NgIf} from "@angular/common";
+import {AsyncPipe, DatePipe, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet} from "@angular/common";
 import {DeletableEntityService} from "../../../support/deletable-entity-service";
 import {map, Observable} from "rxjs";
 import {MatCheckbox} from "@angular/material/checkbox";
@@ -24,7 +24,7 @@ import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {Store} from "@ngrx/store";
 import {MatTooltip} from "@angular/material/tooltip";
 import {SurveyAdminState} from "../../../store/store";
-import {selectSurveyState} from "../../../store/survey/reducer";
+import {selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/reducer";
 
 @Component({
   selector: 'app-survey-list-table',
@@ -49,7 +49,10 @@ import {selectSurveyState} from "../../../store/survey/reducer";
     AsyncPipe,
     MatCheckbox,
     MatProgressSpinner,
-    MatTooltip
+    MatTooltip,
+    NgSwitch,
+    NgSwitchCase,
+    NgTemplateOutlet
   ],
   templateUrl: './survey-list-table.component.html',
   styleUrl: './survey-list-table.component.scss'
@@ -60,6 +63,7 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
   @Output("onDelete") deleteSurvey: EventEmitter<Survey> = new EventEmitter();
   @Output("onRestore") restoreSurvey: EventEmitter<Survey> = new EventEmitter();
   @Output("onPublish") publishSurvey: EventEmitter<Survey> = new EventEmitter();
+  @Output("onUnpublish") unpublishSurvey: EventEmitter<Survey> = new EventEmitter();
 
   constructor(
     private store: Store<SurveyAdminState>,
@@ -77,7 +81,7 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
 
   columns: string[] = ['name', 'startDate', 'endDate', 'status', 'version', 'actions']
 
-  deletingId$ = this.store.select(selectSurveyState).pipe(map(s => s.editingSurveyId))
+  operatingStatus$ = this.store.select(selectSurveyState).pipe(map(s => s.operatingStatus))
 
   protected handleColumn(survey: Survey, propertyName: string): string {
     const key = propertyName as keyof Survey
@@ -94,4 +98,5 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
     }
   }
 
+  protected readonly SurveyOperatingStatus = SurveyOperatingStatus;
 }

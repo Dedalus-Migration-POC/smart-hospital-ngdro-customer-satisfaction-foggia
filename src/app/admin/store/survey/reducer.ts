@@ -4,19 +4,27 @@ import {SurveyActions} from "./actions";
 import {AppActions} from "../application/actions";
 import {SurveyAdminState} from "../store";
 
+export enum SurveyOperatingStatus {
+  DELETING_RESTORING = 'DELETING_RESTORING',
+  PUBLISHING_UNPUBLISHING = 'PUBLISHING_UNPUBLISHING'
+}
+
 export type State = {
-  fetchingSurveys: boolean
-  fetchSurveysError: boolean
-  creatingSurvey: boolean
-  editingSurveyId: string | null
-  surveys: Array<Survey>
+  fetchingSurveys: boolean;
+  fetchSurveysError: boolean;
+  creatingSurvey: boolean;
+  operatingStatus: {
+    surveyId: string;
+    status: SurveyOperatingStatus;
+  } | null
+  surveys: Array<Survey>;
 }
 
 const initialState: State = {
   fetchingSurveys: false,
   fetchSurveysError: false,
   creatingSurvey: false,
-  editingSurveyId: null,
+  operatingStatus: null,
   surveys: [],
 }
 
@@ -79,42 +87,67 @@ export const reducer = createReducer(
   })),
   on(SurveyActions.deleteSurvey, (state, action) => ({
     ...state,
-    editingSurveyId: action.surveyId,
+    operatingStatus: {
+      surveyId: action.surveyId,
+      status: SurveyOperatingStatus.DELETING_RESTORING,
+    },
   })),
   on(SurveyActions.deleteSurveySucceeded, (state, action) => ({
     ...state,
     surveys: action.updatedSurveys,
-    editingSurveyId: null
+    operatingStatus: null
   })),
   on(SurveyActions.deleteSurveyFailed, (state) => ({
     ...state,
-    editingSurveyId: null
+    operatingStatus: null
   })),
   on(SurveyActions.restoreSurvey, (state, action) => ({
     ...state,
-    editingSurveyId: action.surveyId,
+    operatingStatus: {
+      surveyId: action.surveyId,
+      status: SurveyOperatingStatus.DELETING_RESTORING
+    },
   })),
   on(SurveyActions.restoreSurveySucceeded, (state, action) => ({
     ...state,
     surveys: action.updatedSurveys,
-    editingSurveyId: null
+    operatingStatus: null
   })),
   on(SurveyActions.restoreSurveyFailed, (state) => ({
     ...state,
-    editingSurveyId: null
+    operatingStatus: null
   })),
   on(SurveyActions.publishSurvey, (state, action) => ({
     ...state,
-    editingSurveyId: action.surveyId,
+    operatingStatus: {
+      surveyId: action.surveyId,
+      status: SurveyOperatingStatus.PUBLISHING_UNPUBLISHING
+    },
   })),
   on(SurveyActions.publishSurveySucceeded, (state, action) => ({
     ...state,
     surveys: action.updatedSurveys,
-    editingSurveyId: null
+    operatingStatus: null
   })),
   on(SurveyActions.publishSurveyFailed, (state) => ({
     ...state,
-    editingSurveyId: null
+    operatingStatus: null
+  })),
+  on(SurveyActions.unpublishSurvey, (state, action) => ({
+    ...state,
+    operatingStatus: {
+      surveyId: action.surveyId,
+      status: SurveyOperatingStatus.PUBLISHING_UNPUBLISHING
+    },
+  })),
+  on(SurveyActions.unpublishSurveySucceeded, (state, action) => ({
+    ...state,
+    surveys: action.updatedSurveys,
+    operatingStatus: null
+  })),
+  on(SurveyActions.unpublishSurveyFailed, (state) => ({
+    ...state,
+    operatingStatus: null
   })),
 )
 

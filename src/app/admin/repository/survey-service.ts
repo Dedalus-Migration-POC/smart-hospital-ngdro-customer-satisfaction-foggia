@@ -41,6 +41,10 @@ export class SurveyService {
     return this.http.patch<void>(`${baseUrl}/survey/publish/${surveyId}`, null)
   }
 
+  public unpublishSurvey(surveyId: string) {
+    return this.http.patch<void>(`${baseUrl}/survey/unpublish/${surveyId}`, null)
+  }
+
   public getSectionList() {
     return this.http.get<Array<Section>>(`${baseUrl}/survey/section`)
   }

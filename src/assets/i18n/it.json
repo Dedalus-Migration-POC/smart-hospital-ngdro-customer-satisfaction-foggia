@@ -97,14 +97,16 @@
       "actions-hints": {
         "edit": "Modifica",
         "delete": "Elimina",
-        "publish": "Pubblica"
+        "publish": "Pubblica",
+        "unpublish": "Nascondi"
       },
       "surveys-empty": "Non ci sono questionari",
       "show-deleted": "Mostra elementi eliminati",
       "dialog-cannot-delete": "Non è possibile eliminare il questionario perchè risulta pubblicato.",
       "dialog-confirm-delete": "Vuoi davvero eliminare il questionario?",
       "dialog-confirm-restore": "Vuoi davvero ripristinare il questionario?",
-      "dialog-confirm-publish": "Vuoi davvero pubblicare il questionario?"
+      "dialog-confirm-publish": "Vuoi davvero pubblicare il questionario?",
+      "dialog-confirm-unpublish": "Vuoi davvero nascondere al pubblico il questionario?"
     },
     "survey-form": {
       "title-new": "Nuovo questionario",

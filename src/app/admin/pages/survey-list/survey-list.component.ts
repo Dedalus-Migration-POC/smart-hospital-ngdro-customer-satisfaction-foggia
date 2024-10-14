@@ -108,6 +108,13 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
     })
   }
 
+  protected onUnpublish({id}: Section) {
+    this.dialog.attention({
+      text: this.translate.instant('admin.survey-list.dialog-confirm-unpublish'),
+      onConfirm: () => this.store.dispatch(SurveyActions.unpublishSurvey({surveyId: id!.toString()}))
+    })
+  }
+
   private startSubscriptions() {
     this.addSubscriptions(
       this.actions.pipe(

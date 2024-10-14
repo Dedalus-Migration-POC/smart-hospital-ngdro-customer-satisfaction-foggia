@@ -6,7 +6,6 @@ import {SurveyService} from "../../repository/survey-service";
 import {SurveyActions} from "./actions";
 import {Store} from "@ngrx/store";
 import {CreateSurveyRequest} from "../../repository/dto/create-survey-request";
-import {Survey} from "../../repository/dto/survey";
 import {SurveyAdminState} from "../store";
 import {selectSurveyList} from "./reducer";
 
@@ -83,9 +82,10 @@ export class SurveyEffects {
       concatMap(([{surveyId}, {surveys}]) =>
         this.surveyService.deleteSurvey(surveyId).pipe(
           map(() => {
-            const deletedSurvey = {...surveys.find(({id}) => id!.toString() === surveyId)!, deleted: true}
-            const newSurveys = surveys.filter(({id}) => id!.toString() !== surveyId)
-            return SurveyActions.deleteSurveySucceeded({updatedSurveys: [...newSurveys, deletedSurvey]})
+            const idx = surveys.findIndex(s => s.id!.toString() === surveyId)
+            let updatedSurveys = Array.of(...surveys)
+            updatedSurveys[idx] = {...updatedSurveys[idx], deleted: true}
+            return SurveyActions.deleteSurveySucceeded({updatedSurveys})
           }),
           catchError(() =>
             of(SurveyActions.deleteSurveyFailed()),
@@ -102,9 +102,10 @@ export class SurveyEffects {
       concatMap(([{surveyId}, {surveys}]) =>
         this.surveyService.restoreSurvey(surveyId).pipe(
           map(() => {
-            const restoredSurvey = {...surveys.find(({id}) => id!.toString() === surveyId)!, deleted: false}
-            const newSurveys = surveys.filter(({id}) => id!.toString() !== surveyId)
-            return SurveyActions.restoreSurveySucceeded({updatedSurveys: [...newSurveys, restoredSurvey]})
+            const idx = surveys.findIndex(s => s.id!.toString() === surveyId)
+            let updatedSurveys = Array.of(...surveys)
+            updatedSurveys[idx] = {...updatedSurveys[idx], deleted: false}
+            return SurveyActions.restoreSurveySucceeded({updatedSurveys})
           }),
           catchError(() =>
             of(SurveyActions.restoreSurveyFailed()),
@@ -121,12 +122,33 @@ export class SurveyEffects {
       concatMap(([{surveyId}, {surveys}]) =>
         this.surveyService.publishSurvey(surveyId).pipe(
           map(() => {
-            let survey = {...surveys.find(s => s.id!.toString() === surveyId), status: 'ACTIVE'} as Survey
-            const updatedSurveys = [...surveys.filter(s => s.id!.toString() !== surveyId), survey]
+            const idx = surveys.findIndex(s => s.id!.toString() === surveyId)
+            let updatedSurveys = Array.of(...surveys)
+            updatedSurveys[idx] = {...updatedSurveys[idx], status: 'ACTIVE'}
             return SurveyActions.publishSurveySucceeded({updatedSurveys})
           }),
           catchError(() =>
             of(SurveyActions.publishSurveyFailed()),
+          ),
+        ),
+      ),
+    )
+  })
+
+  protected readonly unpublishSurvey$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SurveyActions.unpublishSurvey),
+      withLatestFrom(this.store.select(selectSurveyList)),
+      concatMap(([{surveyId}, {surveys}]) =>
+        this.surveyService.unpublishSurvey(surveyId).pipe(
+          map(() => {
+            const idx = surveys.findIndex(s => s.id!.toString() === surveyId)
+            let updatedSurveys = Array.of(...surveys)
+            updatedSurveys[idx] = {...updatedSurveys[idx], status: 'INACTIVE'}
+            return SurveyActions.unpublishSurveySucceeded({updatedSurveys})
+          }),
+          catchError(() =>
+            of(SurveyActions.unpublishSurveyFailed()),
           ),
         ),
       ),
