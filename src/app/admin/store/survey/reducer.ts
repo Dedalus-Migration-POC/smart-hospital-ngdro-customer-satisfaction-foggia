@@ -83,7 +83,7 @@ export const reducer = createReducer(
   })),
   on(SurveyActions.deleteSurveySucceeded, (state, action) => ({
     ...state,
-    sections: action.updatedSurveys,
+    surveys: action.updatedSurveys,
     editingSurveyId: null
   })),
   on(SurveyActions.deleteSurveyFailed, (state) => ({
