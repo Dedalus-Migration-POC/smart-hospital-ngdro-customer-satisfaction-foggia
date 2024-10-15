@@ -9,12 +9,13 @@ import {
   MatHeaderRowDef,
   MatRow,
   MatRowDef,
-  MatTable
+  MatTable,
+  MatTableModule
 } from "@angular/material/table";
 import {MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
-import {MatPaginator} from "@angular/material/paginator";
+import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
 import {Survey} from "../../../repository/dto/survey";
 import {AsyncPipe, DatePipe, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet} from "@angular/common";
 import {DeletableEntityService} from "../../../support/deletable-entity-service";
@@ -25,6 +26,7 @@ import {Store} from "@ngrx/store";
 import {MatTooltip} from "@angular/material/tooltip";
 import {SurveyAdminState} from "../../../store/store";
 import {selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/reducer";
+import {MatSort, MatSortHeader, MatSortModule} from "@angular/material/sort";
 
 @Component({
   selector: 'app-survey-list-table',
@@ -32,6 +34,9 @@ import {selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/re
   providers: [DatePipe],
   imports: [
     MatTable,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
     MatColumnDef,
     MatHeaderCell,
     MatCell,
@@ -52,7 +57,9 @@ import {selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/re
     MatTooltip,
     NgSwitch,
     NgSwitchCase,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    MatSort,
+    MatSortHeader
   ],
   templateUrl: './survey-list-table.component.html',
   styleUrl: './survey-list-table.component.scss'
@@ -84,11 +91,13 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
   operatingStatus$ = this.store.select(selectSurveyState).pipe(map(s => s.operatingStatus))
 
   protected handleColumn(survey: Survey, propertyName: string): string {
+    if (['startDate', 'endDate'].includes(propertyName) && survey.dateRange) {
+      const key = propertyName as keyof Survey['dateRange']
+      return this.datePipe.transform(survey.dateRange[key], 'dd/MM/yyyy HH:mm') as string;
+    }
     const key = propertyName as keyof Survey
     switch (key) {
       case 'createdAt':
-      case 'startDate':
-      case 'endDate':
         return this.datePipe.transform(survey[key], 'dd/MM/yyyy HH:mm') as string;
       case 'status':
         if (survey[key] === null) return '';

@@ -1,14 +1,19 @@
-import {createFeatureSelector, createReducer, on} from "@ngrx/store";
+import {createFeatureSelector, createReducer, createSelector, on} from "@ngrx/store";
 import {AppActions} from "./actions";
+import {User} from "../../repository/dto/user";
 
 export type State = {
-  initializing: boolean
-  initializeError: boolean
+  initializing: boolean;
+  initializeError: boolean;
+  loggingIn: boolean;
+  user: User | null
 }
 
 const initialState: State = {
   initializing: false,
   initializeError: false,
+  loggingIn: false,
+  user: null
 }
 
 export const reducer = createReducer(
@@ -28,6 +33,22 @@ export const reducer = createReducer(
     initializing: false,
     initializeError: true,
   })),
+  on(AppActions.login, (state) => ({
+    ...state,
+    loggingIn: true,
+    user: null,
+  })),
+  on(AppActions.loginSucceeded, (state, action) => ({
+    ...state,
+    loggingIn: false,
+    user: action.user,
+  })),
+  on(AppActions.loginFailed, (state) => ({
+    ...state,
+    loggingIn: false,
+    user: null,
+  })),
 )
 
 export const selectApplicationState = createFeatureSelector<State>('application');
+export const selectUser = createSelector(selectApplicationState, ({user}) => (user))

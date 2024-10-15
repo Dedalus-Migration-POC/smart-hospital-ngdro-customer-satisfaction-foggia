@@ -86,6 +86,7 @@
       "create-survey-btn": "Nuovo questionario",
       "create-section-btn": "Nuova sezione",
       "view-analytics-btn": "Vedi analitiche",
+      "search-survey-label": "Cerca un questionario",
       "table-headers": {
         "name": "Nome questionario",
         "startDate": "Data inizio",

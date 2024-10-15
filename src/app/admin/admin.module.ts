@@ -16,7 +16,7 @@ import {HTTP_INTERCEPTORS, HttpBackend} from "@angular/common/http";
 import {MultiTranslateHttpLoader} from "ngx-translate-multi-http-loader";
 import {SurveyListComponent} from "./pages/survey-list/survey-list.component";
 import {NotFoundComponent} from "./pages/not-found/not-found.component";
-import {CsrfInterceptor} from "./repository/http_interceptors";
+import {AppHttpInterceptors} from "./config/http_interceptors";
 import {MatPaginatorIntl} from "@angular/material/paginator";
 import {ScaffoldComponent} from "./components/scaffold/scaffold.component";
 import {provideAnimations} from "@angular/platform-browser/animations";
@@ -66,8 +66,8 @@ import {effects, reducers} from "./store/store";
     }),
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: CsrfInterceptor,
-      multi: true,
+      useClass: AppHttpInterceptors,
+      multi: false,
     },
     provideAnimationsAsync(),
   ],

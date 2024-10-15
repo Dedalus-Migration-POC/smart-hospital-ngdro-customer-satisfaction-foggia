@@ -154,8 +154,8 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
       id: survey.id!.toString(),
       name: survey.name,
       description: survey.description,
-      startDate: survey.startDate,
-      endDate: survey.endDate,
+      startDate: survey.dateRange?.startDate,
+      endDate: survey.dateRange?.endDate,
     })
 
     survey.sections?.map((section) => {

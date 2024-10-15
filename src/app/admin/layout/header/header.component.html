@@ -1,3 +1,11 @@
+<ng-template #loggedIn>
+  <span>
+    <mat-icon [matMenuTriggerFor]="menu">person</mat-icon>
+    &nbsp;
+    {{ (user$ | async)!.name }}
+  </span>
+</ng-template>
+
 <mat-toolbar>
   <mat-toolbar-row>
     <img
@@ -7,6 +15,19 @@
       priority="priority"
       height="48" width="168"/>
     <span class="spacer"></span>
-    <mat-icon>person</mat-icon>
+    <button mat-button [matMenuTriggerFor]="menu" *ngIf="!(user$ | async); else loggedIn">
+      <mat-icon>person</mat-icon>
+    </button>
   </mat-toolbar-row>
 </mat-toolbar>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="login('ROLE_ADMIN')">
+    <mat-icon>admin_panel_settings</mat-icon>
+    <span>Admin</span>
+  </button>
+  <button mat-menu-item (click)="login('ROLE_OPERATOR')">
+    <mat-icon>supervised_user_circle</mat-icon>
+    <span>Operator</span>
+  </button>
+</mat-menu>

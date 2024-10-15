@@ -15,7 +15,7 @@
 </ng-template>
 
 <app-scaffold
-  [loading]="loading$" [error]="error$">
+  [loading]="of(false)" [error]="of(false)">
   <div class="content">
     <div class="left">
       <div class="left-content">
@@ -28,6 +28,23 @@
           </button>
           <ng-container *ngTemplateOutlet="createSurveyBtn"></ng-container>
         </span>
+      </div>
+
+      <div class="survey-finder">
+        <mat-form-field appearance="outline" class="min-400">
+          <mat-label>{{ 'admin.survey-list.search-survey-label' | translate }}</mat-label>
+          <input matInput type="text" [(ngModel)]="searchField" (ngModelChange)="onSearchFieldChange($event)">
+          <ng-template #idle>
+            <button matSuffix mat-icon-button (click)="search()">
+              <mat-icon>search</mat-icon>
+            </button>
+          </ng-template>
+          <mat-spinner
+            matSuffix
+            *ngIf="fetchingSurveys$ | async; else idle"
+            [style]="{marginRight: '16px'}"
+            [diameter]="20"></mat-spinner>
+        </mat-form-field>
       </div>
 
       <app-survey-list-table

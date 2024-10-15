@@ -1,11 +1,11 @@
 import {Component} from '@angular/core';
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {Store} from "@ngrx/store";
-import {map, Observable, tap} from "rxjs";
+import {debounceTime, distinctUntilChanged, map, Observable, of, Subject, tap} from "rxjs";
 import {AsyncPipe, NgIf, NgTemplateOutlet} from "@angular/common";
 import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
-import {MatLabel} from "@angular/material/form-field";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
@@ -24,6 +24,9 @@ import {Actions, ofType} from "@ngrx/effects";
 import {SurveyAdminState} from "../../store/store";
 import {selectSectionState} from "../../store/section/reducer";
 import {selectSurveyState} from "../../store/survey/reducer";
+import {MatInput} from "@angular/material/input";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-survey-list',
@@ -50,6 +53,13 @@ import {selectSurveyState} from "../../store/survey/reducer";
     ScaffoldComponent,
     NgIf,
     NgTemplateOutlet,
+    MatFormField,
+    MatIconButton,
+    MatInput,
+    MatSuffix,
+    ReactiveFormsModule,
+    FormsModule,
+    MatProgressSpinner,
   ],
   templateUrl: './survey-list.component.html',
   styleUrl: './survey-list.component.scss'
@@ -67,14 +77,25 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
     this.startSubscriptions();
   }
 
+  searchField = ''
+  private searchFieldSubject = new Subject<string>();
+
   state$ = this.store.select(selectSurveyState)
   surveys$: Observable<Array<Survey>> = this.state$.pipe(map(({surveys}) => surveys));
   sections$: Observable<Array<Section>> = this.store.select(selectSectionState).pipe(map(({sections}) => sections));
-  loading$ = this.state$.pipe(map(s => s.fetchingSurveys));
-  error$ = this.state$.pipe(map(s => s.fetchSurveysError));
+  fetchingSurveys$ = this.state$.pipe(map(s => s.fetchingSurveys));
 
   protected viewAnalytics() {
     console.log('missing analytics url')
+  }
+
+  protected search() {
+    console.log('search term', this.searchField);
+    this.store.dispatch(SurveyActions.fetchSurveys({name: this.searchField}));
+  }
+
+  protected onSearchFieldChange(searchTerm: string) {
+    this.searchFieldSubject.next(searchTerm)
   }
 
   async onEdit(survey: Survey) {
@@ -116,6 +137,16 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
   }
 
   private startSubscriptions() {
+    this.searchFieldSubject
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+      )
+      .subscribe((searchTerm) => {
+        this.searchField = searchTerm
+        this.search();
+      });
+
     this.addSubscriptions(
       this.actions.pipe(
         ofType(SurveyActions.deleteSurveyFailed),
@@ -129,4 +160,5 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
     )
   }
 
+  protected readonly of = of;
 }

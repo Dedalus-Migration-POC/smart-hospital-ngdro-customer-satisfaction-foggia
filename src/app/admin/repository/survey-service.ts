@@ -1,11 +1,11 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Survey} from "./dto/survey";
-import {Section} from "./dto/section";
-import {CreateSectionRequest} from "./dto/create-section-request";
 import {CreateSurveyRequest} from "./dto/create-survey-request";
+import {FilterSurveyRequest} from "./dto/filter-survey-request";
+import {PagedList} from "./dto/paged_list";
 
-const baseUrl = '/api/v1'
+const baseUrl = '/api/v1/survey'
 
 @Injectable({providedIn: 'root'})
 export class SurveyService {
@@ -13,59 +13,39 @@ export class SurveyService {
 
   }
 
-  public getSurveyList() {
-    return this.http.get<Array<Survey>>(`${baseUrl}/survey`)
+  public list() {
+    return this.http.get<Array<Survey>>(`${baseUrl}`)
   }
 
-  public getSurveyById(id: string) {
-    return this.http.get<Survey>(`${baseUrl}/survey/${id}`)
+  public findByFilter(request: FilterSurveyRequest) {
+    return this.http.post<PagedList<Survey>>(`${baseUrl}/findByFilter`, request)
   }
 
-  public createSurvey(survey: CreateSurveyRequest) {
-    return this.http.post<Survey>(`${baseUrl}/survey/create`, survey)
+  public findById(id: string) {
+    return this.http.get<Survey>(`${baseUrl}/${id}`)
   }
 
-  public updateSurvey(survey: CreateSurveyRequest) {
-    return this.http.post<Survey>(`${baseUrl}/survey/update`, survey)
+  public create(survey: CreateSurveyRequest) {
+    return this.http.post<Survey>(`${baseUrl}/create`, survey)
   }
 
-  public deleteSurvey(surveyId: string) {
-    return this.http.delete<void>(`${baseUrl}/survey/${surveyId}`)
+  public update(survey: CreateSurveyRequest) {
+    return this.http.post<Survey>(`${baseUrl}/update`, survey)
   }
 
-  public restoreSurvey(surveyId: string) {
-    return this.http.patch<void>(`${baseUrl}/survey/restore/${surveyId}`, null)
+  public delete(surveyId: string) {
+    return this.http.delete<void>(`${baseUrl}/${surveyId}`)
   }
 
-  public publishSurvey(surveyId: string) {
-    return this.http.patch<void>(`${baseUrl}/survey/publish/${surveyId}`, null)
+  public restore(surveyId: string) {
+    return this.http.patch<void>(`${baseUrl}/restore/${surveyId}`, null)
   }
 
-  public unpublishSurvey(surveyId: string) {
-    return this.http.patch<void>(`${baseUrl}/survey/unpublish/${surveyId}`, null)
+  public publish(surveyId: string) {
+    return this.http.patch<void>(`${baseUrl}/publish/${surveyId}`, null)
   }
 
-  public getSectionList() {
-    return this.http.get<Array<Section>>(`${baseUrl}/survey/section`)
-  }
-
-  public getSectionById(sectionId: string) {
-    return this.http.get<Section>(`${baseUrl}/survey/section/${sectionId}`)
-  }
-
-  public createSection(section: CreateSectionRequest) {
-    return this.http.post<Section>(`${baseUrl}/survey/section`, section)
-  }
-
-  public updateSection(section: CreateSectionRequest) {
-    return this.http.post<Section>(`${baseUrl}/survey/section/update`, section)
-  }
-
-  public deleteSection(sectionId: string) {
-    return this.http.delete<void>(`${baseUrl}/survey/section/${sectionId}`)
-  }
-
-  public restoreSection(sectionId: string) {
-    return this.http.patch<void>(`${baseUrl}/survey/section/restore/${sectionId}`, null)
+  public unpublish(surveyId: string) {
+    return this.http.patch<void>(`${baseUrl}/unpublish/${surveyId}`, null)
   }
 }

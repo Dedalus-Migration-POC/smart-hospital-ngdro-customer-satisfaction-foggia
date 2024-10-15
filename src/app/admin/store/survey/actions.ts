@@ -4,6 +4,7 @@ import {SurveyForm} from "../../pages/survey-form/survey-form.component";
 
 const fetchSurveys = createAction(
   '[Survey] Fetch Surveys',
+  props<{ name?: string, startDate?: Date, endDate?: Date }>(),
 )
 
 const fetchSurveysSucceeded = createAction(

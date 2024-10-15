@@ -21,9 +21,9 @@ export class SurveyEffects {
   protected readonly fetchSurveys$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.fetchSurveys),
-      concatMap(() =>
-        this.surveyService.getSurveyList().pipe(
-          map((surveys) => SurveyActions.fetchSurveysSucceeded({surveys})),
+      concatMap((action) =>
+        this.surveyService.findByFilter({...action}).pipe(
+          map((response) => SurveyActions.fetchSurveysSucceeded({surveys: response.content})),
           catchError(() =>
             of(SurveyActions.fetchSurveysFailed()),
           ),
@@ -36,7 +36,7 @@ export class SurveyEffects {
     return this.actions$.pipe(
       ofType(SurveyActions.fetchSurveyById),
       concatMap(({surveyId}) =>
-        this.surveyService.getSurveyById(surveyId).pipe(
+        this.surveyService.findById(surveyId).pipe(
           map((survey) => SurveyActions.fetchSurveyByIdSucceeded({survey})),
           catchError(() =>
             of(SurveyActions.fetchSurveyByIdFailed()),
@@ -57,13 +57,15 @@ export class SurveyEffects {
             id: surveyForm.id ? Number(surveyForm.id) : undefined,
             name: surveyForm.name!,
             description: surveyForm.description ?? undefined,
-            startDate: surveyForm.startDate!,
-            endDate: surveyForm.endDate ?? undefined,
+            dateRange: {
+              startDate: surveyForm.startDate!,
+              endDate: surveyForm.endDate ?? undefined,
+            },
             sections: surveyForm.sections,
           }
           const api = !survey.id
-            ? this.surveyService.createSurvey(survey)
-            : this.surveyService.updateSurvey(survey)
+            ? this.surveyService.create(survey)
+            : this.surveyService.update(survey)
           return api.pipe(
             map((survey) => SurveyActions.submitSurveySucceeded({survey})),
             catchError(() =>
@@ -80,7 +82,7 @@ export class SurveyEffects {
       ofType(SurveyActions.deleteSurvey),
       withLatestFrom(this.store.select(selectSurveyList)),
       concatMap(([{surveyId}, {surveys}]) =>
-        this.surveyService.deleteSurvey(surveyId).pipe(
+        this.surveyService.delete(surveyId).pipe(
           map(() => {
             const idx = surveys.findIndex(s => s.id!.toString() === surveyId)
             let updatedSurveys = Array.of(...surveys)
@@ -100,7 +102,7 @@ export class SurveyEffects {
       ofType(SurveyActions.restoreSurvey),
       withLatestFrom(this.store.select(selectSurveyList)),
       concatMap(([{surveyId}, {surveys}]) =>
-        this.surveyService.restoreSurvey(surveyId).pipe(
+        this.surveyService.restore(surveyId).pipe(
           map(() => {
             const idx = surveys.findIndex(s => s.id!.toString() === surveyId)
             let updatedSurveys = Array.of(...surveys)
@@ -120,7 +122,7 @@ export class SurveyEffects {
       ofType(SurveyActions.publishSurvey),
       withLatestFrom(this.store.select(selectSurveyList)),
       concatMap(([{surveyId}, {surveys}]) =>
-        this.surveyService.publishSurvey(surveyId).pipe(
+        this.surveyService.publish(surveyId).pipe(
           map(() => {
             const idx = surveys.findIndex(s => s.id!.toString() === surveyId)
             let updatedSurveys = Array.of(...surveys)
@@ -140,7 +142,7 @@ export class SurveyEffects {
       ofType(SurveyActions.unpublishSurvey),
       withLatestFrom(this.store.select(selectSurveyList)),
       concatMap(([{surveyId}, {surveys}]) =>
-        this.surveyService.unpublishSurvey(surveyId).pipe(
+        this.surveyService.unpublish(surveyId).pipe(
           map(() => {
             const idx = surveys.findIndex(s => s.id!.toString() === surveyId)
             let updatedSurveys = Array.of(...surveys)
