@@ -30,4 +30,8 @@
     <mat-icon>supervised_user_circle</mat-icon>
     <span>Operator</span>
   </button>
+  <button mat-menu-item (click)="logout()" *ngIf="!!(user$ | async)">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
 </mat-menu>

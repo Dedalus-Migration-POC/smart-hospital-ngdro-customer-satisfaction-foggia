@@ -1,56 +1,70 @@
-<mat-card [style]="{opacity: (disabled$ | async) ? 0.75 : 1}">
-  <mat-card-header>{{ 'admin.print-card.title' | translate }}</mat-card-header>
-  <div class="divider"></div>
-  <mat-card-content>
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'admin.print-card.select-unit-label' | translate }}</mat-label>
-      <mat-select [(ngModel)]="selectedUnit" [disabled]="(disabled$ | async) ?? false">
-        @for (unit of units; track unit) {
-          <mat-option [value]="unit.value">{{ 'admin.print-card.units.' + unit.viewValue | translate }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
+<form [formGroup]="printSurveyForm" (ngSubmit)="print()">
+  <mat-card [style]="{opacity: (disabled$ | async) ? 0.75 : 1}">
+    <mat-card-header>{{ 'admin.print-card.title' | translate }}</mat-card-header>
     <div class="divider"></div>
+    <mat-card-content>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'admin.print-card.select-unit-label' | translate }}</mat-label>
+        <mat-select [formControl]="printSurveyForm.controls.unit" [value]="printSurveyForm.controls.unit.value"
+                    [disabled]="(disabled$ | async) ?? false">
+          @for (unit of units; track unit) {
+            <mat-option [value]="unit.value">{{ 'admin.print-card.units.' + unit.viewValue | translate }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-    <div class="structure-type-label">{{ 'admin.print-card.structure-type-label' | translate }}</div>
-    <mat-radio-group aria-label="Select an option" [disabled]="(disabled$ | async) ?? false">
-      <mat-radio-button value="1">{{ 'admin.print-card.structure-type-radio.department' | translate }}
-      </mat-radio-button>
-      <mat-radio-button value="2">{{ 'admin.print-card.structure-type-radio.ambulatory' | translate }}
-      </mat-radio-button>
-    </mat-radio-group>
+      <div class="divider"></div>
 
-    <div class="divider"></div>
+      <div class="structure-type-label">{{ 'admin.print-card.structure-type-label' | translate }}</div>
+      <mat-radio-group [formControl]="printSurveyForm.controls.type" [disabled]="(disabled$ | async) ?? false">
+        <mat-radio-button value="1">{{ 'admin.print-card.structure-type-radio.department' | translate }}
+        </mat-radio-button>
+        <mat-radio-button value="2">{{ 'admin.print-card.structure-type-radio.ambulatory' | translate }}
+        </mat-radio-button>
+      </mat-radio-group>
 
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'admin.print-card.select-survey-label' | translate }}</mat-label>
-      <mat-select [(ngModel)]="selectedSurveyId" [disabled]="(disabled$ | async) ?? false">
-        @for (survey of surveys; track survey) {
-          <mat-option [value]="survey.id">{{ survey.name }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+      <div class="divider"></div>
 
-    <div class="structure-type-label">{{ 'admin.print-card.copies-to-print' | translate }}</div>
-    <div class="divider"></div>
-    <span>
-      <mat-button-toggle-group [hideMultipleSelectionIndicator]="true" [hideSingleSelectionIndicator]="true">
-        <mat-button-toggle [disabled]="printCount < 1" [value]="false" (click)="setPrintCount(printCount-1)">&nbsp;&#8212;&nbsp;
-        </mat-button-toggle>
-        <mat-button-toggle [disabled]="true">&nbsp;{{ printCount }}&nbsp;</mat-button-toggle>
-        <mat-button-toggle [value]="false" (click)="setPrintCount(printCount+1)"
-                           [disabled]="(disabled$ | async) ?? false">&nbsp;&#43;&nbsp;</mat-button-toggle>
-    </mat-button-toggle-group>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'admin.print-card.select-survey-label' | translate }}</mat-label>
+        <mat-select [formControl]="printSurveyForm.controls.surveyId" [disabled]="(disabled$ | async) ?? false">
+          <mat-option *ngFor="let survey of surveys" [value]="survey.id">{{ survey.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="structure-type-label">{{ 'admin.print-card.copies-to-print' | translate }}</div>
+      <div class="divider"></div>
+      <span>
+          <mat-button-toggle-group [hideMultipleSelectionIndicator]="true"
+                                   [hideSingleSelectionIndicator]="true"
+          >
+            <mat-button-toggle [disabled]="printSurveyForm.controls.copies.value! < 1"
+                               [value]="false"
+                               (click)="handleCopies(printSurveyForm.controls.copies.value! - 1)"
+            >&nbsp;&#8212;&nbsp;
+            </mat-button-toggle>
+
+            <mat-button-toggle [disabled]="true">
+              &nbsp;{{ printSurveyForm.controls.copies.value }}&nbsp;
+            </mat-button-toggle>
+
+            <mat-button-toggle [disabled]="(disabled$ | async) ?? false"
+                               [value]="false"
+                               (click)="handleCopies(printSurveyForm.controls.copies.value! + 1)"
+            >&nbsp;&#43;&nbsp;
+            </mat-button-toggle>
+
+          </mat-button-toggle-group>
     </span>
 
-    <div class="divider"></div>
+      <div class="divider"></div>
 
-    <span>
-      <button [style]="{padding: '0 36px'}" mat-flat-button [disabled]="printCount < 1" (click)="print()">
+      <span>
+      <button [style]="{padding: '0 36px'}" mat-flat-button [disabled]="printSurveyForm.controls.copies.value! < 1">
           {{ 'admin.print-card.button' | translate }}
       </button>
     </span>
 
-  </mat-card-content>
-</mat-card>
+    </mat-card-content>
+  </mat-card>
+</form>

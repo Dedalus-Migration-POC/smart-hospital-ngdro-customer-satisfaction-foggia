@@ -47,16 +47,27 @@ export class AppEffects {
     )
   })
 
+  private readonly logout$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AppActions.logout),
+      map(() => {
+          document.cookie = 'access_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          return AppActions.logoutSucceeded()
+        }
+      ),
+    )
+  })
+
   private Users: Record<UserRole, User> = {
     ROLE_ADMIN: {
       name: "Administrator",
       roles: ['ROLE_ADMIN'],
-      jwt: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3Mjg5MzE1MDIsImV4cCI6MTc2MDQ2NzUwMiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsImZpcnN0TmFtZSI6IkFkbWluIiwibGFzdE5hbWUiOiJBZG1pbiIsIkVtYWlsIjoianJvY2tldEBleGFtcGxlLmNvbSIsIlJvbGUiOlsiUk9MRV9BRE1JTiIsIlJPTEVfT1BFUkFUT1IiXX0.4pS1fwGB0gCJD67Ba8p0ipzDaRK3_A20NdryCPtL0No"
+      jwt: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTQ01vY2siLCJpYXQiOjE3Mjg5NzQ3NTQsImV4cCI6MTc2MDUxMDc1NCwiYXVkIjoid3d3LmRlZGFsdXMuY29tIiwic3ViIjoiYWRtaW5Ac3VydmV5LmRlZGFsdXMubXMiLCJmaXJzdG5hbWUiOiJBZG1pbiIsImxhc3RuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQHN1cnZleS5tcyIsInJvbGUiOlsiUk9MRV9BRE1JTiIsIlJPTEVfT1BFUkFUT1IiLCJST0xFX1VTRVIiXX0.MURwcvADg5uUVrtcxCET6ACZjujFw2HjTMzzyBV1y8A"
     },
     ROLE_OPERATOR: {
       name: "Operator",
       roles: ['ROLE_OPERATOR'],
-      jwt: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3Mjg5MzE1MDIsImV4cCI6MTc2MDQ2NzUwMiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsImZpcnN0TmFtZSI6Ik9wZXJhdG9yIiwibGFzdE5hbWUiOiJPcGVyYXRvciIsIkVtYWlsIjoib3BlcmF0b3JAc3VydmV5Lm1zIiwiUm9sZSI6WyJST0xFX1VTRVIiLCJST0xFX09QRVJBVE9SIl19.r7D-vsvTV9cfDJO8bzEwvh734VSekVAmg9PCUDCc9pE"
+      jwt: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTQ01vY2siLCJpYXQiOjE3Mjg5NzQ3NTQsImV4cCI6MTc2MDUxMDc1NCwiYXVkIjoid3d3LmRlZGFsdXMuY29tIiwic3ViIjoiYWRtaW5Ac3VydmV5LmRlZGFsdXMubXMiLCJmaXJzdG5hbWUiOiJPcGVyYXRvciIsImxhc3RuYW1lIjoiT3BlcmF0b3IiLCJlbWFpbCI6Im9wZXJhdG9yQHN1cnZleS5tcyIsInJvbGUiOlsiUk9MRV9PUEVSQVRPUiIsIlJPTEVfVVNFUiJdfQ.ma_oLROwsB0DKtunDB_-5DBE404wexdc2_6jtNCdbkw"
     },
     ROLE_USER: {
       name: "User",
@@ -65,3 +76,4 @@ export class AppEffects {
     }
   }
 }
+ 

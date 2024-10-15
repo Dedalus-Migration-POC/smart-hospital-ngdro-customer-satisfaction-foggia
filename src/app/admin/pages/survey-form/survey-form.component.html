@@ -1,5 +1,5 @@
 <app-scaffold [loading]="of(false)" [error]="of(false)">
-  <form class="min-400" [formGroup]="surveyForm" (ngSubmit)="publish()">
+  <form class="min-400" [formGroup]="surveyForm" (ngSubmit)="submit()">
     <div class="head min-400">
       <h6>{{ getTitlePlaceholder() | translate }}</h6>
       <button type="submit" mat-flat-button [disabled]="(creating$ | async) || !surveyForm.dirty">
@@ -30,6 +30,9 @@
       <!--      <mat-hint>{{ 'date-hint' | translate }}</mat-hint>-->
       <mat-datepicker-toggle matIconSuffix [for]="startDatePicker"></mat-datepicker-toggle>
       <mat-datepicker #startDatePicker></mat-datepicker>
+      <mat-error
+        *ngIf="surveyForm.controls.startDate.hasError('required')">{{ 'admin.survey-form.required-field' | translate }}
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="min-400">
@@ -39,15 +42,6 @@
       <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
       <mat-datepicker #endDatePicker></mat-datepicker>
     </mat-form-field>
-
-    <!--    <mat-form-field appearance="outline" class="min-400">-->
-    <!--      <mat-date-range-input [rangePicker]="picker">-->
-    <!--        <input matStartDate placeholder="Start date">-->
-    <!--        <input matEndDate placeholder="End date">-->
-    <!--      </mat-date-range-input>-->
-
-    <!--      <mat-date-range-picker #picker></mat-date-range-picker>-->
-    <!--    </mat-form-field>-->
 
     @for (control of surveyForm.controls.sections.controls; track control; let i = $index) {
       <mat-card>

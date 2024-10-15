@@ -48,6 +48,16 @@ export const reducer = createReducer(
     loggingIn: false,
     user: null,
   })),
+  on(AppActions.logout, (state) => ({
+    ...state,
+  })),
+  on(AppActions.logoutSucceeded, (state) => ({
+    ...state,
+    user: null,
+  })),
+  on(AppActions.logoutFailed, (state) => ({
+    ...state,
+  })),
 )
 
 export const selectApplicationState = createFeatureSelector<State>('application');

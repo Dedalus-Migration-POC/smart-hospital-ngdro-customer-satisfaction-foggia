@@ -1,12 +1,16 @@
 {
   "yes": "Sì",
   "no": "No",
+  "copy": "Copia",
+  "copies": "Copie",
+  "print": "Stampa",
   "skip-to-main-content": "Vai al contenuto principale",
   "forward": "Avanti",
   "back": "Indietro",
   "go-back": "Torna indietro",
   "send": "Invia",
   "retry": "Riprova",
+  "confirm": "Conferma",
   "cancel": "Annulla",
   "date-hint": "GG/MM/AAAA",
   "header": {
@@ -98,6 +102,7 @@
       "actions-hints": {
         "edit": "Modifica",
         "delete": "Elimina",
+        "restore": "Ripristina",
         "publish": "Pubblica",
         "unpublish": "Nascondi"
       },
@@ -145,7 +150,8 @@
         "ambulatory": "Ambulatorio"
       },
       "copies-to-print": "Copie da stampare",
-      "button": "Stampa"
+      "button": "Stampa",
+      "resume": "Confermi di voler stampare {{copies}} per l'unità operativa {{unit}}, tipologia della struttura {{type}} per questionario {{survey}}?"
     },
     "section-list": {
       "title": "Sezioni questionario",
@@ -159,7 +165,8 @@
       },
       "actions-hints": {
         "edit": "Modifica",
-        "delete": "Elimina"
+        "delete": "Elimina",
+        "restore": "Ripristina"
       },
       "show-deleted": "Mostra elementi eliminati",
       "dialog-cannot-delete": "Non è possibile eliminare la Sezione perchè è associata ad uno o più questionari.",

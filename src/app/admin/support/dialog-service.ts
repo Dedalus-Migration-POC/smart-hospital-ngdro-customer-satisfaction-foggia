@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {DialogComponent, DialogProps} from "../components/dialog/dialog.component";
 
-type Props = Omit<DialogProps, 'type'>
+type Props = Omit<DialogProps, 'dialogType'>
 
 @Injectable({providedIn: 'root'})
 export class DialogService {
@@ -17,28 +17,28 @@ export class DialogService {
   public info(props: Props): MatDialogRef<DialogComponent, Props> {
     return this.dialog.open<DialogComponent, DialogProps>(DialogComponent, {
       ...this.defaultDialogSettings,
-      data: {...props, type: 'info'}
+      data: {...props, dialogType: 'info'}
     })
   }
 
-  public success(props?: Props): MatDialogRef<DialogComponent, Props> {
+  public success(props: Props): MatDialogRef<DialogComponent, Props> {
     return this.dialog.open<DialogComponent, DialogProps>(DialogComponent, {
       ...this.defaultDialogSettings,
-      data: {...props, type: 'success'}
+      data: {...props, dialogType: 'success'}
     })
   }
 
-  public attention(props?: Props): MatDialogRef<DialogComponent, Props> {
+  public attention(props: Props): MatDialogRef<DialogComponent, Props> {
     return this.dialog.open<DialogComponent, DialogProps>(DialogComponent, {
       ...this.defaultDialogSettings,
-      data: {...props, type: 'attention'}
+      data: {...props, dialogType: 'attention'}
     })
   }
 
-  public error(props?: Props): MatDialogRef<DialogComponent, Props> {
+  public error(props: Props): MatDialogRef<DialogComponent, Props> {
     return this.dialog.open<DialogComponent, DialogProps>(DialogComponent, {
       ...this.defaultDialogSettings,
-      data: {...props, type: 'error'}
+      data: {...props, dialogType: 'error'}
     })
   }
 

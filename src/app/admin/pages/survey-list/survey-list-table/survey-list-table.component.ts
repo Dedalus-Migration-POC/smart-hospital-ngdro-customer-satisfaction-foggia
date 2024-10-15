@@ -27,6 +27,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {SurveyAdminState} from "../../../store/store";
 import {selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/reducer";
 import {MatSort, MatSortHeader, MatSortModule} from "@angular/material/sort";
+import {selectUser} from "../../../store/application/reducer";
 
 @Component({
   selector: 'app-survey-list-table',
@@ -87,7 +88,7 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
   }
 
   columns: string[] = ['name', 'startDate', 'endDate', 'status', 'version', 'actions']
-
+  canShowDeleted$ = this.store.select(selectUser).pipe(map((user) => user?.roles.includes('ROLE_ADMIN') ?? false))
   operatingStatus$ = this.store.select(selectSurveyState).pipe(map(s => s.operatingStatus))
 
   protected handleColumn(survey: Survey, propertyName: string): string {

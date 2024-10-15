@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {combineLatest, map, of, Subject, take, tap} from "rxjs";
+import {BehaviorSubject, map, of, take, tap} from "rxjs";
 import {Store} from "@ngrx/store";
 import {Actions, ofType} from "@ngrx/effects";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -30,6 +30,7 @@ import {
 import {SurveyAdminState} from "../../store/store";
 import {selectSectionState} from "../../store/section/reducer";
 import {selectSurveyState} from "../../store/survey/reducer";
+import {withLatestFrom} from "rxjs/operators";
 
 export type SurveyForm = FormGroup<{
   id: FormControl<string | null>;
@@ -80,7 +81,7 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
   state$ = this.store.select(selectSurveyState)
   surveys$ = this.state$.pipe(map(({surveys}) => surveys));
   sections$ = this.store.select(selectSectionState).pipe(map(({sections}) => sections));
-  selectableSections$: Subject<Section[]> = new Subject();
+  selectableSections$ = new BehaviorSubject<Array<Section>>([]);
   creating$ = this.state$.pipe(map(({creatingSurvey}) => creatingSurvey))
 
   protected readonly of = of;
@@ -95,10 +96,6 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
     private translate: TranslateService
   ) {
     super();
-  }
-
-  ngOnInit() {
-    this.startActionsSubscription()
 
     this.surveyForm = this.fb.group({
       id: new FormControl<string | null>(null),
@@ -108,13 +105,16 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
       endDate: new FormControl<Date | null>(null),
       sections: this.fb.array<Section | null>([])
     });
+  }
+
+  ngOnInit() {
+    this.startActionsSubscription()
 
     this.subscriptions.push(
-      combineLatest([
-        this.surveyForm.valueChanges,
-        this.sections$
-      ]).pipe(
-        map(([formChanges, sections]) => {
+      this.surveyForm.valueChanges.pipe(
+        withLatestFrom(this.sections$),
+        tap(([formChanges, sections]) => {
+          console.log('1 - updating selectableSections$', sections)
           this.selectableSections$.next(
             sections.filter(section => !formChanges.sections?.find(s => s?.id?.toString() === section.id?.toString()))
           )
@@ -122,14 +122,10 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
       ).subscribe()
     )
 
-    this.selectableSections$.asObservable().subscribe(selectableSections => {
-      console.log(selectableSections)
-    })
-
     const surveyId = this.activatedRoute.snapshot.paramMap.get('surveyId');
     if (surveyId) {
       this.editMode = true
-      this.subscriptions.push(this.surveys$.pipe(
+      this.surveys$.pipe(
         take(1),
         map(surveys => {
           const survey = surveys.find(({id}) => id?.toString() === surveyId);
@@ -137,16 +133,18 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
             this.initializeForm(survey);
           } else {
             const text = `Survey with id [${survey}] not found`
-            this.dialog.error({text})
+            this.dialog.error({text, buttonsType: 'ok'})
             throw new Error(text);
           }
         })
-      ).subscribe())
+      ).subscribe()
     } else {
       this.surveyForm.controls.sections.push(
         new FormControl<Section | null>(null, Validators.required)
       )
     }
+
+    this.surveyForm.clearValidators()
   }
 
   private initializeForm(survey: Survey) {
@@ -171,7 +169,10 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
         ofType(SurveyActions.submitSurveySucceeded),
         tap(() => {
           const translation = this.editMode ? 'edited' : 'created'
-          this.dialog.success({text: this.translate.instant(`admin.survey-form.survey-${translation}-dialog`)})
+          this.dialog.success({
+            buttonsType: 'ok',
+            text: this.translate.instant(`admin.survey-form.survey-${translation}-dialog`)
+          })
             .afterClosed().subscribe(() => this.router.navigate(['/']))
         })
       ).subscribe(),
@@ -179,13 +180,15 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
       this.actions.pipe(
         ofType(SurveyActions.submitSurveyFailed),
         tap(() => this.dialog.error({
-          onConfirm: () => this.publish(),
+          buttonsType: 'ok',
+          onConfirm: () => this.submit(),
           onConfirmLabel: this.translate.instant('retry'),
           onCancelLabel: this.translate.instant('cancel'),
           onCancel: () => {
           }
         }))
-      ).subscribe())
+      ).subscribe()
+    )
   }
 
   protected getTitlePlaceholder() {
@@ -206,7 +209,7 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
     this.surveyForm.markAsDirty()
   }
 
-  protected publish() {
+  protected submit() {
     this.surveyForm.markAllAsTouched()
     if (this.surveyForm.valid) {
       console.log('VALID', this.surveyForm.value)

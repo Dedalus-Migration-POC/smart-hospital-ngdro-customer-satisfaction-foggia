@@ -33,12 +33,23 @@ export class HeaderComponent {
         this.store.dispatch(AppActions.initialize());
       })
     ).subscribe()
+    this.actions.pipe(
+      ofType(AppActions.logoutSucceeded),
+      map(() => {
+        console.log(document.cookie)
+        this.store.dispatch(AppActions.initialize());
+      })
+    ).subscribe()
   }
 
   user$ = this.store.select(s => s.application.user)
 
   protected login(userRole: UserRole) {
     this.store.dispatch(AppActions.login({userRole}))
+  }
+
+  protected logout() {
+    this.store.dispatch(AppActions.logout())
   }
 
 }

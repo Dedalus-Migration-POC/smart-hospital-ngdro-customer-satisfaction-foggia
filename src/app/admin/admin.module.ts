@@ -12,11 +12,10 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {DesignAngularKitModule, provideDesignAngularKit} from "design-angular-kit";
 import {LayoutModule} from "../layout/layout.module";
 import {APP_BASE_HREF} from "@angular/common";
-import {HTTP_INTERCEPTORS, HttpBackend} from "@angular/common/http";
+import {HttpBackend} from "@angular/common/http";
 import {MultiTranslateHttpLoader} from "ngx-translate-multi-http-loader";
 import {SurveyListComponent} from "./pages/survey-list/survey-list.component";
 import {NotFoundComponent} from "./pages/not-found/not-found.component";
-import {AppHttpInterceptors} from "./config/http_interceptors";
 import {MatPaginatorIntl} from "@angular/material/paginator";
 import {ScaffoldComponent} from "./components/scaffold/scaffold.component";
 import {provideAnimations} from "@angular/platform-browser/animations";
@@ -64,11 +63,6 @@ import {effects, reducers} from "./store/store";
         deps: [HttpBackend],
       }),
     }),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AppHttpInterceptors,
-      multi: false,
-    },
     provideAnimationsAsync(),
   ],
   bootstrap: [AdminComponent]

@@ -13,6 +13,7 @@ import {selectApplicationState} from "./store/application/reducer";
 export class AdminComponent implements OnInit {
 
   constructor(private store: Store<SurveyAdminState>) {
+    console.log(document.cookie)
   }
 
   ngOnInit() {

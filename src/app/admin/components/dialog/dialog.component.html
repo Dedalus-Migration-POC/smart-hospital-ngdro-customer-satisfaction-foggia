@@ -1,26 +1,38 @@
-<ng-template #yesOrNo>
+<!-- BUTTONS -->
+<ng-template #dual let-confirmLabel=confirmLabel let-cancelLabel=cancelLabel>
   <div class="inline-buttons">
-    <button mat-flat-button mat-dialog-close (click)="confirm()">{{ data.onConfirmLabel ?? ('yes' | translate) }}
+    <button mat-flat-button mat-dialog-close (click)="confirm()">{{ data.onConfirmLabel ?? (confirmLabel | translate) }}
     </button>
     <button mat-raised-button mat-dialog-close
-            (click)="cancel()">{{ data.onCancelLabel ?? ('no' | translate) }}
+            (click)="cancel()">{{ data.onCancelLabel ?? (cancelLabel | translate) }}
     </button>
   </div>
 </ng-template>
+<!-- BUTTONS -->
 
+
+<!-- DIALOG -->
 <div class="head">
-  <img alt="" [ngSrc]="'assets/images/icon_popup_' + data.type + '.svg'" height="75" width="75"/>
-  <span class="title">{{ data.title ?? ('dialog.default-title.' + data.type | translate) }}</span>
+  <img alt="" [ngSrc]="'assets/images/icon_popup_' + data.dialogType + '.svg'" height="75" width="75"/>
+  <span class="title">{{ data.title ?? ('dialog.default-title.' + data.dialogType | translate) }}</span>
 </div>
 
-<div *ngIf="data.type === 'error' || data.text" class="content">
-  {{ data.type === 'error' ? (data.text ?? 'dialog.default-content.error' | translate) : data.text }}
+<div *ngIf="data.dialogType === 'error' || data.text" class="content">
+  {{ data.dialogType === 'error' ? (data.text ?? 'dialog.default-content.error' | translate) : data.text }}
 </div>
+<!-- DIALOG -->
+
 
 <div class="actions">
-  <ng-container [ngSwitch]="data.type">
-    <ng-container *ngSwitchCase="'attention'">
-      <ng-container *ngTemplateOutlet="yesOrNo"></ng-container>
+  <ng-container [ngSwitch]="data.buttonsType">
+    <ng-container *ngSwitchCase="'yes_no'">
+      <ng-container *ngTemplateOutlet="dual; context: {confirmLabel: 'yes', cancelLabel: 'no'}"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="'confirm_cancel'">
+      <ng-container *ngTemplateOutlet="dual; context: {confirmLabel: 'confirm', cancelLabel: 'cancel'}"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="'retry_cancel'">
+      <ng-container *ngTemplateOutlet="dual; context: {confirmLabel: 'retry', cancelLabel: 'cancel'}"></ng-container>
     </ng-container>
     <ng-container *ngSwitchDefault>
       <button mat-flat-button mat-dialog-close (click)="confirm()">{{ data.onConfirmLabel ?? 'OK' }}</button>

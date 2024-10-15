@@ -1,4 +1,4 @@
-<div class="deleted-toggler">
+<div class="deleted-toggler" *ngIf="canShowDeleted$ | async">
   <mat-checkbox (change)="changeShowDeleted($event)">{{ 'admin.section-list.show-deleted' | translate }}</mat-checkbox>
 </div>
 <mat-table [dataSource]="(datasource$ | async)!" class="mat-elevation-z8">
@@ -9,7 +9,7 @@
       </mat-header-cell>
       <ng-container *matCellDef="let element">
         <mat-cell [class.deleted]="element.deleted">
-          {{ element[column] }}
+          {{ handleColumn(element, column) }}
         </mat-cell>
       </ng-container>
     </ng-container>
@@ -26,7 +26,7 @@
       <ng-template #idle>
         <button mat-icon-button (click)="changeDeletedStatus(element)">
           <mat-icon
-            [matTooltip]="'admin.section-list.actions-hints.delete' | translate">{{ element.deleted ? 'restore' : 'delete' }}
+            [matTooltip]="'admin.section-list.actions-hints.' + (element.deleted ? 'restore' : 'delete') | translate">{{ element.deleted ? 'restore' : 'delete' }}
           </mat-icon>
         </button>
       </ng-template>

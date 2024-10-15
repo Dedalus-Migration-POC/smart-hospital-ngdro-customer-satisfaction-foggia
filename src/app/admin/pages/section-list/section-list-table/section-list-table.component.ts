@@ -27,6 +27,7 @@ import {DeletableEntityService} from "../../../support/deletable-entity-service"
 import {MatTooltip} from "@angular/material/tooltip";
 import {SurveyAdminState} from "../../../store/store";
 import {selectSectionState} from "../../../store/section/reducer";
+import {selectUser} from "../../../store/application/reducer";
 
 @Component({
   selector: 'app-section-list-table',
@@ -77,5 +78,20 @@ export class SectionListTableComponent extends DeletableEntityService<Section> {
   deletingId$ = this.store.select(selectSectionState).pipe(map(s => s.editingSectionId))
 
   columns: string[] = ['name', 'presence', 'version', 'actions']
+
+  canShowDeleted$ = this.store.select(selectUser).pipe(map((user) => user?.roles.includes('ROLE_ADMIN') ?? false))
+
+  protected handleColumn(section: Section, propertyName: string): string {
+    switch (propertyName) {
+      case "name":
+        return section.name;
+      case "presence":
+        return (section.associatedSurveys ?? []).map(survey => survey.name).join(', ')
+      case 'version':
+        return section.version.toString()
+      default:
+        return ''
+    }
+  }
 
 }

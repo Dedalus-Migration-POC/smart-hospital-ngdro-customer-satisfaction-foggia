@@ -56,6 +56,7 @@ const deleteSurveySucceeded = createAction(
 
 const deleteSurveyFailed = createAction(
   '[Survey] Delete Survey Failed',
+  props<{ survey: Survey }>()
 )
 
 const restoreSurvey = createAction(
@@ -70,6 +71,7 @@ const restoreSurveySucceeded = createAction(
 
 const restoreSurveyFailed = createAction(
   '[Survey] Restore Survey Failed',
+  props<{ survey: Survey }>()
 )
 
 const publishSurvey = createAction(

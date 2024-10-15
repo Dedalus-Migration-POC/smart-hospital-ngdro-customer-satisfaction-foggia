@@ -6,14 +6,23 @@ import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption} from "@angular/material/core";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 import {MatSelect} from "@angular/material/select";
-import {TranslateModule} from "@ngx-translate/core";
-import {FormsModule} from "@angular/forms";
+import {TranslateModule, TranslateService} from "@ngx-translate/core";
+import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Survey} from "../../../repository/dto/survey";
 import {Store} from "@ngrx/store";
 import {map, Observable} from "rxjs";
-import {AsyncPipe} from "@angular/common";
+import {AsyncPipe, NgForOf} from "@angular/common";
 import {SurveyAdminState} from "../../../store/store";
 import {selectSurveyState} from "../../../store/survey/reducer";
+import {DialogService} from "../../../support/dialog-service";
+
+
+export type PrintSurveyForm = FormGroup<{
+  unit: FormControl<string | null>;
+  type: FormControl<string | null>;
+  surveyId: FormControl<number | null>;
+  copies: FormControl<number | null>;
+}>
 
 @Component({
   selector: 'app-print-card',
@@ -33,7 +42,9 @@ import {selectSurveyState} from "../../../store/survey/reducer";
     TranslateModule,
     FormsModule,
     MatFormField,
-    AsyncPipe
+    AsyncPipe,
+    ReactiveFormsModule,
+    NgForOf
   ],
   templateUrl: './print-card.component.html',
   styleUrl: './print-card.component.scss'
@@ -41,25 +52,45 @@ import {selectSurveyState} from "../../../store/survey/reducer";
 export class PrintCardComponent {
   @Input({alias: "surveys", required: true}) surveys!: Array<Survey>;
 
-  constructor(private store: Store<SurveyAdminState>) {
+  constructor(
+    private store: Store<SurveyAdminState>,
+    private fb: FormBuilder,
+    private dialog: DialogService,
+    private translate: TranslateService
+  ) {
+    this.printSurveyForm = this.fb.group({
+      unit: new FormControl<string | null>(null),
+      type: new FormControl<string | null>(null, Validators.required),
+      surveyId: new FormControl<number | null>(null),
+      copies: new FormControl<number>(0),
+    });
   }
+
+  printSurveyForm!: PrintSurveyForm
 
   state$ = this.store.select(selectSurveyState)
   disabled$: Observable<boolean> = this.state$.pipe(map(({surveys}) => !surveys.length));
-
-  selectedSurveyId: string | number | null = null
-  selectedUnit: string | null = null
-  printCount = 0
 
   units = [
     {value: 'cardio', viewValue: 'cardio'},
   ];
 
-  protected setPrintCount(value: number) {
-    this.printCount = value;
+  protected handleCopies(copies: number) {
+    this.printSurveyForm.patchValue({copies})
   }
 
   protected print() {
-    console.log('print ', this.selectedUnit)
+    console.log('print ', this.printSurveyForm.value)
+    const copiesValue = this.printSurveyForm.controls.copies.value
+    const copiesTranslation = this.translate.instant(copiesValue === 1 ? 'copy' : 'copies').toLowerCase();
+    this.dialog.info({
+      buttonsType: 'confirm_cancel',
+      text: this.translate.instant('admin.print-card.resume', {
+        ...this.printSurveyForm.value,
+        copies: `${copiesValue} ${copiesTranslation}`,
+        survey: this.printSurveyForm.controls.surveyId.value
+      }),
+      onConfirmLabel: this.translate.instant('print'),
+    })
   }
 }

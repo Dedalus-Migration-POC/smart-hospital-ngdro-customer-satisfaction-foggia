@@ -30,13 +30,13 @@
       [style]="{visibility: survey.status === 'ACTIVE' ? 'hidden' : undefined}"
       (click)="changeDeletedStatus(survey)">
       <mat-icon
-        [matTooltip]="'admin.survey-list.actions-hints.delete' | translate">{{ survey.deleted ? 'restore' : 'delete' }}
+        [matTooltip]="'admin.survey-list.actions-hints.' + (survey.deleted ? 'restore' : 'delete') | translate">{{ survey.deleted ? 'restore' : 'delete' }}
       </mat-icon>
     </button>
   </ng-template>
 </ng-template>
 
-<div class="deleted-toggler">
+<div class="deleted-toggler" *ngIf="canShowDeleted$ | async">
   <mat-checkbox (change)="changeShowDeleted($event)">{{ 'admin.section-list.show-deleted' | translate }}</mat-checkbox>
 </div>
 <mat-table [dataSource]="(datasource$ | async)!" class="mat-elevation-z8">

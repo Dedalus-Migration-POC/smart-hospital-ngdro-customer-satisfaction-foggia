@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {CommonModule, Location, NgOptimizedImage} from "@angular/common";
+import {CommonModule, NgOptimizedImage} from "@angular/common";
 import {TranslateModule} from "@ngx-translate/core";
 import {DesignAngularKitModule} from "design-angular-kit";
 import {map, Observable} from "rxjs";
@@ -8,6 +8,9 @@ import {MatDialogActions, MatDialogClose, MatDialogContent} from "@angular/mater
 import {MatButton} from "@angular/material/button";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {MatIcon} from "@angular/material/icon";
+import {Store} from "@ngrx/store";
+import {SurveyAdminState} from "../../store/store";
+import {withLatestFrom} from "rxjs/operators";
 
 @Component({
   selector: 'app-scaffold',
@@ -39,12 +42,9 @@ export class ScaffoldComponent implements OnInit {
   @Output('onErrorRetryCallback') onErrorRetryCallback: EventEmitter<any> = new EventEmitter();
   @Output('onErrorCancelCallback') onErrorCancelCallback: EventEmitter<any> | undefined;
 
-  window = window
-
-  constructor(private activatedRoute: ActivatedRoute, protected location: Location) {
-    //FIXME remove if not used
-    // this.activatedRoute.url.subscribe((event) => {
-    // })
+  constructor(
+    private store: Store<SurveyAdminState>,
+    private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -53,6 +53,10 @@ export class ScaffoldComponent implements OnInit {
     }
   }
 
-  canGoBack$ = this.activatedRoute.url.pipe(map(url => url.length));
+  initializing$ = this.store.select(s => s.application.initializing)
+  canGoBack$ = this.activatedRoute.url.pipe(
+    withLatestFrom(this.initializing$),
+    map(([url, initializing]) => !initializing && url.length)
+  );
 
 }

@@ -30,6 +30,18 @@ const loginFailed = createAction(
   '[Survey] Login Failed',
 )
 
+const logout = createAction(
+  '[Survey] Logout',
+)
+
+const logoutSucceeded = createAction(
+  '[Survey] Logout Succeeded',
+)
+
+const logoutFailed = createAction(
+  '[Survey] Logout Failed',
+)
+
 export const AppActions = {
   initialize,
   initializeSucceeded,
@@ -37,6 +49,9 @@ export const AppActions = {
   login,
   loginSucceeded,
   loginFailed,
+  logout,
+  logoutSucceeded,
+  logoutFailed,
 }
 
 export type SurveyActionTypes =
@@ -46,3 +61,6 @@ export type SurveyActionTypes =
   | typeof login
   | typeof loginSucceeded
   | typeof loginFailed
+  | typeof logout
+  | typeof logoutSucceeded
+  | typeof logoutFailed

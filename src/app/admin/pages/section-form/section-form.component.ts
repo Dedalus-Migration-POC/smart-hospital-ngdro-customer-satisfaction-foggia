@@ -101,7 +101,7 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
             this.initializeForm(section);
           } else {
             const text = `Section with id [${sectionId}] not found`
-            this.dialog.error({text})
+            this.dialog.error({text, buttonsType: 'ok'})
             throw new Error(text);
           }
         })).subscribe())
@@ -133,14 +133,17 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
         tap(() => {
           console.log('submitSectionSucceeded subscription')
           const translation = this.editMode ? 'edited' : 'created'
-          this.dialog.success({text: this.translate.instant(`admin.section-form.section-${translation}-dialog`)})
+          this.dialog.success({
+            buttonsType: 'ok',
+            text: this.translate.instant(`admin.section-form.section-${translation}-dialog`)
+          })
             .afterClosed().subscribe(() => this.router.navigate(['/section']))
         })
       ).subscribe(),
 
       this.actions.pipe(
         ofType(SectionActions.submitSectionFailed),
-        tap(() => this.dialog.error())
+        tap(() => this.dialog.error({buttonsType: 'ok'}))
       ).subscribe())
   }
 
@@ -162,7 +165,7 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
     this.sectionForm.markAsDirty()
   }
 
-  protected publish() {
+  protected submit() {
     this.sectionForm.markAllAsTouched()
     if (this.sectionForm.valid) {
       console.log('VALID', this.sectionForm.value)

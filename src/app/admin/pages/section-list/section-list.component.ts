@@ -79,9 +79,13 @@ export class SectionListComponent extends WithSubscriptionsComponent {
         console.log(surveys)
         if (surveys.some(({sections}) => !!sections.find(({id}) => id === section.id))) {
           console.log('found')
-          this.dialog.error({text: this.translate.instant('admin.section-list.dialog-cannot-delete')})
+          this.dialog.error({
+            buttonsType: 'ok',
+            text: this.translate.instant('admin.section-list.dialog-cannot-delete')
+          })
         } else {
           this.dialog.attention({
+            buttonsType: 'ok',
             text: this.translate.instant('admin.section-list.dialog-confirm-delete'),
             onConfirm: () => this.store.dispatch(SectionActions.deleteSection({sectionId: section.id!.toString()}))
           })
@@ -91,6 +95,7 @@ export class SectionListComponent extends WithSubscriptionsComponent {
 
   protected onRestore({id}: Section) {
     this.dialog.attention({
+      buttonsType: 'ok',
       text: this.translate.instant('admin.section-list.dialog-confirm-restore'),
       onConfirm: () => this.store.dispatch(SectionActions.restoreSection({sectionId: id!.toString()}))
     })
@@ -100,12 +105,12 @@ export class SectionListComponent extends WithSubscriptionsComponent {
     this.addSubscriptions(
       this.actions.pipe(
         ofType(SectionActions.deleteSectionFailed),
-        tap(() => this.dialog.error())
+        tap(() => this.dialog.error({buttonsType: 'ok'}))
       ).subscribe(),
 
       this.actions.pipe(
         ofType(SectionActions.restoreSectionFailed),
-        tap(() => this.dialog.error())
+        tap(() => this.dialog.error({buttonsType: 'ok'}))
       ).subscribe()
     )
   }

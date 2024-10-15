@@ -5,7 +5,8 @@ import {TranslateModule} from "@ngx-translate/core";
 import {NgIf, NgOptimizedImage, NgSwitch, NgSwitchCase, NgSwitchDefault, NgTemplateOutlet} from "@angular/common";
 
 export type DialogProps = {
-  type: 'info' | 'success' | 'attention' | 'error';
+  dialogType: 'info' | 'success' | 'attention' | 'error';
+  buttonsType: 'yes_no' | 'confirm_cancel' | 'retry_cancel' | 'ok';
   title?: string;
   text?: string;
   onConfirmLabel?: string;

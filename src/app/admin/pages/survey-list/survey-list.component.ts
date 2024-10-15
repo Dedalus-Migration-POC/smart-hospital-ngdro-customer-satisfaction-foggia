@@ -105,10 +105,14 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
   protected onDelete(survey: Survey) {
     console.log(survey)
     if (survey.status === 'ACTIVE') {
-      //FIXME
-      this.dialog.error({text: this.translate.instant('admin.survey-list.dialog-cannot-delete')})
+      this.dialog.error({
+        buttonsType: 'ok',
+        text: this.translate.instant('admin.survey-list.dialog-cannot-delete'),
+        onConfirm: () => this.onDelete(survey)
+      })
     } else {
       this.dialog.attention({
+        buttonsType: 'yes_no',
         text: this.translate.instant('admin.survey-list.dialog-confirm-delete'),
         onConfirm: () => this.store.dispatch(SurveyActions.deleteSurvey({surveyId: survey.id!.toString()}))
       })
@@ -117,6 +121,7 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
 
   protected onRestore({id}: Section) {
     this.dialog.attention({
+      buttonsType: 'yes_no',
       text: this.translate.instant('admin.survey-list.dialog-confirm-restore'),
       onConfirm: () => this.store.dispatch(SurveyActions.restoreSurvey({surveyId: id!.toString()}))
     })
@@ -124,6 +129,7 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
 
   protected onPublish({id}: Section) {
     this.dialog.attention({
+      buttonsType: 'yes_no',
       text: this.translate.instant('admin.survey-list.dialog-confirm-publish'),
       onConfirm: () => this.store.dispatch(SurveyActions.publishSurvey({surveyId: id!.toString()}))
     })
@@ -131,6 +137,7 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
 
   protected onUnpublish({id}: Section) {
     this.dialog.attention({
+      buttonsType: 'yes_no',
       text: this.translate.instant('admin.survey-list.dialog-confirm-unpublish'),
       onConfirm: () => this.store.dispatch(SurveyActions.unpublishSurvey({surveyId: id!.toString()}))
     })
@@ -150,12 +157,18 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
     this.addSubscriptions(
       this.actions.pipe(
         ofType(SurveyActions.deleteSurveyFailed),
-        tap(() => this.dialog.error())
+        tap(({survey}) => this.dialog.error({
+          buttonsType: 'retry_cancel',
+          onConfirm: () => this.onDelete(survey)
+        }))
       ).subscribe(),
 
       this.actions.pipe(
         ofType(SurveyActions.restoreSurveyFailed),
-        tap(() => this.dialog.error())
+        tap(({survey}) => this.dialog.error({
+          buttonsType: 'retry_cancel',
+          onConfirm: () => this.onDelete(survey)
+        }))
       ).subscribe()
     )
   }

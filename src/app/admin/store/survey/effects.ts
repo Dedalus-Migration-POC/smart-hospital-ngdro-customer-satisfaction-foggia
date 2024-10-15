@@ -90,7 +90,9 @@ export class SurveyEffects {
             return SurveyActions.deleteSurveySucceeded({updatedSurveys})
           }),
           catchError(() =>
-            of(SurveyActions.deleteSurveyFailed()),
+            of(SurveyActions.deleteSurveyFailed({
+              survey: surveys.find(s => s.id!.toString() === surveyId)!
+            })),
           ),
         ),
       ),
@@ -105,12 +107,14 @@ export class SurveyEffects {
         this.surveyService.restore(surveyId).pipe(
           map(() => {
             const idx = surveys.findIndex(s => s.id!.toString() === surveyId)
-            let updatedSurveys = Array.of(...surveys)
+            let updatedSurveys = Array.from(surveys)
             updatedSurveys[idx] = {...updatedSurveys[idx], deleted: false}
             return SurveyActions.restoreSurveySucceeded({updatedSurveys})
           }),
           catchError(() =>
-            of(SurveyActions.restoreSurveyFailed()),
+            of(SurveyActions.restoreSurveyFailed({
+              survey: surveys.find(s => s.id!.toString() === surveyId)!
+            })),
           ),
         ),
       ),
@@ -125,7 +129,7 @@ export class SurveyEffects {
         this.surveyService.publish(surveyId).pipe(
           map(() => {
             const idx = surveys.findIndex(s => s.id!.toString() === surveyId)
-            let updatedSurveys = Array.of(...surveys)
+            let updatedSurveys = Array.from(surveys)
             updatedSurveys[idx] = {...updatedSurveys[idx], status: 'ACTIVE'}
             return SurveyActions.publishSurveySucceeded({updatedSurveys})
           }),
