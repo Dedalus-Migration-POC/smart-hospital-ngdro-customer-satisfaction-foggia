@@ -75,7 +75,8 @@
     "survey-status": {
       "ACTIVE": "Pubblicato",
       "INACTIVE": "Bozza",
-      "EXPIRED": "Scaduto"
+      "EXPIRED": "Scaduto",
+      "DELETED": "Eliminato"
     },
     "mat-paginator-intl": {
       "firstPageLabel": "Prima pagina",
@@ -117,7 +118,6 @@
         "publish": "Pubblica",
         "unpublish": "Nascondi"
       },
-      "surveys-empty": "Non ci sono questionari",
       "dialog-cannot-delete": "Non è possibile eliminare il questionario perchè risulta pubblicato.",
       "dialog-confirm-delete": "Vuoi davvero eliminare il questionario?",
       "dialog-confirm-restore": "Vuoi davvero ripristinare il questionario?",

@@ -5,7 +5,6 @@ import {Store} from "@ngrx/store";
 import {Actions, ofType} from "@ngrx/effects";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SurveyActions} from "../../store/survey/actions";
-import {ScaffoldComponent} from "../../components/scaffold/scaffold.component";
 import {MatButton} from "@angular/material/button";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatError, MatFormField, MatHint, MatLabel, MatSuffix} from "@angular/material/form-field";
@@ -46,7 +45,6 @@ export type SurveyForm = FormGroup<{
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [
-    ScaffoldComponent,
     MatButton,
     TranslateModule,
     ReactiveFormsModule,
@@ -83,8 +81,6 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
   sections$ = this.store.select(selectSectionState).pipe(map(({sections}) => sections));
   selectableSections$ = new BehaviorSubject<Array<Section>>([]);
   creating$ = this.state$.pipe(map(({creatingSurvey}) => creatingSurvey))
-
-  protected readonly of = of;
 
   constructor(
     private store: Store<SurveyAdminState>,
@@ -218,4 +214,6 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
       }))
     }
   }
+
+  protected readonly of = of;
 }

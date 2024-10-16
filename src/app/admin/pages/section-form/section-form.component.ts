@@ -1,5 +1,4 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ScaffoldComponent} from "../../components/scaffold/scaffold.component";
 import {map, of, take, tap} from "rxjs";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -39,7 +38,6 @@ export type SectionForm = FormGroup<{
   selector: 'app-section-form',
   standalone: true,
   imports: [
-    ScaffoldComponent,
     MatButton,
     MatFormField,
     MatIcon,
@@ -65,8 +63,6 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
   state$ = this.store.select(selectSectionState)
   sections$ = this.state$.pipe(map(({sections}) => sections));
   creating$ = this.state$.pipe(map(({creatingSection}) => creatingSection))
-
-  protected readonly of = of;
 
   constructor(
     private store: Store<SurveyAdminState>,
@@ -175,4 +171,5 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
     }
   }
 
+  protected readonly of = of;
 }

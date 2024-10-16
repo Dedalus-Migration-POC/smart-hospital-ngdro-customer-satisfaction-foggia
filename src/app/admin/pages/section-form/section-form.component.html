@@ -1,48 +1,46 @@
-<app-scaffold [loading]="of(false)" [error]="of(false)">
-  <form [formGroup]="sectionForm" (ngSubmit)="submit()">
-    <div class="head">
-      <h6>{{ getTitlePlaceholder() | translate }}</h6>
-      <button type="submit" mat-flat-button [disabled]="(creating$ | async) || !sectionForm.dirty">
-        <mat-spinner [diameter]="20" *ngIf="creating$ | async; else idle"></mat-spinner>
-        <ng-template #idle>
-          <span>{{ ('admin.section-form.' + (editMode ? 'edit' : 'save') + '-section-btn') | translate }}</span>
-        </ng-template>
-      </button>
-    </div>
+<form [formGroup]="sectionForm" (ngSubmit)="submit()">
+  <div class="head">
+    <h6>{{ getTitlePlaceholder() | translate }}</h6>
+    <button type="submit" mat-flat-button [disabled]="(creating$ | async) || !sectionForm.dirty">
+      <mat-spinner [diameter]="20" *ngIf="creating$ | async; else idle"></mat-spinner>
+      <ng-template #idle>
+        <span>{{ ('admin.section-form.' + (editMode ? 'edit' : 'save') + '-section-btn') | translate }}</span>
+      </ng-template>
+    </button>
+  </div>
 
-    <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{ 'admin.section-form.section-name-field' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="sectionForm.controls.name">
+  <mat-form-field appearance="outline" floatLabel="always">
+    <mat-label>{{ 'admin.section-form.section-name-field' | translate }}</mat-label>
+    <input matInput type="text" [formControl]="sectionForm.controls.name">
+    <mat-error
+      *ngIf="sectionForm.controls.name.hasError('required')">{{ 'admin.section-form.required-field' | translate }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" floatLabel="always">
+    <mat-label>{{ 'admin.section-form.section-description-field' | translate }}</mat-label>
+    <input matInput type="text" [formControl]="sectionForm.controls.description">
+  </mat-form-field>
+
+  <mat-card>
+    <mat-form-field appearance="outline" floatLabel="always"
+                    *ngFor="let control of sectionForm.controls.questions.controls; let i = index"
+                    [formGroupName]="'questions'">
+      <mat-label>{{ 'admin.section-form.question-item' | translate : {index: i + 1} }}</mat-label>
+      <input matInput type="text" [formControl]="control">
+      <mat-icon *ngIf="i > 0" class="remove-qst" matSuffix (click)="removeQuestion(i)">remove</mat-icon>
       <mat-error
-        *ngIf="sectionForm.controls.name.hasError('required')">{{ 'admin.section-form.required-field' | translate }}
+        *ngIf="control.hasError('required')">{{ 'admin.section-form.required-field' | translate }}
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{ 'admin.section-form.section-description-field' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="sectionForm.controls.description">
-    </mat-form-field>
-
-    <mat-card>
-      <mat-form-field appearance="outline" floatLabel="always"
-                      *ngFor="let control of sectionForm.controls.questions.controls; let i = index"
-                      [formGroupName]="'questions'">
-        <mat-label>{{ 'admin.section-form.question-item' | translate : {index: i + 1} }}</mat-label>
-        <input matInput type="text" [formControl]="control">
-        <mat-icon *ngIf="i > 0" class="remove-qst" matSuffix (click)="removeQuestion(i)">remove</mat-icon>
-        <mat-error
-          *ngIf="control.hasError('required')">{{ 'admin.section-form.required-field' | translate }}
-        </mat-error>
-      </mat-form-field>
-
-      <span>
+    <span>
         <button type="button" mat-stroked-button (click)="addQuestion()">
           <mat-icon>add</mat-icon>
           <span>{{ 'admin.section-form.add-question-item' | translate }}</span>
         </button>
       </span>
 
-    </mat-card>
+  </mat-card>
 
-  </form>
-</app-scaffold>
+</form>

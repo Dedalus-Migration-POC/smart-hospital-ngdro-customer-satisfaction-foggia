@@ -1,21 +1,19 @@
-<app-scaffold [loading]="of(false)" [error]="of(false)">
-  <div class="head">
-    <h6>{{ 'admin.section-list.title' | translate }}</h6>
-    <button mat-flat-button routerLink="./form"
-            class="create-section-btn"
-            [style]="{width: createSurveyBtn ? createSurveyBtn.clientWidth + 'px' : undefined}"
-    >
-      <mat-icon>add</mat-icon>
-      <span>{{ 'admin.section-list.create-section-btn' | translate }}</span>
-    </button>
-  </div>
+<div class="head">
+  <h6>{{ 'admin.section-list.title' | translate }}</h6>
+  <button mat-flat-button routerLink="./form"
+          class="create-section-btn"
+          [style]="{width: createSurveyBtn ? createSurveyBtn.clientWidth + 'px' : undefined}"
+  >
+    <mat-icon>add</mat-icon>
+    <span>{{ 'admin.section-list.create-section-btn' | translate }}</span>
+  </button>
+</div>
 
-  <app-section-filter></app-section-filter>
+<app-section-filter></app-section-filter>
 
-  <app-section-list-table
-    [sections]="sections$"
-    (onEdit)="onEdit($event)"
-    (onDelete)="onDelete($event)"
-    (onRestore)="onRestore($event)"
-  ></app-section-list-table>
-</app-scaffold>
+<app-section-list-table
+  [sections]="sections$"
+  (onEdit)="onEdit($event)"
+  (onDelete)="onDelete($event)"
+  (onRestore)="onRestore($event)"
+></app-section-list-table>

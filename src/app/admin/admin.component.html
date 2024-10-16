@@ -1,16 +1,7 @@
-<ng-template #ready>
-  <div id="content">
-    <router-outlet></router-outlet>
-  </div>
-</ng-template>
-
-
 <main>
   <app-header></app-header>
-  <app-scaffold *ngIf="(initializing$ | async) || (initializeError$ | async); else ready"
-                [loading]="initializing$"
-                [error]="initializeError$"
-                (onErrorRetryCallback)="initialize()"
-  ></app-scaffold>
+  <div style="padding: 32px 64px">
+    <router-outlet></router-outlet>
+  </div>
 </main>
 

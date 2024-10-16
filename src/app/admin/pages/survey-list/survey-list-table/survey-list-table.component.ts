@@ -1,4 +1,18 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {TranslateModule, TranslateService} from "@ngx-translate/core";
+import {Survey} from "../../../repository/dto/survey";
+import {AsyncPipe, DatePipe, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet} from "@angular/common";
+import {DeletableEntityService} from "../../../support/deletable-entity-service";
+import {map, Observable} from "rxjs";
+import {Store} from "@ngrx/store";
+import {SurveyAdminState} from "../../../store/store";
+import {selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/reducer";
+import {SurveyActions} from "../../../store/survey/actions";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatIcon} from "@angular/material/icon";
+import {FilterComponent} from "./filter/filter.component";
 import {
   MatCell,
   MatCellDef,
@@ -9,61 +23,37 @@ import {
   MatHeaderRowDef,
   MatRow,
   MatRowDef,
-  MatTable,
-  MatTableModule
+  MatTable
 } from "@angular/material/table";
-import {MatIconButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
-import {TranslateModule, TranslateService} from "@ngx-translate/core";
-import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
-import {Survey} from "../../../repository/dto/survey";
-import {AsyncPipe, DatePipe, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet} from "@angular/common";
-import {DeletableEntityService} from "../../../support/deletable-entity-service";
-import {map, Observable} from "rxjs";
-import {MatCheckbox} from "@angular/material/checkbox";
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {Store} from "@ngrx/store";
-import {MatTooltip} from "@angular/material/tooltip";
-import {SurveyAdminState} from "../../../store/store";
-import {selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/reducer";
-import {MatSort, MatSortHeader, MatSortModule} from "@angular/material/sort";
-import {selectUser} from "../../../store/application/reducer";
-import {FilterComponent} from "./filter/filter.component";
-import {SurveyActions} from "../../../store/survey/actions";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-survey-list-table',
   standalone: true,
   providers: [DatePipe],
   imports: [
-    MatTable,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatColumnDef,
-    MatHeaderCell,
-    MatCell,
-    MatCellDef,
-    MatHeaderCellDef,
-    MatIconButton,
-    MatIcon,
-    MatHeaderRowDef,
-    MatHeaderRow,
-    MatRowDef,
-    MatRow,
-    MatPaginator,
-    TranslateModule,
-    NgIf,
-    AsyncPipe,
-    MatCheckbox,
     MatProgressSpinner,
-    MatTooltip,
+    NgIf,
     NgSwitch,
+    MatIconButton,
     NgSwitchCase,
+    MatTooltip,
+    MatIcon,
+    TranslateModule,
+    FilterComponent,
+    MatTable,
+    AsyncPipe,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatColumnDef,
+    MatCellDef,
+    MatCell,
     NgTemplateOutlet,
-    MatSort,
-    MatSortHeader,
-    FilterComponent
+    MatHeaderRow,
+    MatRow,
+    MatHeaderRowDef,
+    MatRowDef,
+    MatPaginator
   ],
   templateUrl: './survey-list-table.component.html',
   styleUrl: './survey-list-table.component.scss'
@@ -91,7 +81,6 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
   }
 
   columns: string[] = ['name', 'startDate', 'endDate', 'status', 'version', 'actions']
-  canShowDeleted$ = this.store.select(selectUser).pipe(map((user) => user?.roles.includes('ROLE_ADMIN') ?? false))
   operatingStatus$ = this.store.select(selectSurveyState).pipe(map(s => s.operatingStatus))
 
   protected handleColumn(survey: Survey, propertyName: string): string {
@@ -104,7 +93,8 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
       case 'createdAt':
         return this.datePipe.transform(survey[key], 'dd/MM/yyyy HH:mm') as string;
       case 'status':
-        if (survey[key] === null) return '';
+        if (survey.deleted) return this.translate.instant('admin.survey-status.DELETED');
+        else if (!survey[key]) return '';
         return this.translate.instant('admin.survey-status.' + survey[key]);
       default:
         return survey[key] as string;

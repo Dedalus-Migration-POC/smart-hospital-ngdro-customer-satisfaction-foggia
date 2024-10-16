@@ -1,76 +1,75 @@
-<app-scaffold [loading]="of(false)" [error]="of(false)">
-  <form [formGroup]="surveyForm" (ngSubmit)="submit()">
-    <div class="head">
-      <h6>{{ getTitlePlaceholder() | translate }}</h6>
-      <button type="submit" mat-flat-button [disabled]="(creating$ | async) || !surveyForm.dirty">
-        <mat-spinner [diameter]="20" *ngIf="creating$ | async; else idle"></mat-spinner>
-        <ng-template #idle>
-          <span>{{ ('admin.survey-form.' + (editMode ? 'edit' : 'save') + '-survey-btn') | translate }}</span>
-        </ng-template>
-      </button>
-    </div>
+<form [formGroup]="surveyForm" (ngSubmit)="submit()">
+  <div class="head">
+    <h6>{{ getTitlePlaceholder() | translate }}</h6>
+    <button type="submit" mat-flat-button [disabled]="(creating$ | async) || !surveyForm.dirty">
+      <mat-spinner [diameter]="20" *ngIf="creating$ | async; else idle"></mat-spinner>
+      <ng-template #idle>
+        <span>{{ ('admin.survey-form.' + (editMode ? 'edit' : 'save') + '-survey-btn') | translate }}</span>
+      </ng-template>
+    </button>
+  </div>
 
 
-    <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{ 'admin.survey-form.survey-name-field' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="surveyForm.controls.name">
-      <mat-error
-        *ngIf="surveyForm.controls.name.hasError('required')">{{ 'admin.survey-form.required-field' | translate }}
-      </mat-error>
-    </mat-form-field>
+  <mat-form-field appearance="outline" floatLabel="always">
+    <mat-label>{{ 'admin.survey-form.survey-name-field' | translate }}</mat-label>
+    <input matInput type="text" [formControl]="surveyForm.controls.name">
+    <mat-error
+      *ngIf="surveyForm.controls.name.hasError('required')">{{ 'admin.survey-form.required-field' | translate }}
+    </mat-error>
+  </mat-form-field>
 
-    <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{ 'admin.survey-form.survey-description-field' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="surveyForm.controls.description">
-    </mat-form-field>
+  <mat-form-field appearance="outline" floatLabel="always">
+    <mat-label>{{ 'admin.survey-form.survey-description-field' | translate }}</mat-label>
+    <input matInput type="text" [formControl]="surveyForm.controls.description">
+  </mat-form-field>
 
-    <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{ 'admin.survey-form.survey-start-date-field' | translate }}</mat-label>
-      <input matInput [matDatepicker]="startDatePicker" [formControl]="surveyForm.controls.startDate">
-      <!--      <mat-hint>{{ 'date-hint' | translate }}</mat-hint>-->
-      <mat-datepicker-toggle matIconSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-      <mat-datepicker #startDatePicker></mat-datepicker>
-      <mat-error
-        *ngIf="surveyForm.controls.startDate.hasError('required')">{{ 'admin.survey-form.required-field' | translate }}
-      </mat-error>
-    </mat-form-field>
+  <mat-form-field appearance="outline" floatLabel="always">
+    <mat-label>{{ 'admin.survey-form.survey-start-date-field' | translate }}</mat-label>
+    <input matInput [matDatepicker]="startDatePicker" [formControl]="surveyForm.controls.startDate">
+    <!--      <mat-hint>{{ 'date-hint' | translate }}</mat-hint>-->
+    <mat-datepicker-toggle matIconSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #startDatePicker></mat-datepicker>
+    <mat-error
+      *ngIf="surveyForm.controls.startDate.hasError('required')">{{ 'admin.survey-form.required-field' | translate }}
+    </mat-error>
+  </mat-form-field>
 
-    <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{ 'admin.survey-form.survey-end-date-field' | translate }}</mat-label>
-      <input matInput [matDatepicker]="endDatePicker" [formControl]="surveyForm.controls.endDate">
-      <!--      <mat-hint>{{ 'date-hint' | translate }}</mat-hint>-->
-      <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-      <mat-datepicker #endDatePicker></mat-datepicker>
-    </mat-form-field>
+  <mat-form-field appearance="outline" floatLabel="always">
+    <mat-label>{{ 'admin.survey-form.survey-end-date-field' | translate }}</mat-label>
+    <input matInput [matDatepicker]="endDatePicker" [formControl]="surveyForm.controls.endDate">
+    <!--      <mat-hint>{{ 'date-hint' | translate }}</mat-hint>-->
+    <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #endDatePicker></mat-datepicker>
+  </mat-form-field>
 
-    @for (control of surveyForm.controls.sections.controls; track control; let i = $index) {
-      <mat-card>
-        <div class="mat-section-select">
-          <mat-form-field appearance="outline" floatLabel="always" [formGroupName]="'sections'">
-            <mat-label>{{ 'admin.survey-form.section-field-label' | translate : {index: i + 1} }}</mat-label>
-            <mat-select [formControl]="control">
-              @for (section of (selectableSections$ | async); track section) {
-                <mat-option [value]="section">{{ section.name }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
+  @for (control of surveyForm.controls.sections.controls; track control; let i = $index) {
+    <mat-card>
+      <div class="mat-section-select">
+        <mat-form-field appearance="outline" floatLabel="always" [formGroupName]="'sections'">
+          <mat-label>{{ 'admin.survey-form.section-field-label' | translate : {index: i + 1} }}</mat-label>
+          <mat-select [formControl]="control">
+            @for (section of (selectableSections$ | async); track section) {
+              <mat-option [value]="section">{{ section.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-          <button type="button" *ngIf="i > 0" mat-stroked-button class="remove-qst" color="warn"
-                  (click)="removeQuestion(i)">
-            <mat-icon>remove</mat-icon>
-            <span>{{ 'admin.survey-form.remove-section-btn' | translate }}</span>
-          </button>
+        <button type="button" *ngIf="i > 0" mat-stroked-button class="remove-qst" color="warn"
+                (click)="removeQuestion(i)">
+          <mat-icon>remove</mat-icon>
+          <span>{{ 'admin.survey-form.remove-section-btn' | translate }}</span>
+        </button>
+      </div>
+      @for (q of (control.value?.questions ?? []); track q; let j = $index) {
+        <div class="section-questions">
+          <span>{{ 'admin.survey-form.section-question-label' | translate : {index: j + 1} }}</span>
+          <span>{{ q.name }}</span>
         </div>
-        @for (q of (control.value?.questions ?? []); track q; let j = $index) {
-          <div class="section-questions">
-            <span>{{ 'admin.survey-form.section-question-label' | translate : {index: j + 1} }}</span>
-            <span>{{ q.name }}</span>
-          </div>
-        }
-      </mat-card>
-    }
+      }
+    </mat-card>
+  }
 
-    <span>
+  <span>
         <button type="button" mat-stroked-button (click)="addSection()"
                 [disabled]="!(sections$ | async)?.length ||  surveyForm.controls.sections.length >= (sections$ | async)!.length">
           <mat-icon>add</mat-icon>
@@ -79,5 +78,4 @@
       </span>
 
 
-  </form>
-</app-scaffold>
+</form>

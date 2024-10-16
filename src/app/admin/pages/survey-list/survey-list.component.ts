@@ -1,21 +1,9 @@
 import {Component} from '@angular/core';
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
-import {MatButton, MatIconButton} from "@angular/material/button";
 import {Store} from "@ngrx/store";
-import {map, Observable, of, tap} from "rxjs";
-import {AsyncPipe, NgIf, NgTemplateOutlet} from "@angular/common";
-import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
-import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
-import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
-import {PrintSurveyDialogComponent} from "./print-survey-dialog/print-survey-dialog.component";
-import {SectionsCardComponent} from "./sections-card/sections-card.component";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
-import {MatIcon} from "@angular/material/icon";
-import {SurveyListTableComponent} from "./survey-list-table/survey-list-table.component";
+import {map, Observable, tap} from "rxjs";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Survey} from "../../repository/dto/survey";
-import {ScaffoldComponent} from "../../components/scaffold/scaffold.component";
 import {Section} from "../../repository/dto/section";
 import {WithSubscriptionsComponent} from "../../support/with-subscriptions-component";
 import {SurveyActions} from "../../store/survey/actions";
@@ -24,49 +12,30 @@ import {Actions, ofType} from "@ngrx/effects";
 import {SurveyAdminState} from "../../store/store";
 import {selectSectionState} from "../../store/section/reducer";
 import {selectSurveyState} from "../../store/survey/reducer";
-import {MatInput} from "@angular/material/input";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {TopRightButtonsComponent} from "./top-right-buttons/top-right-buttons.component";
-import {SectionListComponent} from "../section-list/section-list.component";
+import {SurveyListTableComponent} from "./survey-list-table/survey-list-table.component";
+import {AsyncPipe, NgIf} from "@angular/common";
+import {MatCard, MatCardContent} from "@angular/material/card";
 
 @Component({
   selector: 'app-survey-list',
   standalone: true,
   imports: [
-    TranslateModule,
-    MatButton,
     SurveyListTableComponent,
-    AsyncPipe,
-    MatCard,
-    MatCardHeader,
-    MatCardContent,
-    MatLabel,
-    MatSelect,
-    MatOption,
-    MatRadioGroup,
-    MatRadioButton,
-    MatIcon,
-    MatButtonToggleGroup,
-    MatButtonToggle,
-    PrintSurveyDialogComponent,
-    SectionsCardComponent,
-    RouterLink,
-    ScaffoldComponent,
     NgIf,
-    NgTemplateOutlet,
-    MatFormField,
-    MatIconButton,
-    MatInput,
-    MatSuffix,
-    ReactiveFormsModule,
-    FormsModule,
-    MatProgressSpinner,
-    TopRightButtonsComponent,
-    SectionListComponent,
+    MatCard,
+    MatCardContent,
+    AsyncPipe,
+    TranslateModule
   ],
-  templateUrl: './survey-list.component.html',
-  styleUrl: './survey-list.component.scss'
+  template: `
+    <app-survey-list-table
+      [surveys]="surveys$"
+      (onEdit)="onEdit($event)"
+      (onDelete)="onDelete($event)"
+      (onRestore)="onRestore($event)"
+      (onPublish)="onPublish($event)"
+      (onUnpublish)="onUnpublish($event)"
+    ></app-survey-list-table>`,
 })
 export class SurveyListComponent extends WithSubscriptionsComponent {
   constructor(
@@ -150,6 +119,4 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
       ).subscribe()
     )
   }
-
-  protected readonly of = of;
 }

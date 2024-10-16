@@ -1,13 +1,13 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {SurveyListComponent} from "./pages/survey-list/survey-list.component";
 import {NotFoundComponent} from "./pages/not-found/not-found.component";
+import {DashboardComponent} from "./pages/dashboard/dashboard.component";
 
 const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    component: SurveyListComponent
+    component: DashboardComponent
   },
   {
     path: 'form',

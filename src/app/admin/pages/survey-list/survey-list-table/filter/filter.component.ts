@@ -1,23 +1,22 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MatError, MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatButton, MatIconButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
-import {TranslateModule} from "@ngx-translate/core";
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {debounceTime, distinctUntilChanged, map, Observable} from "rxjs";
 import {SurveyActions} from "../../../../store/survey/actions";
 import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../../../store/store";
 import {selectSurveyState} from "../../../../store/survey/reducer";
 import {WithSubscriptionsComponent} from "../../../../support/with-subscriptions-component";
-import {MatOption, MatSelect} from "@angular/material/select";
 import {SurveyStatus} from "../../../../repository/dto/survey";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {MatOption, MatSelect} from "@angular/material/select";
+import {AsyncPipe, NgForOf} from "@angular/common";
+import {TranslateModule} from "@ngx-translate/core";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
-import {ToggleButtonComponent} from "../../../../components/toggle-button/toggle-button.component";
+import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
+import {MatIcon} from "@angular/material/icon";
+import {ToggleButtonComponent} from "../../../../components/toggle-button/toggle-button.component";
 
 export type SurveyFilterForm = FormGroup<{
   name: FormControl<string | null>;
@@ -31,28 +30,22 @@ export type SurveyFilterForm = FormGroup<{
   selector: 'app-survey-filter',
   standalone: true,
   imports: [
+    ReactiveFormsModule,
     MatFormField,
     MatInput,
-    FormsModule,
-    MatIconButton,
-    MatSuffix,
-    MatLabel,
-    MatIcon,
-    MatProgressSpinner,
-    NgIf,
-    TranslateModule,
-    AsyncPipe,
-    MatButton,
     MatSelect,
     MatOption,
     NgForOf,
-    ReactiveFormsModule,
-    MatDatepicker,
+    TranslateModule,
+    AsyncPipe,
     MatDatepickerInput,
     MatDatepickerToggle,
-    MatError,
-    ToggleButtonComponent,
-    MatTooltip
+    MatDatepicker,
+    MatIconButton,
+    MatTooltip,
+    MatLabel,
+    MatIcon,
+    ToggleButtonComponent
   ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss'
@@ -88,11 +81,9 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
   }
 
   state$ = this.store.select(selectSurveyState)
-  fetchingSurveys$ = this.state$.pipe(map(s => s.fetchingSurveys));
   versions$ = this.state$.pipe(map(s => s.versions));
 
   protected search() {
-    console.log('search term', this.form.value);
     this.store.dispatch(SurveyActions.fetchSurveys({form: this.form.value}));
   }
 
