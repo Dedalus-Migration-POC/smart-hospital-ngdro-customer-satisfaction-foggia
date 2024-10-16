@@ -1,4 +1,4 @@
-import {AfterViewChecked, ChangeDetectorRef, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {RouterLink} from "@angular/router";
@@ -28,18 +28,13 @@ import {selectSectionState} from "../../../store/section/reducer";
   templateUrl: './sections-card.component.html',
   styleUrl: './sections-card.component.scss'
 })
-export class SectionsCardComponent implements AfterViewChecked {
+export class SectionsCardComponent {
   constructor(
     private store: Store<SurveyAdminState>,
-    private changeDetectorRef: ChangeDetectorRef
   ) {
   }
 
   sections$: Observable<Array<Section>> = this.store.select(selectSectionState).pipe(map(({sections}) => sections));
-  createSurveyBtn: HTMLElement | null | undefined;
 
-  ngAfterViewChecked() {
-    this.createSurveyBtn = window.document.getElementById('create-survey-btn')
-    this.changeDetectorRef.detectChanges();
-  }
+
 }

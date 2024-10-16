@@ -4,11 +4,12 @@ import {Section} from "../../repository/dto/section";
 import {AppActions} from "../application/actions";
 
 export type State = {
-  fetchingSections: boolean
-  fetchSectionsError: boolean
-  sections: Array<Section>
-  creatingSection: boolean
-  editingSectionId: string | null
+  fetchingSections: boolean;
+  fetchSectionsError: boolean;
+  sections: Array<Section>;
+  creatingSection: boolean;
+  editingSectionId: string | null;
+  versions: Set<number>;
 }
 
 const initialState: State = {
@@ -16,7 +17,8 @@ const initialState: State = {
   fetchSectionsError: false,
   sections: [],
   creatingSection: false,
-  editingSectionId: null
+  editingSectionId: null,
+  versions: new Set([1])
 }
 
 export const reducer = createReducer(
@@ -24,6 +26,7 @@ export const reducer = createReducer(
   on(AppActions.initializeSucceeded, (state, action) => ({
     ...state,
     sections: action.sections,
+    versions: new Set<number>(action.sections.map(({version}) => version).filter(Boolean).sort((a, b) => a > b ? 1 : -1))
   })),
   on(SectionActions.fetchSections, (state) => ({
     ...state,

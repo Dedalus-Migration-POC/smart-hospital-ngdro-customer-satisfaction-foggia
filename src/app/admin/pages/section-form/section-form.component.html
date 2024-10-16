@@ -1,6 +1,6 @@
 <app-scaffold [loading]="of(false)" [error]="of(false)">
-  <form class="min-400" [formGroup]="sectionForm" (ngSubmit)="submit()">
-    <div class="head min-400">
+  <form [formGroup]="sectionForm" (ngSubmit)="submit()">
+    <div class="head">
       <h6>{{ getTitlePlaceholder() | translate }}</h6>
       <button type="submit" mat-flat-button [disabled]="(creating$ | async) || !sectionForm.dirty">
         <mat-spinner [diameter]="20" *ngIf="creating$ | async; else idle"></mat-spinner>
@@ -10,7 +10,7 @@
       </button>
     </div>
 
-    <mat-form-field appearance="outline" class="min-400">
+    <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>{{ 'admin.section-form.section-name-field' | translate }}</mat-label>
       <input matInput type="text" [formControl]="sectionForm.controls.name">
       <mat-error
@@ -18,13 +18,13 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="min-400">
+    <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>{{ 'admin.section-form.section-description-field' | translate }}</mat-label>
       <input matInput type="text" [formControl]="sectionForm.controls.description">
     </mat-form-field>
 
     <mat-card>
-      <mat-form-field appearance="outline" class="min-400"
+      <mat-form-field appearance="outline" floatLabel="always"
                       *ngFor="let control of sectionForm.controls.questions.controls; let i = index"
                       [formGroupName]="'questions'">
         <mat-label>{{ 'admin.section-form.question-item' | translate : {index: i + 1} }}</mat-label>

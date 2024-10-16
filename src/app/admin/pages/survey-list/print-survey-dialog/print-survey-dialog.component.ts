@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
@@ -10,11 +10,15 @@ import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Survey} from "../../../repository/dto/survey";
 import {Store} from "@ngrx/store";
-import {map, Observable} from "rxjs";
+import {map, Observable, tap} from "rxjs";
 import {AsyncPipe, NgForOf} from "@angular/common";
 import {SurveyAdminState} from "../../../store/store";
 import {selectSurveyState} from "../../../store/survey/reducer";
 import {DialogService} from "../../../support/dialog-service";
+import {MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {SurveyActions} from "../../../store/survey/actions";
+import {WithSubscriptionsComponent} from "../../../support/with-subscriptions-component";
+import {Actions, ofType} from "@ngrx/effects";
 
 
 export type PrintSurveyForm = FormGroup<{
@@ -25,7 +29,7 @@ export type PrintSurveyForm = FormGroup<{
 }>
 
 @Component({
-  selector: 'app-print-card',
+  selector: 'app-print-survey-dialog',
   standalone: true,
   imports: [
     MatButton,
@@ -44,26 +48,54 @@ export type PrintSurveyForm = FormGroup<{
     MatFormField,
     AsyncPipe,
     ReactiveFormsModule,
-    NgForOf
+    NgForOf,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatDialogClose
   ],
-  templateUrl: './print-card.component.html',
-  styleUrl: './print-card.component.scss'
+  templateUrl: './print-survey-dialog.component.html',
+  styleUrl: './print-survey-dialog.component.scss'
 })
-export class PrintCardComponent {
+export class PrintSurveyDialogComponent extends WithSubscriptionsComponent implements OnInit {
   @Input({alias: "surveys", required: true}) surveys!: Array<Survey>;
 
   constructor(
+    private matDialog: MatDialog,
+    private actions: Actions,
     private store: Store<SurveyAdminState>,
     private fb: FormBuilder,
     private dialog: DialogService,
     private translate: TranslateService
   ) {
+    super();
     this.printSurveyForm = this.fb.group({
       unit: new FormControl<string | null>(null),
       type: new FormControl<string | null>(null, Validators.required),
       surveyId: new FormControl<number | null>(null),
       copies: new FormControl<number>(0),
     });
+  }
+
+  ngOnInit() {
+    this.addSubscriptions(
+      this.actions.pipe(
+        ofType(SurveyActions.printSurveySucceeded),
+        tap(() => {
+          this.dialog.info({text: "Stampa inviata con successo", buttonsType: 'ok'})
+        })
+      ).subscribe(),
+
+      this.actions.pipe(
+        ofType(SurveyActions.printSurveyFailed),
+        tap(() => {
+          this.dialog.error({
+            buttonsType: 'retry_cancel',
+            onConfirm: () => this.store.dispatch(SurveyActions.printSurvey({printSurveyForm: this.printSurveyForm.value}))
+          })
+        })
+      ).subscribe()
+    )
   }
 
   printSurveyForm!: PrintSurveyForm
@@ -83,14 +115,19 @@ export class PrintCardComponent {
     console.log('print ', this.printSurveyForm.value)
     const copiesValue = this.printSurveyForm.controls.copies.value
     const copiesTranslation = this.translate.instant(copiesValue === 1 ? 'copy' : 'copies').toLowerCase();
-    this.dialog.info({
-      buttonsType: 'confirm_cancel',
-      text: this.translate.instant('admin.print-card.resume', {
-        ...this.printSurveyForm.value,
-        copies: `${copiesValue} ${copiesTranslation}`,
-        survey: this.printSurveyForm.controls.surveyId.value
-      }),
-      onConfirmLabel: this.translate.instant('print'),
-    })
+    this.addSubscriptions(
+      this.dialog.info({
+        buttonsType: 'confirm_cancel',
+        text: this.translate.instant('admin.print-survey-dialog.resume', {
+          ...this.printSurveyForm.value,
+          copies: `${copiesValue} ${copiesTranslation}`,
+          survey: this.printSurveyForm.controls.surveyId.value
+        }),
+        onConfirmLabel: this.translate.instant('print'),
+        onConfirm: () => this.store.dispatch(SurveyActions.printSurvey({printSurveyForm: this.printSurveyForm.value}))
+      }).afterClosed().subscribe(() => {
+        this.matDialog.getDialogById("PRINT_SURVEY_DIALOG")?.close()
+      })
+    )
   }
 }

@@ -1,0 +1,65 @@
+<ng-template #listEmptyTemplate>
+  <mat-card>
+    <mat-card-content class="empty-card">
+      <span>{{ 'admin.survey-list.surveys-empty' | translate }}</span>
+      <ng-container *ngTemplateOutlet="createSurveyBtn"></ng-container>
+    </mat-card-content>
+  </mat-card>
+</ng-template>
+
+<ng-template #createSurveyBtn>
+  <button id="create-survey-btn" mat-flat-button routerLink="./form" [disabled]="!(sections$ | async)?.length">
+    <mat-icon>add</mat-icon>
+    <span>{{ 'admin.survey-list.create-survey-btn' | translate }}</span>
+  </button>
+</ng-template>
+
+<app-scaffold
+  [loading]="of(false)" [error]="of(false)">
+  <div class="content">
+    <div class="left">
+      <div class="left-content">
+        <h6>{{ 'admin.survey-list.title' | translate }}</h6>
+        <span class="spacer"></span>
+        <span class="qst-buttons" *ngIf="(surveys$ | async)?.length">
+          <button mat-stroked-button (click)="viewAnalytics()">
+            <mat-icon>query_stats</mat-icon>
+            <span>{{ 'admin.survey-list.view-analytics-btn' | translate }}</span>
+          </button>
+          <ng-container *ngTemplateOutlet="createSurveyBtn"></ng-container>
+        </span>
+      </div>
+
+      <div class="survey-finder">
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>{{ 'admin.survey-list.search-survey-label' | translate }}</mat-label>
+          <input matInput type="text" [(ngModel)]="searchField" (ngModelChange)="onSearchFieldChange($event)">
+          <ng-template #idle>
+            <button matSuffix mat-icon-button (click)="search()">
+              <mat-icon>search</mat-icon>
+            </button>
+          </ng-template>
+          <mat-spinner
+            matSuffix
+            *ngIf="fetchingSurveys$ | async; else idle"
+            [style]="{marginRight: '16px'}"
+            [diameter]="20"></mat-spinner>
+        </mat-form-field>
+      </div>
+
+      <app-survey-list-table
+        *ngIf="(surveys$ | async)!.length; else listEmptyTemplate"
+        [surveys]="surveys$"
+        (onEdit)="onEdit($event)"
+        (onDelete)="onDelete($event)"
+        (onRestore)="onRestore($event)"
+        (onPublish)="onPublish($event)"
+        (onUnpublish)="onUnpublish($event)"
+      ></app-survey-list-table>
+      <app-sections-card></app-sections-card>
+    </div>
+    <div class="right">
+      <app-print-card [surveys]="(surveys$ | async)!"></app-print-card>
+    </div>
+  </div>
+</app-scaffold>

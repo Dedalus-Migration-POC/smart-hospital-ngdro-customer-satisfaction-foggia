@@ -8,6 +8,7 @@ import {Store} from "@ngrx/store";
 import {CreateSurveyRequest} from "../../repository/dto/create-survey-request";
 import {SurveyAdminState} from "../store";
 import {selectSurveyList} from "./reducer";
+import {SurveyStatus} from "../../repository/dto/survey";
 
 @Injectable()
 export class SurveyEffects {
@@ -18,11 +19,15 @@ export class SurveyEffects {
   ) {
   }
 
-  protected readonly fetchSurveys$ = createEffect(() => {
+  private readonly fetchSurveys$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.fetchSurveys),
-      concatMap((action) =>
-        this.surveyService.findByFilter({...action}).pipe(
+      concatMap(({form}) => this.surveyService.find({
+          name: form.name ?? undefined,
+          status: form.status ?? undefined,
+          version: form.version ?? undefined,
+          dateRange: {startDate: form.startDate ?? undefined, endDate: form.endDate ?? undefined}
+        }).pipe(
           map((response) => SurveyActions.fetchSurveysSucceeded({surveys: response.content})),
           catchError(() =>
             of(SurveyActions.fetchSurveysFailed()),
@@ -32,7 +37,7 @@ export class SurveyEffects {
     )
   })
 
-  protected readonly fetchSurveyById$ = createEffect(() => {
+  private readonly fetchSurveyById$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.fetchSurveyById),
       concatMap(({surveyId}) =>
@@ -46,7 +51,7 @@ export class SurveyEffects {
     )
   })
 
-  protected readonly submitSurvey$ = createEffect(() => {
+  private readonly submitSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.submitSurvey),
       concatMap(({surveyForm}) => {
@@ -77,7 +82,7 @@ export class SurveyEffects {
     )
   })
 
-  protected readonly deleteSurvey$ = createEffect(() => {
+  private readonly deleteSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.deleteSurvey),
       withLatestFrom(this.store.select(selectSurveyList)),
@@ -99,7 +104,7 @@ export class SurveyEffects {
     )
   })
 
-  protected readonly restoreSurvey$ = createEffect(() => {
+  private readonly restoreSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.restoreSurvey),
       withLatestFrom(this.store.select(selectSurveyList)),
@@ -121,7 +126,7 @@ export class SurveyEffects {
     )
   })
 
-  protected readonly publishSurvey$ = createEffect(() => {
+  private readonly publishSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.publishSurvey),
       withLatestFrom(this.store.select(selectSurveyList)),
@@ -130,7 +135,7 @@ export class SurveyEffects {
           map(() => {
             const idx = surveys.findIndex(s => s.id!.toString() === surveyId)
             let updatedSurveys = Array.from(surveys)
-            updatedSurveys[idx] = {...updatedSurveys[idx], status: 'ACTIVE'}
+            updatedSurveys[idx] = {...updatedSurveys[idx], status: SurveyStatus.ACTIVE}
             return SurveyActions.publishSurveySucceeded({updatedSurveys})
           }),
           catchError(() =>
@@ -141,7 +146,7 @@ export class SurveyEffects {
     )
   })
 
-  protected readonly unpublishSurvey$ = createEffect(() => {
+  private readonly unpublishSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.unpublishSurvey),
       withLatestFrom(this.store.select(selectSurveyList)),
@@ -150,13 +155,30 @@ export class SurveyEffects {
           map(() => {
             const idx = surveys.findIndex(s => s.id!.toString() === surveyId)
             let updatedSurveys = Array.of(...surveys)
-            updatedSurveys[idx] = {...updatedSurveys[idx], status: 'INACTIVE'}
+            updatedSurveys[idx] = {...updatedSurveys[idx], status: SurveyStatus.INACTIVE}
             return SurveyActions.unpublishSurveySucceeded({updatedSurveys})
           }),
           catchError(() =>
             of(SurveyActions.unpublishSurveyFailed()),
           ),
         ),
+      ),
+    )
+  })
+
+  private readonly printSurvey$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SurveyActions.printSurvey),
+      withLatestFrom(this.store.select(selectSurveyList)),
+      concatMap(([{printSurveyForm}, {surveys}]) => {
+          console.log(printSurveyForm)
+          return this.surveyService.print().pipe(
+            map(() => SurveyActions.printSurveySucceeded()),
+            catchError(() =>
+              of(SurveyActions.printSurveyFailed()),
+            ),
+          )
+        }
       ),
     )
   })

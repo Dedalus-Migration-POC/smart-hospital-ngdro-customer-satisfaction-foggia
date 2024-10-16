@@ -16,8 +16,9 @@ export type State = {
   operatingStatus: {
     surveyId: string;
     status: SurveyOperatingStatus;
-  } | null
+  } | null;
   surveys: Array<Survey>;
+  versions: Set<number>;
 }
 
 const initialState: State = {
@@ -26,6 +27,7 @@ const initialState: State = {
   creatingSurvey: false,
   operatingStatus: null,
   surveys: [],
+  versions: new Set([1])
 }
 
 export const reducer = createReducer(
@@ -33,6 +35,7 @@ export const reducer = createReducer(
   on(AppActions.initializeSucceeded, (state, action) => ({
     ...state,
     surveys: action.surveys,
+    versions: new Set<number>(action.surveys.map(({version}) => version).filter(Boolean).sort((a, b) => a > b ? 1 : -1))
   })),
   on(SurveyActions.fetchSurveys, (state) => ({
     ...state,
@@ -161,3 +164,5 @@ export const selectSurveyList = createSelector((state: SurveyAdminState) => stat
   fetchSurveysError,
   surveys,
 }))
+
+export const selectSurveyVersions = createSelector((state: SurveyAdminState) => state.survey, ({versions}) => versions)

@@ -1,6 +1,6 @@
 <app-scaffold [loading]="of(false)" [error]="of(false)">
-  <form class="min-400" [formGroup]="surveyForm" (ngSubmit)="submit()">
-    <div class="head min-400">
+  <form [formGroup]="surveyForm" (ngSubmit)="submit()">
+    <div class="head">
       <h6>{{ getTitlePlaceholder() | translate }}</h6>
       <button type="submit" mat-flat-button [disabled]="(creating$ | async) || !surveyForm.dirty">
         <mat-spinner [diameter]="20" *ngIf="creating$ | async; else idle"></mat-spinner>
@@ -11,7 +11,7 @@
     </div>
 
 
-    <mat-form-field appearance="outline" class="min-400">
+    <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>{{ 'admin.survey-form.survey-name-field' | translate }}</mat-label>
       <input matInput type="text" [formControl]="surveyForm.controls.name">
       <mat-error
@@ -19,12 +19,12 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="min-400">
+    <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>{{ 'admin.survey-form.survey-description-field' | translate }}</mat-label>
       <input matInput type="text" [formControl]="surveyForm.controls.description">
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="min-400">
+    <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>{{ 'admin.survey-form.survey-start-date-field' | translate }}</mat-label>
       <input matInput [matDatepicker]="startDatePicker" [formControl]="surveyForm.controls.startDate">
       <!--      <mat-hint>{{ 'date-hint' | translate }}</mat-hint>-->
@@ -35,7 +35,7 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="min-400">
+    <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>{{ 'admin.survey-form.survey-end-date-field' | translate }}</mat-label>
       <input matInput [matDatepicker]="endDatePicker" [formControl]="surveyForm.controls.endDate">
       <!--      <mat-hint>{{ 'date-hint' | translate }}</mat-hint>-->
@@ -46,7 +46,7 @@
     @for (control of surveyForm.controls.sections.controls; track control; let i = $index) {
       <mat-card>
         <div class="mat-section-select">
-          <mat-form-field appearance="outline" class="min-400" [formGroupName]="'sections'">
+          <mat-form-field appearance="outline" floatLabel="always" [formGroupName]="'sections'">
             <mat-label>{{ 'admin.survey-form.section-field-label' | translate : {index: i + 1} }}</mat-label>
             <mat-select [formControl]="control">
               @for (section of (selectableSections$ | async); track section) {

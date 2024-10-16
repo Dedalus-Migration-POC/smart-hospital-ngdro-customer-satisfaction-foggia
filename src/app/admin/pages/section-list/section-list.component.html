@@ -1,20 +1,17 @@
-<app-scaffold [loading]="loading$" [error]="error$">
-  <div class="head min-400">
+<app-scaffold [loading]="of(false)" [error]="of(false)">
+  <div class="head">
     <h6>{{ 'admin.section-list.title' | translate }}</h6>
-    <button mat-flat-button routerLink="./form">
+    <button mat-flat-button routerLink="./form"
+            class="create-section-btn"
+            [style]="{width: createSurveyBtn ? createSurveyBtn.clientWidth + 'px' : undefined}"
+    >
       <mat-icon>add</mat-icon>
       <span>{{ 'admin.section-list.create-section-btn' | translate }}</span>
     </button>
   </div>
-  <div class="search min-400">
-    <mat-form-field appearance="outline" class="min-400">
-      <mat-label>{{ 'admin.section-list.search-section-label' | translate }}</mat-label>
-      <input matInput type="text" [(ngModel)]="searchField">
-      <button matSuffix mat-icon-button aria-label="Clear" (click)="search()">
-        <mat-icon>search</mat-icon>
-      </button>
-    </mat-form-field>
-  </div>
+
+  <app-section-filter></app-section-filter>
+
   <app-section-list-table
     [sections]="sections$"
     (onEdit)="onEdit($event)"

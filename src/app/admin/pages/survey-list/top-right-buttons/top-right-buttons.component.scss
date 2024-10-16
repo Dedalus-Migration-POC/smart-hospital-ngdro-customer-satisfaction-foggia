@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+h6 {
+  margin: 0 !important;
+}
+
+button:not(:last-child) {
+  margin-right: 16px;
+}

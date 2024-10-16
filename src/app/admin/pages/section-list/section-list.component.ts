@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
+import {AfterViewChecked, ChangeDetectorRef, Component} from '@angular/core';
 import {ScaffoldComponent} from "../../components/scaffold/scaffold.component";
-import {map, take, tap} from "rxjs";
+import {map, of, take, tap} from "rxjs";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
@@ -19,6 +19,7 @@ import {SectionActions} from "../../store/section/actions";
 import {SurveyAdminState} from "../../store/store";
 import {selectSectionList} from "../../store/section/reducer";
 import {selectSurveyList} from "../../store/survey/reducer";
+import {FilterComponent} from "./section-list-table/filter/filter.component";
 
 @Component({
   selector: 'app-section-list',
@@ -38,11 +39,12 @@ import {selectSurveyList} from "../../store/survey/reducer";
     SectionListTableComponent,
     AsyncPipe,
     NgIf,
+    FilterComponent,
   ],
   templateUrl: './section-list.component.html',
   styleUrl: './section-list.component.scss'
 })
-export class SectionListComponent extends WithSubscriptionsComponent {
+export class SectionListComponent extends WithSubscriptionsComponent implements AfterViewChecked {
 
   constructor(
     private store: Store<SurveyAdminState>,
@@ -50,10 +52,18 @@ export class SectionListComponent extends WithSubscriptionsComponent {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private dialog: DialogService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super();
     this.startSubscriptions();
+  }
+
+  createSurveyBtn: HTMLElement | null | undefined;
+
+  ngAfterViewChecked() {
+    this.createSurveyBtn = window.document.getElementById('create-survey-btn')
+    this.changeDetectorRef.detectChanges();
   }
 
   state$ = this.store.select(selectSectionList)
@@ -114,4 +124,6 @@ export class SectionListComponent extends WithSubscriptionsComponent {
       ).subscribe()
     )
   }
+
+  protected readonly of = of;
 }

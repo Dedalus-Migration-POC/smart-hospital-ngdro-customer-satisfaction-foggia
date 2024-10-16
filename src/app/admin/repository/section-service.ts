@@ -2,6 +2,8 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Section} from "./dto/section";
 import {CreateSectionRequest} from "./dto/create-section-request";
+import {PagedList} from "./dto/paged_list";
+import {FilterSectionRequest} from "./dto/filter-section-request";
 
 const baseUrl = '/api/v1/survey/section'
 
@@ -11,8 +13,8 @@ export class SectionService {
 
   }
 
-  public list() {
-    return this.http.get<Array<Section>>(baseUrl)
+  public find(request: FilterSectionRequest) {
+    return this.http.post<PagedList<Section>>(baseUrl, request)
   }
 
   public findById(sectionId: string) {
@@ -20,7 +22,7 @@ export class SectionService {
   }
 
   public create(section: CreateSectionRequest) {
-    return this.http.post<Section>(`${baseUrl}`, section)
+    return this.http.post<Section>(`${baseUrl}/create`, section)
   }
 
   public update(section: CreateSectionRequest) {

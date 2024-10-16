@@ -21,9 +21,13 @@ export class SectionEffects {
   private readonly fetchSections$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SectionActions.fetchSections),
-      concatMap(() =>
-        this.sectionService.list().pipe(
-          map((sections) => SectionActions.fetchSectionsSucceeded({sections})),
+      concatMap(({form}) =>
+        this.sectionService.find({
+          name: form.name ?? undefined,
+          version: form.version ?? undefined,
+          associatedSurveyIds: form.presentIn ? [form.presentIn] : undefined,
+        }).pipe(
+          map((response) => SectionActions.fetchSectionsSucceeded({sections: response.content})),
           catchError(() =>
             of(SectionActions.fetchSectionsFailed()),
           ),

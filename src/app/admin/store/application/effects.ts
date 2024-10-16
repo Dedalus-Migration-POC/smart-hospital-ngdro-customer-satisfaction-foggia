@@ -22,10 +22,10 @@ export class AppEffects {
       ofType(AppActions.initialize),
       concatMap(() =>
         forkJoin([
-          this.surveyService.list(),
-          this.sectionService.list()
+          this.surveyService.find({}),
+          this.sectionService.find({})
         ]).pipe(
-          map(([surveys, sections]) =>
+          map(([{content: surveys}, {content: sections}]) =>
             AppActions.initializeSucceeded({surveys, sections})
           ),
           catchError(() =>
@@ -76,4 +76,4 @@ export class AppEffects {
     }
   }
 }
- 
+

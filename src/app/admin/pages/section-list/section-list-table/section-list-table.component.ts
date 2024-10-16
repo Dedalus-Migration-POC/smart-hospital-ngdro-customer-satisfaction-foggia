@@ -77,7 +77,7 @@ export class SectionListTableComponent extends DeletableEntityService<Section> {
 
   deletingId$ = this.store.select(selectSectionState).pipe(map(s => s.editingSectionId))
 
-  columns: string[] = ['name', 'presence', 'version', 'actions']
+  columns: string[] = ['name', 'present-in', 'version', 'actions']
 
   canShowDeleted$ = this.store.select(selectUser).pipe(map((user) => user?.roles.includes('ROLE_ADMIN') ?? false))
 
@@ -85,7 +85,7 @@ export class SectionListTableComponent extends DeletableEntityService<Section> {
     switch (propertyName) {
       case "name":
         return section.name;
-      case "presence":
+      case "present-in":
         return (section.associatedSurveys ?? []).map(survey => survey.name).join(', ')
       case 'version':
         return section.version.toString()

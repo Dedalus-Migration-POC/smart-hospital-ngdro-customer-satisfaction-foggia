@@ -1,10 +1,12 @@
 import {createAction, props} from '@ngrx/store'
 import {Survey} from "../../repository/dto/survey";
 import {SurveyForm} from "../../pages/survey-form/survey-form.component";
+import {PrintSurveyForm} from "../../pages/survey-list/print-survey-dialog/print-survey-dialog.component";
+import {SurveyFilterForm} from "../../pages/survey-list/survey-list-table/filter/filter.component";
 
 const fetchSurveys = createAction(
   '[Survey] Fetch Surveys',
-  props<{ name?: string, startDate?: Date, endDate?: Date }>(),
+  props<{ form: SurveyFilterForm['value'] }>(),
 )
 
 const fetchSurveysSucceeded = createAction(
@@ -102,6 +104,19 @@ const unpublishSurveyFailed = createAction(
   '[Survey] Unpublish Survey Failed',
 )
 
+const printSurvey = createAction(
+  '[Survey] Print Survey',
+  props<{ printSurveyForm: PrintSurveyForm['value'] }>()
+)
+
+const printSurveySucceeded = createAction(
+  '[Survey] Print Survey Succeeded',
+)
+
+const printSurveyFailed = createAction(
+  '[Survey] Print Survey Failed',
+)
+
 export const SurveyActions = {
   fetchSurveys,
   fetchSurveysSucceeded,
@@ -124,6 +139,9 @@ export const SurveyActions = {
   unpublishSurvey,
   unpublishSurveySucceeded,
   unpublishSurveyFailed,
+  printSurvey,
+  printSurveySucceeded,
+  printSurveyFailed,
 }
 
 export type SurveyActionTypes =
@@ -148,3 +166,6 @@ export type SurveyActionTypes =
   | typeof unpublishSurvey
   | typeof unpublishSurveySucceeded
   | typeof unpublishSurveyFailed
+  | typeof printSurvey
+  | typeof printSurveySucceeded
+  | typeof printSurveyFailed

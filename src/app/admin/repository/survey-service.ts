@@ -13,12 +13,8 @@ export class SurveyService {
 
   }
 
-  public list() {
-    return this.http.get<Array<Survey>>(`${baseUrl}`)
-  }
-
-  public findByFilter(request: FilterSurveyRequest) {
-    return this.http.post<PagedList<Survey>>(`${baseUrl}/findByFilter`, request)
+  public find(request: FilterSurveyRequest) {
+    return this.http.post<PagedList<Survey>>(baseUrl, request)
   }
 
   public findById(id: string) {
@@ -47,5 +43,9 @@ export class SurveyService {
 
   public unpublish(surveyId: string) {
     return this.http.patch<void>(`${baseUrl}/unpublish/${surveyId}`, null)
+  }
+
+  public print() {
+    return this.http.post<void>(`${baseUrl}/print`, null)
   }
 }

@@ -28,6 +28,7 @@ import {SurveyAdminState} from "../../../store/store";
 import {selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/reducer";
 import {MatSort, MatSortHeader, MatSortModule} from "@angular/material/sort";
 import {selectUser} from "../../../store/application/reducer";
+import {FilterComponent} from "./filter/filter.component";
 
 @Component({
   selector: 'app-survey-list-table',
@@ -60,7 +61,8 @@ import {selectUser} from "../../../store/application/reducer";
     NgSwitchCase,
     NgTemplateOutlet,
     MatSort,
-    MatSortHeader
+    MatSortHeader,
+    FilterComponent
   ],
   templateUrl: './survey-list-table.component.html',
   styleUrl: './survey-list-table.component.scss'

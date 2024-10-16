@@ -1,9 +1,11 @@
 import {createAction, props} from '@ngrx/store'
 import {Section} from "../../repository/dto/section";
 import {SectionForm} from "../../pages/section-form/section-form.component";
+import {SectionFilterForm} from "../../pages/section-list/section-list-table/filter/filter.component";
 
 const fetchSections = createAction(
   '[Survey] Fetch Sections',
+  props<{ form: SectionFilterForm['value'] }>()
 )
 
 const fetchSectionsSucceeded = createAction(

@@ -39,6 +39,9 @@
 <div class="deleted-toggler" *ngIf="canShowDeleted$ | async">
   <mat-checkbox (change)="changeShowDeleted($event)">{{ 'admin.section-list.show-deleted' | translate }}</mat-checkbox>
 </div>
+
+<app-survey-filter></app-survey-filter>
+
 <mat-table [dataSource]="(datasource$ | async)!" class="mat-elevation-z8">
   @for (surveyProperty of columns; track surveyProperty) {
     <ng-container *ngIf="surveyProperty !== 'actions'" [matColumnDef]="surveyProperty">
@@ -83,6 +86,7 @@
 
   <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: columns"></mat-row>
+
 </mat-table>
 
 

@@ -1,0 +1,64 @@
+<form [formGroup]="printSurveyForm" (ngSubmit)="print()">
+  <h2 mat-dialog-title>{{ 'admin.print-survey-dialog.title' | translate }}</h2>
+  <mat-dialog-content>
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>{{ 'admin.print-survey-dialog.select-unit-label' | translate }}</mat-label>
+      <mat-select [formControl]="printSurveyForm.controls.unit" [value]="printSurveyForm.controls.unit.value"
+                  [disabled]="(disabled$ | async) ?? false">
+        @for (unit of units; track unit) {
+          <mat-option [value]="unit.value">{{ 'admin.print-survey-dialog.units.' + unit.viewValue | translate }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="structure-type-label">{{ 'admin.print-survey-dialog.structure-type-label' | translate }}</div>
+    <mat-radio-group [formControl]="printSurveyForm.controls.type" [disabled]="(disabled$ | async) ?? false">
+      <mat-radio-button value="1">{{ 'admin.print-survey-dialog.structure-type-radio.department' | translate }}
+      </mat-radio-button>
+      <mat-radio-button value="2">{{ 'admin.print-survey-dialog.structure-type-radio.ambulatory' | translate }}
+      </mat-radio-button>
+    </mat-radio-group>
+
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>{{ 'admin.print-survey-dialog.select-survey-label' | translate }}</mat-label>
+      <mat-select [formControl]="printSurveyForm.controls.surveyId" [disabled]="(disabled$ | async) ?? false">
+        <mat-option *ngFor="let survey of surveys" [value]="survey.id">{{ survey.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="structure-type-label">{{ 'admin.print-survey-dialog.copies-to-print' | translate }}</div>
+    <span>
+          <mat-button-toggle-group [hideMultipleSelectionIndicator]="true"
+                                   [hideSingleSelectionIndicator]="true"
+          >
+            <mat-button-toggle [disabled]="printSurveyForm.controls.copies.value! < 1"
+                               [value]="false"
+                               (click)="handleCopies(printSurveyForm.controls.copies.value! - 1)"
+            >&nbsp;&#8212;&nbsp;
+            </mat-button-toggle>
+
+            <mat-button-toggle [disabled]="true">
+              &nbsp;{{ printSurveyForm.controls.copies.value }}&nbsp;
+            </mat-button-toggle>
+
+            <mat-button-toggle [disabled]="(disabled$ | async) ?? false"
+                               [value]="false"
+                               (click)="handleCopies(printSurveyForm.controls.copies.value! + 1)"
+            >&nbsp;&#43;&nbsp;
+            </mat-button-toggle>
+
+          </mat-button-toggle-group>
+    </span>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>
+      {{ 'cancel' | translate }}
+    </button>
+    <button mat-button [disabled]="printSurveyForm.controls.copies.value! < 1">
+      {{ 'admin.print-survey-dialog.button' | translate }}
+    </button>
+  </mat-dialog-actions>
+
+</form>
