@@ -160,8 +160,7 @@
         "ambulatory": "Ambulatorio"
       },
       "copies-to-print": "Copie da stampare",
-      "button": "Stampa",
-      "resume": "Confermi di voler stampare {{copies}} per l'unità operativa {{unit}}, tipologia della struttura {{type}} per questionario {{survey}}?"
+      "button": "Stampa"
     },
     "section-list": {
       "title": "Sezioni",

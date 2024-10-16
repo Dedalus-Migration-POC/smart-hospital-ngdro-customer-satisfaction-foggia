@@ -24,22 +24,5 @@ export class ToggleButtonComponent {
   @Input({alias: 'idleIcon', required: true}) idleIcon!: string;
   @Input({alias: 'activeIcon', required: true}) activeIcon!: string;
   @Input({alias: 'status', required: true}) status!: boolean;
-  @Input({
-    alias: 'buttonType',
-    required: false
-  }) buttonType?: 'mat-button' | 'mat-raised-button' | 'mat-flat-button' | 'mat-stroked-button';
   @Output('onClick') onClick: EventEmitter<void> = new EventEmitter();
-
-  protected getMatDirective() {
-    switch (this.buttonType) {
-      case 'mat-raised-button':
-        return true;
-      case 'mat-flat-button':
-        return true;
-      case 'mat-stroked-button':
-        return true;
-      default:
-        return false;
-    }
-  }
 }

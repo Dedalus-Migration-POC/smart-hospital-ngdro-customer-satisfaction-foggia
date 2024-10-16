@@ -35,14 +35,12 @@ export class TopRightButtonsComponent {
   sections$: Observable<Array<Section>> = this.store.select(selectSectionState).pipe(map(({sections}) => sections));
 
   protected print() {
-    this.dialog.open<PrintSurveyDialogComponent, any>(PrintSurveyDialogComponent, {
-      id: "PRINT_SURVEY_DIALOG",
+    this.dialog.open<PrintSurveyDialogComponent>(PrintSurveyDialogComponent, {
       width: '360px',
       maxWidth: '480px',
       minHeight: '480px',
       hasBackdrop: true,
       disableClose: true,
-      data: {}
     })
   }
 
