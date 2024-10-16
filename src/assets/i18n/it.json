@@ -98,7 +98,9 @@
         "version": "Versione",
         "start-date": "Data inizio validità",
         "end-date": "Data fine validità",
-        "clear-filter-btn": "Cancella filtri"
+        "clear-filter-btn": "Cancella filtri",
+        "show-deleted-btn": "Mostra eliminati",
+        "hide-deleted-btn": "Nascondi eliminati"
       },
       "table-headers": {
         "name": "Nome questionario",
@@ -116,7 +118,6 @@
         "unpublish": "Nascondi"
       },
       "surveys-empty": "Non ci sono questionari",
-      "show-deleted": "Mostra elementi eliminati",
       "dialog-cannot-delete": "Non è possibile eliminare il questionario perchè risulta pubblicato.",
       "dialog-confirm-delete": "Vuoi davvero eliminare il questionario?",
       "dialog-confirm-restore": "Vuoi davvero ripristinare il questionario?",
@@ -171,7 +172,9 @@
         "status": "Stato",
         "version": "Versione",
         "present-in": "Presente in",
-        "clear-filter-btn": "Cancella filtri"
+        "clear-filter-btn": "Cancella filtri",
+        "show-deleted-btn": "Mostra eliminati",
+        "hide-deleted-btn": "Nascondi eliminati"
       },
       "table-headers": {
         "name": "Nome sezione",
@@ -184,7 +187,6 @@
         "delete": "Elimina",
         "restore": "Ripristina"
       },
-      "show-deleted": "Mostra elementi eliminati",
       "dialog-cannot-delete": "Non è possibile eliminare la Sezione perchè è associata ad uno o più questionari.",
       "dialog-confirm-delete": "Vuoi davvero eliminare la sezione?",
       "dialog-confirm-restore": "Vuoi davvero ripristinare la sezione?"

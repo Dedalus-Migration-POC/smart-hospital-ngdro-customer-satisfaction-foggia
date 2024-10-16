@@ -45,9 +45,18 @@
   </div>
 
   <div>
-    <button type="button" matSuffix mat-stroked-button (click)="form.reset()">
-      <mat-icon>close</mat-icon>
-      <span>{{ 'admin.survey-list.search-filter.clear-filter-btn' | translate }}</span>
+    <button type="button" mat-icon-button (click)="form.reset()">
+      <mat-icon [matTooltip]="'admin.survey-list.search-filter.clear-filter-btn' | translate">close</mat-icon>
     </button>
+
+    <app-toggle-button
+      buttonType="mat-stroked-button"
+      (onClick)="toggleShowDeleted.emit()"
+      [activeLabel]="'admin.survey-list.search-filter.show-deleted-btn' | translate"
+      [idleLabel]="'admin.survey-list.search-filter.hide-deleted-btn' | translate"
+      [status]="(showDeleted | async)!"
+      activeIcon="delete"
+      idleIcon="restore"
+    ></app-toggle-button>
   </div>
 </form>

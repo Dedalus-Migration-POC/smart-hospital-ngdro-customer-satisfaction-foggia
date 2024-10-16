@@ -27,7 +27,7 @@ import {DeletableEntityService} from "../../../support/deletable-entity-service"
 import {MatTooltip} from "@angular/material/tooltip";
 import {SurveyAdminState} from "../../../store/store";
 import {selectSectionState} from "../../../store/section/reducer";
-import {selectUser} from "../../../store/application/reducer";
+import {SectionActions} from "../../../store/section/actions";
 
 @Component({
   selector: 'app-section-list-table',
@@ -65,7 +65,7 @@ export class SectionListTableComponent extends DeletableEntityService<Section> {
   @Output("onRestore") restoreSection: EventEmitter<Section> = new EventEmitter();
 
   constructor(private store: Store<SurveyAdminState>) {
-    super();
+    super(store.select(s => s.section.showDeleted), () => store.dispatch(SectionActions.toggleShowDeleted()));
   }
 
   override ngOnInit() {
@@ -78,8 +78,6 @@ export class SectionListTableComponent extends DeletableEntityService<Section> {
   deletingId$ = this.store.select(selectSectionState).pipe(map(s => s.editingSectionId))
 
   columns: string[] = ['name', 'present-in', 'version', 'actions']
-
-  canShowDeleted$ = this.store.select(selectUser).pipe(map((user) => user?.roles.includes('ROLE_ADMIN') ?? false))
 
   protected handleColumn(section: Section, propertyName: string): string {
     switch (propertyName) {

@@ -29,6 +29,7 @@ import {selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/re
 import {MatSort, MatSortHeader, MatSortModule} from "@angular/material/sort";
 import {selectUser} from "../../../store/application/reducer";
 import {FilterComponent} from "./filter/filter.component";
+import {SurveyActions} from "../../../store/survey/actions";
 
 @Component({
   selector: 'app-survey-list-table',
@@ -79,7 +80,7 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
     private store: Store<SurveyAdminState>,
     private datePipe: DatePipe,
     private translate: TranslateService) {
-    super();
+    super(store.select(s => s.survey.showDeleted), () => store.dispatch(SurveyActions.toggleShowDeleted()));
   }
 
   override ngOnInit() {

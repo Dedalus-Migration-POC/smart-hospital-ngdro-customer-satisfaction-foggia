@@ -19,6 +19,7 @@ export type State = {
   } | null;
   surveys: Array<Survey>;
   versions: Set<number>;
+  showDeleted: boolean;
 }
 
 const initialState: State = {
@@ -27,7 +28,8 @@ const initialState: State = {
   creatingSurvey: false,
   operatingStatus: null,
   surveys: [],
-  versions: new Set([1])
+  versions: new Set([1]),
+  showDeleted: false,
 }
 
 export const reducer = createReducer(
@@ -151,6 +153,10 @@ export const reducer = createReducer(
   on(SurveyActions.unpublishSurveyFailed, (state) => ({
     ...state,
     operatingStatus: null
+  })),
+  on(SurveyActions.toggleShowDeleted, (state) => ({
+    ...state,
+    showDeleted: !state.showDeleted
   })),
 )
 

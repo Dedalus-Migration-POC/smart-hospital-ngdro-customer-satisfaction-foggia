@@ -16,6 +16,9 @@ import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/m
 import {selectSectionState} from "../../../../store/section/reducer";
 import {SectionActions} from "../../../../store/section/actions";
 import {selectSurveyState} from "../../../../store/survey/reducer";
+import {selectUser} from "../../../../store/application/reducer";
+import {ToggleButtonComponent} from "../../../../components/toggle-button/toggle-button.component";
+import {MatTooltip} from "@angular/material/tooltip";
 
 export type SectionFilterForm = FormGroup<{
   name: FormControl<string | null>;
@@ -46,7 +49,9 @@ export type SectionFilterForm = FormGroup<{
     MatDatepicker,
     MatDatepickerInput,
     MatDatepickerToggle,
-    MatError
+    MatError,
+    ToggleButtonComponent,
+    MatTooltip
   ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss'
@@ -77,6 +82,8 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
     )
   }
 
+  canShowDeleted$ = this.store.select(selectUser).pipe(map((user) => user?.roles.includes('ROLE_ADMIN') ?? false))
+
   state$ = this.store.select(selectSectionState)
   surveyState$ = this.store.select(selectSurveyState)
   versions$ = this.state$.pipe(map(s => s.versions));
@@ -85,5 +92,9 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
   protected search() {
     console.log('search term', this.form.value);
     this.store.dispatch(SectionActions.fetchSections({form: this.form.value}));
+  }
+
+  protected toggleDeleted() {
+    this.store.dispatch(SectionActions.toggleShowDeleted());
   }
 }

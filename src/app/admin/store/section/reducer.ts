@@ -10,6 +10,7 @@ export type State = {
   creatingSection: boolean;
   editingSectionId: string | null;
   versions: Set<number>;
+  showDeleted: boolean;
 }
 
 const initialState: State = {
@@ -18,7 +19,8 @@ const initialState: State = {
   sections: [],
   creatingSection: false,
   editingSectionId: null,
-  versions: new Set([1])
+  versions: new Set([1]),
+  showDeleted: false,
 }
 
 export const reducer = createReducer(
@@ -104,6 +106,10 @@ export const reducer = createReducer(
   on(SectionActions.restoreSectionFailed, (state) => ({
     ...state,
     editingSectionId: null
+  })),
+  on(SectionActions.toggleShowDeleted, (state) => ({
+    ...state,
+    showDeleted: !state.showDeleted
   })),
 )
 

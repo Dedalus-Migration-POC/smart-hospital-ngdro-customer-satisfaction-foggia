@@ -32,9 +32,18 @@
   </div>
 
   <div>
-    <button type="button" matSuffix mat-stroked-button (click)="form.reset()">
-      <mat-icon>close</mat-icon>
-      <span>{{ 'admin.section-list.search-filter.clear-filter-btn' | translate }}</span>
+    <button type="button" mat-icon-button (click)="form.reset()">
+      <mat-icon [matTooltip]="'admin.section-list.search-filter.clear-filter-btn' | translate">close</mat-icon>
     </button>
+
+    <app-toggle-button
+      [buttonType]="'mat-stroked-button'"
+      (onClick)="toggleDeleted()"
+      [activeLabel]="'admin.section-list.search-filter.show-deleted-btn' | translate"
+      [idleLabel]="'admin.section-list.search-filter.hide-deleted-btn' | translate"
+      [status]="(canShowDeleted$ | async)!"
+      activeIcon="delete"
+      idleIcon="restore"
+    ></app-toggle-button>
   </div>
 </form>

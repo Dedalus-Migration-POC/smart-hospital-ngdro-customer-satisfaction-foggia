@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatError, MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -7,7 +7,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {TranslateModule} from "@ngx-translate/core";
-import {debounceTime, distinctUntilChanged, map} from "rxjs";
+import {debounceTime, distinctUntilChanged, map, Observable} from "rxjs";
 import {SurveyActions} from "../../../../store/survey/actions";
 import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../../../store/store";
@@ -16,6 +16,8 @@ import {WithSubscriptionsComponent} from "../../../../support/with-subscriptions
 import {MatOption, MatSelect} from "@angular/material/select";
 import {SurveyStatus} from "../../../../repository/dto/survey";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
+import {ToggleButtonComponent} from "../../../../components/toggle-button/toggle-button.component";
+import {MatTooltip} from "@angular/material/tooltip";
 
 export type SurveyFilterForm = FormGroup<{
   name: FormControl<string | null>;
@@ -48,12 +50,16 @@ export type SurveyFilterForm = FormGroup<{
     MatDatepicker,
     MatDatepickerInput,
     MatDatepickerToggle,
-    MatError
+    MatError,
+    ToggleButtonComponent,
+    MatTooltip
   ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss'
 })
 export class FilterComponent extends WithSubscriptionsComponent implements OnInit {
+  @Input({alias: 'showDeleted', required: true}) showDeleted!: Observable<boolean>;
+  @Output('onToggleShowDeleted') toggleShowDeleted: EventEmitter<void> = new EventEmitter();
   protected form!: SurveyFilterForm;
 
   constructor(

@@ -73,6 +73,10 @@ const restoreSectionFailed = createAction(
   '[Survey] Restore Section Failed',
 )
 
+const toggleShowDeleted = createAction(
+  '[Survey] Toggle Show Deleted',
+)
+
 export const SectionActions = {
   fetchSections,
   fetchSectionsSucceeded,
@@ -89,6 +93,7 @@ export const SectionActions = {
   restoreSection,
   restoreSectionSucceeded,
   restoreSectionFailed,
+  toggleShowDeleted
 }
 
 export type SectionActionTypes =
@@ -107,3 +112,4 @@ export type SectionActionTypes =
   | typeof restoreSection
   | typeof restoreSectionSucceeded
   | typeof restoreSectionFailed
+  | typeof toggleShowDeleted

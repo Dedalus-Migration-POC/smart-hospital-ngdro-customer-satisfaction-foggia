@@ -117,6 +117,10 @@ const printSurveyFailed = createAction(
   '[Survey] Print Survey Failed',
 )
 
+const toggleShowDeleted = createAction(
+  '[Survey] Toggle Show Deleted',
+)
+
 export const SurveyActions = {
   fetchSurveys,
   fetchSurveysSucceeded,
@@ -142,6 +146,7 @@ export const SurveyActions = {
   printSurvey,
   printSurveySucceeded,
   printSurveyFailed,
+  toggleShowDeleted,
 }
 
 export type SurveyActionTypes =
@@ -169,3 +174,4 @@ export type SurveyActionTypes =
   | typeof printSurvey
   | typeof printSurveySucceeded
   | typeof printSurveyFailed
+  | typeof toggleShowDeleted

@@ -2,12 +2,3 @@ mat-cell.deleted {
   text-decoration: line-through;
   color: #ff0000;
 }
-
-.deleted-toggler {
-  text-align: end;
-  margin-bottom: 16px;
-
-  > input {
-    margin-left: 16px;
-  }
-}
