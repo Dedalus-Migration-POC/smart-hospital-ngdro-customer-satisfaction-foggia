@@ -4,6 +4,8 @@ import {SurveyForm} from "../../pages/survey-form/survey-form.component";
 import {PrintSurveyForm} from "../../pages/survey-list/print-survey-dialog/print-survey-dialog.component";
 import {SurveyFilterForm} from "../../pages/survey-list/survey-list-table/filter/filter.component";
 
+export type SubmitSurveyOption = 'save' | 'publish'
+
 const fetchSurveys = createAction(
   '[Survey] Fetch Surveys',
   props<{ form: SurveyFilterForm['value'] }>(),
@@ -34,7 +36,7 @@ const fetchSurveyByIdFailed = createAction(
 
 const submitSurvey = createAction(
   '[Survey] Submit Survey',
-  props<{ surveyForm: SurveyForm['value'] }>()
+  props<{ surveyForm: SurveyForm['value'], submitOption: SubmitSurveyOption }>()
 )
 
 const submitSurveySucceeded = createAction(

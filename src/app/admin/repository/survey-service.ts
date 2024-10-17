@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Survey} from "./dto/survey";
-import {CreateSurveyRequest} from "./dto/create-survey-request";
+import {SurveyPersistRequest} from "./dto/survey-persist-request";
 import {FilterSurveyRequest} from "./dto/filter-survey-request";
 import {PagedList} from "./dto/paged_list";
 
@@ -21,11 +21,11 @@ export class SurveyService {
     return this.http.get<Survey>(`${baseUrl}/${id}`)
   }
 
-  public create(survey: CreateSurveyRequest) {
+  public create(survey: SurveyPersistRequest) {
     return this.http.post<Survey>(`${baseUrl}/create`, survey)
   }
 
-  public update(survey: CreateSurveyRequest) {
+  public update(survey: SurveyPersistRequest) {
     return this.http.post<Survey>(`${baseUrl}/update`, survey)
   }
 

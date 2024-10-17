@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {map, of, take, tap} from "rxjs";
+import {map, take, tap} from "rxjs";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatError, MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
@@ -170,6 +170,4 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
       }))
     }
   }
-
-  protected readonly of = of;
 }

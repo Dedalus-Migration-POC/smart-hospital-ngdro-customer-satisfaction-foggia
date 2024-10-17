@@ -126,20 +126,24 @@
     },
     "survey-form": {
       "title-new": "Nuovo questionario",
-      "title-edit": "Modifica questionario",
+      "title-edit": "Nuova versione questionario",
       "save-survey-btn": "Salva",
       "edit-survey-btn": "Salva modifiche",
+      "publish-survey-btn": "Pubblica",
       "survey-name-field": "Nome questionario",
+      "survey-version-field": "Versione",
       "survey-description-field": "Descrizione questionario",
-      "survey-start-date-field": "Data inizio",
-      "survey-end-date-field": "Data fine",
+      "survey-start-date-field": "Data inizio validità",
+      "survey-end-date-field": "Data fine validità",
       "section-field-label": "Sezione {{index}}",
       "add-section-item": "Aggiungi sezione",
       "required-field": "Campo obbligatorio",
       "remove-section-btn": "Rimuovi sezione",
       "section-question-label": "Domanda {{index}}",
       "survey-created-dialog": "Il questionario è stato creato correttamente",
-      "survey-edited-dialog": "Il questionario è stato aggiornato correttamente"
+      "survey-edited-dialog": "Il questionario è stato aggiornato correttamente",
+      "move-up-btn": "Sposta su",
+      "move-down-btn": "Sposta su"
     },
     "sections-card": {
       "title": "Sezioni",
