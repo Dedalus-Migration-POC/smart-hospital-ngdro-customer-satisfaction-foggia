@@ -1,28 +1,30 @@
 <form [formGroup]="form">
   <div class="head">
     <h6>{{ getTitlePlaceholder() | translate }}</h6>
-    <div class="head-buttons">
-      <button type="button" mat-flat-button
+    <div>
+      <button type="button" mat-stroked-button
               (click)="submit('save')"
-              [disabled]="(creating$ | async) || !form.dirty">
-        <mat-spinner [diameter]="20" *ngIf="creating$ | async; else idle"></mat-spinner>
-        <ng-template #idle>
+              [disabled]="((operatingStatus$ | async) === SurveyOperatingStatus.CREATING) || !form.dirty">
+        <mat-spinner [diameter]="20"
+                     *ngIf="(operatingStatus$ | async) === SurveyOperatingStatus.CREATING; else canSave"></mat-spinner>
+        <ng-template #canSave>
           <span>{{ ('admin.survey-form.' + (editMode ? 'edit' : 'save') + '-survey-btn') | translate }}</span>
         </ng-template>
       </button>
 
       <button type="button" mat-flat-button
               (click)="submit('publish')"
-              [disabled]="(creating$ | async) || !form.dirty">
-        <mat-spinner [diameter]="20" *ngIf="creating$ | async; else idle"></mat-spinner>
-        <ng-template #idle>
+              [disabled]="((operatingStatus$ | async) === SurveyOperatingStatus.CREATING_PUBLISHING) || !form.dirty">
+        <mat-spinner [diameter]="20"
+                     *ngIf="(operatingStatus$ | async) === SurveyOperatingStatus.CREATING_PUBLISHING; else canPublish"></mat-spinner>
+        <ng-template #canPublish>
           <span>{{ 'admin.survey-form.publish-survey-btn' | translate }}</span>
         </ng-template>
       </button>
     </div>
   </div>
 
-  <div class="survey-fields">
+  <div #surveyFields class="survey-fields">
 
     <mat-form-field appearance="outline" floatLabel="always" *ngIf="form.controls.name; let field">
       <mat-label>{{ 'admin.survey-form.survey-name-field' | translate }}</mat-label>
@@ -32,12 +34,12 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" floatLabel="always" *ngIf="form.controls.version; let field">
+    <mat-form-field style="max-width: 140px" appearance="outline" floatLabel="always"
+                    *ngIf="form.controls.version; let field">
       <mat-label>{{ 'admin.survey-form.survey-version-field' | translate }}</mat-label>
       <mat-select
         [formControl]="field"
         [value]="field.value"
-        [disabled]="true"
       >
         <mat-option *ngFor="let version of versions" [value]="version">
           {{ version }}
@@ -48,33 +50,39 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" floatLabel="always" *ngIf="form.controls.startDate; let field">
-      <mat-label>{{ 'admin.survey-form.survey-start-date-field' | translate }}</mat-label>
-      <input matInput [matDatepicker]="startDatePicker" [formControl]="field">
-      <!--      <mat-hint>{{ 'date-hint' | translate }}</mat-hint>-->
-      <mat-datepicker-toggle matIconSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-      <mat-datepicker #startDatePicker></mat-datepicker>
-      <mat-error
-        *ngIf="field.hasError('required')">{{ 'admin.survey-form.required-field' | translate }}
-      </mat-error>
-    </mat-form-field>
+    <ng-container *ngIf="dateRange$ | async as range">
+      <mat-form-field style="max-width: 200px" appearance="outline" floatLabel="always"
+                      *ngIf="form.controls.startDate; let field">
+        <mat-label>{{ 'admin.survey-form.survey-start-date-field' | translate }}</mat-label>
+        <input matInput [min]="range.minStartDate" [max]="range.maxStartDate" [matDatepicker]="startDatePicker"
+               [formControl]="field"/>
+        <mat-datepicker-toggle matIconSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+        <mat-error
+          *ngIf="field.hasError('required')">{{ 'admin.survey-form.required-field' | translate }}
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" floatLabel="always" *ngIf="form.controls.endDate; let field">
-      <mat-label>{{ 'admin.survey-form.survey-end-date-field' | translate }}</mat-label>
-      <input matInput [matDatepicker]="endDatePicker" [formControl]="field">
-      <!--      <mat-hint>{{ 'date-hint' | translate }}</mat-hint>-->
-      <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-      <mat-datepicker #endDatePicker></mat-datepicker>
-    </mat-form-field>
+      <mat-form-field style="max-width: 200px" appearance="outline" floatLabel="always"
+                      *ngIf="form.controls.endDate; let field">
+        <mat-label>{{ 'admin.survey-form.survey-end-date-field' | translate }}</mat-label>
+        <input matInput [min]="range.minEndDate" [matDatepicker]="endDatePicker"
+               [formControl]="field"/>
+        <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #endDatePicker></mat-datepicker>
+      </mat-form-field>
+    </ng-container>
 
   </div>
 
-  <mat-form-field appearance="outline" floatLabel="always" *ngIf="form.controls.description; let field">
+  <mat-form-field [style]="{maxWidth: surveyFieldsDiv?.nativeElement?.clientWidth + 'px'}" appearance="outline"
+                  floatLabel="always" *ngIf="form.controls.description; let field">
     <mat-label>{{ 'admin.survey-form.survey-description-field' | translate }}</mat-label>
     <input matInput type="text" [formControl]="field">
   </mat-form-field>
 
-  <mat-card *ngFor="let control of form.controls.sections.controls; let i = index">
+  <mat-card *ngFor="let control of form.controls.sections.controls; let i = index"
+            [style]="{maxWidth: surveyFieldsDiv?.nativeElement?.clientWidth + 'px'}">
     <div class="mat-section-select">
       <mat-form-field appearance="outline" floatLabel="always">
         <mat-label>{{ 'admin.survey-form.section-field-label' | translate : {index: i + 1} }}</mat-label>
@@ -85,6 +93,9 @@
           }
           <mat-option *ngIf="control.value as selected" [value]="selected">{{ selected.name }}</mat-option>
         </mat-select>
+        <mat-error
+          *ngIf="control.hasError('required')">{{ 'admin.survey-form.required-field' | translate }}
+        </mat-error>
       </mat-form-field>
 
       <button type="button" *ngIf="form.controls.sections.value.length > 1" mat-stroked-button class="remove-qst"

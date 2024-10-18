@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {BehaviorSubject, map, Observable, take, tap} from "rxjs";
 import {Store} from "@ngrx/store";
@@ -28,7 +28,7 @@ import {
 } from "@angular/material/datepicker";
 import {SurveyAdminState} from "../../store/store";
 import {selectSectionState} from "../../store/section/reducer";
-import {selectSurveyState} from "../../store/survey/reducer";
+import {selectSurveyState, SurveyOperatingStatus} from "../../store/survey/reducer";
 import {withLatestFrom} from "rxjs/operators";
 import {MatTooltip} from "@angular/material/tooltip";
 
@@ -76,15 +76,34 @@ export type SurveyForm = FormGroup<{
   styleUrl: './survey-form.component.scss'
 })
 export class SurveyFormComponent extends WithSubscriptionsComponent implements OnInit {
+  @ViewChild("surveyFields", {static: false}) surveyFieldsDiv!: ElementRef<HTMLDivElement>;
   editMode = false;
 
-  form!: SurveyForm;
+  form: SurveyForm = this.fb.group({
+    id: new FormControl<string | null>(null),
+    name: new FormControl<string | null>(null, Validators.required),
+    version: new FormControl<number | null>({value: 1, disabled: true}),
+    description: new FormControl<string | null>(null),
+    startDate: new FormControl<Date | null>(null, Validators.required),
+    endDate: new FormControl<Date | null>(null),
+    sections: this.fb.array<Section | null>([])
+  });
 
   state$ = this.store.select(selectSurveyState)
   surveys$ = this.state$.pipe(map(({surveys}) => surveys));
   sections$ = this.store.select(selectSectionState).pipe(map(({sections}) => sections));
   selectableSections$ = new BehaviorSubject<Array<Section>>([]);
-  creating$ = this.state$.pipe(map(({creatingSurvey}) => creatingSurvey))
+  operatingStatus$ = this.state$.pipe(map(({operatingStatus}) => operatingStatus?.status))
+
+  protected dateRange$ = new BehaviorSubject<{
+    minStartDate: string | null;
+    maxStartDate: string | null;
+    minEndDate: string | null;
+  }>({
+    minStartDate: new Date().toISOString().slice(0, 10),
+    maxStartDate: null,
+    minEndDate: new Date().toISOString().slice(0, 10),
+  })
 
   constructor(
     private store: Store<SurveyAdminState>,
@@ -96,16 +115,6 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
     private translate: TranslateService
   ) {
     super();
-
-    this.form = this.fb.group({
-      id: new FormControl<string | null>(null),
-      name: new FormControl<string | null>(null, Validators.required),
-      version: new FormControl<number | null>(1),
-      description: new FormControl<string | null>(null),
-      startDate: new FormControl<Date | null>(null, Validators.required),
-      endDate: new FormControl<Date | null>(null),
-      sections: this.fb.array<Section | null>([])
-    });
   }
 
   protected get versions() {
@@ -124,11 +133,16 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
     this.subscriptions.push(
       this.form.valueChanges.pipe(
         withLatestFrom(this.sections$),
-        tap(([formChanges, sections]) => {
+        tap(([form, sections]) => {
           console.log('Selected sections:', this.form.get('sectionIds')?.value);
           this.selectableSections$.next(
-            sections.filter(section => !formChanges.sections?.find(s => s?.id === section.id))
+            sections.filter(section => !form.sections?.find(s => s?.id === section.id))
           )
+          this.dateRange$.next({
+            minStartDate: !form.endDate ? null : form.endDate.toISOString().slice(0, 10),
+            maxStartDate: null,
+            minEndDate: !form.startDate ? null : form.startDate.toISOString().slice(0, 10),
+          })
         })
       ).subscribe()
     )
@@ -245,4 +259,7 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
       }),
     )
   }
+
+  protected readonly SurveyOperatingStatus = SurveyOperatingStatus;
+  protected readonly document = document;
 }

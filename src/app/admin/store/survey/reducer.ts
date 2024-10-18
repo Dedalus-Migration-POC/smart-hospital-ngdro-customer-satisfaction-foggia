@@ -1,18 +1,19 @@
 import {createFeatureSelector, createReducer, createSelector, on} from "@ngrx/store";
 import {Survey} from "../../repository/dto/survey";
-import {SurveyActions} from "./actions";
+import {SubmitSurveyOption, SurveyActions} from "./actions";
 import {AppActions} from "../application/actions";
 import {SurveyAdminState} from "../store";
 
 export enum SurveyOperatingStatus {
   DELETING_RESTORING = 'DELETING_RESTORING',
-  PUBLISHING_UNPUBLISHING = 'PUBLISHING_UNPUBLISHING'
+  PUBLISHING_UNPUBLISHING = 'PUBLISHING_UNPUBLISHING',
+  CREATING = 'CREATING',
+  CREATING_PUBLISHING = 'CREATING_PUBLISHING',
 }
 
 export type State = {
   fetchingSurveys: boolean;
   fetchSurveysError: boolean;
-  creatingSurvey: boolean;
   operatingStatus: {
     surveyId: string;
     status: SurveyOperatingStatus;
@@ -25,7 +26,6 @@ export type State = {
 const initialState: State = {
   fetchingSurveys: false,
   fetchSurveysError: false,
-  creatingSurvey: false,
   operatingStatus: null,
   surveys: [],
   versions: new Set([1]),
@@ -68,21 +68,30 @@ export const reducer = createReducer(
     ...state,
     fetchingSurveys: false,
   })),
-  on(SurveyActions.submitSurvey, (state) => ({
-    ...state,
-    creatingSurvey: true,
-  })),
+  on(SurveyActions.submitSurvey, (state, {submitOption}) => {
+    const statuses: Record<SubmitSurveyOption, SurveyOperatingStatus> = {
+      save: SurveyOperatingStatus.CREATING,
+      publish: SurveyOperatingStatus.CREATING_PUBLISHING
+    }
+    return {
+      ...state,
+      operatingStatus: {
+        surveyId: "",
+        status: statuses[submitOption],
+      },
+    }
+  }),
   on(SurveyActions.submitSurveySucceeded, (state, action) => {
     if (state.surveys.some(s => s.id === action.survey.id)) {
       return {
         ...state,
-        creatingSurvey: false,
+        operatingStatus: null,
         surveys: [...state.surveys.filter(s => s.id !== action.survey.id), action.survey]
       }
     }
     return {
       ...state,
-      creatingSurvey: false,
+      operatingStatus: null,
       surveys: [...state.surveys, action.survey]
     }
   }),
