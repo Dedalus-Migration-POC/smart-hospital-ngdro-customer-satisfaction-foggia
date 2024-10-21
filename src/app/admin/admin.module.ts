@@ -1,4 +1,4 @@
-import {LOCALE_ID, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AdminRoutingModule} from './admin-routing.module';
 import {AdminComponent} from './admin.component';
@@ -19,9 +19,10 @@ import {NotFoundComponent} from "./pages/not-found/not-found.component";
 import {MatPaginatorIntl} from "@angular/material/paginator";
 import {ScaffoldComponent} from "./components/scaffold/scaffold.component";
 import {provideAnimations} from "@angular/platform-browser/animations";
-import {DateAdapter, MAT_DATE_FORMATS} from "@angular/material/core";
-import {AppDateAdapter, MY_FORMATS} from "./config/date-adapter";
+import {APP_DATE_FORMATS} from "./config/date-adapter";
 import {effects, reducers} from "./store/store";
+import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from "@angular/material-moment-adapter";
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from "@angular/material/core";
 
 @NgModule({
   declarations: [
@@ -48,9 +49,10 @@ import {effects, reducers} from "./store/store";
   providers: [
     MatPaginatorIntl,
     provideAnimations(),
-    {provide: DateAdapter, useClass: AppDateAdapter},
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
-    {provide: LOCALE_ID, useValue: 'it'},
+    {provide: MAT_DATE_LOCALE, useValue: 'it'},
+    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS},
+    {provide: DateAdapter, useClass: MomentDateAdapter},
+    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}},
     {provide: APP_BASE_HREF, useValue: window.location.origin + '/ui/'},
     provideDesignAngularKit({
       translateLoader: (itPrefix: string, itSuffix: string) => ({

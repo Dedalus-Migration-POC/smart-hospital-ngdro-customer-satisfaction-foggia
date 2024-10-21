@@ -1,16 +1,16 @@
-import {NativeDateAdapter} from "@angular/material/core";
+import {MatDateFormats, NativeDateAdapter} from "@angular/material/core";
 import {Injectable} from "@angular/core";
 import {DatePipe} from "@angular/common";
 
-export const MY_FORMATS = {
+export const APP_DATE_FORMATS: MatDateFormats = {
   parse: {
-    dateInput: {month: "numeric", year: "numeric", day: "numeric"}
+    dateInput: 'DD/MM/YYYY'
   },
   display: {
-    dateInput: "input",
-    monthYearLabel: {year: "numeric", month: "numeric"},
-    dateA11yLabel: {year: "numeric", month: "long", day: "numeric"},
-    monthYearA11yLabel: {year: "numeric", month: "long"}
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'DD/MM/YYYY',
+    monthYearA11yLabel: 'MMMM YYYY',
   }
 };
 
