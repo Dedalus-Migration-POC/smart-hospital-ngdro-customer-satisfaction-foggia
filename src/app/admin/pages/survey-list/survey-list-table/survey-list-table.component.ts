@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
-import {Survey} from "../../../repository/dto/survey";
+import {Survey, SurveyStatus} from "../../../repository/dto/survey";
 import {AsyncPipe, DatePipe, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet} from "@angular/common";
 import {DeletableEntityService} from "../../../support/deletable-entity-service";
 import {map, Observable} from "rxjs";
@@ -60,7 +60,7 @@ import {MatPaginator} from "@angular/material/paginator";
 })
 export class SurveyListTableComponent extends DeletableEntityService<Survey> {
   @Input({alias: "surveys", required: true}) surveys$!: Observable<Array<Survey>>;
-  @Output("onEdit") editSurvey: EventEmitter<Survey> = new EventEmitter();
+  @Output("onEdit") editSurvey: EventEmitter<{ survey: Survey, mode: 'edit' | 'clone' }> = new EventEmitter();
   @Output("onDelete") deleteSurvey: EventEmitter<Survey> = new EventEmitter();
   @Output("onRestore") restoreSurvey: EventEmitter<Survey> = new EventEmitter();
   @Output("onPublish") publishSurvey: EventEmitter<Survey> = new EventEmitter();
@@ -80,18 +80,19 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
     super.ngOnInit();
   }
 
-  columns: string[] = ['name', 'startDate', 'endDate', 'status', 'version', 'actions']
+  columns: string[] = ['name', 'version', 'status', 'validity', 'createdAt', 'actions']
   operatingStatus$ = this.store.select(selectSurveyState).pipe(map(s => s.operatingStatus))
 
   protected handleColumn(survey: Survey, propertyName: string): string {
-    if (['startDate', 'endDate'].includes(propertyName) && survey.dateRange) {
-      const key = propertyName as keyof Survey['dateRange']
-      return this.datePipe.transform(survey.dateRange[key], 'dd/MM/yyyy HH:mm') as string;
+    if (['validity'].includes(propertyName) && survey.dateRange) {
+      const start = this.datePipe.transform(survey.dateRange.startDate, 'dd/MM/yyyy') as string;
+      const end = this.datePipe.transform(survey.dateRange.endDate, 'dd/MM/yyyy') as string;
+      return `${start} - ${end}`;
     }
     const key = propertyName as keyof Survey
     switch (key) {
       case 'createdAt':
-        return this.datePipe.transform(survey[key], 'dd/MM/yyyy HH:mm') as string;
+        return this.datePipe.transform(survey[key], 'dd/MM/yyyy') as string;
       case 'status':
         if (survey.deleted) return this.translate.instant('admin.survey-status.DELETED');
         else if (!survey[key]) return '';
@@ -101,5 +102,10 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
     }
   }
 
+  protected onEdit(survey: Survey) {
+    this.editSurvey.emit({survey, mode: survey.status === SurveyStatus.ACTIVE ? 'clone' : 'edit'});
+  }
+
   protected readonly SurveyOperatingStatus = SurveyOperatingStatus;
+  protected readonly SurveyStatus = SurveyStatus;
 }

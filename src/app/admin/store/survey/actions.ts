@@ -22,7 +22,7 @@ const fetchSurveysFailed = createAction(
 
 const fetchSurveyById = createAction(
   '[Survey] Fetch Survey by ID',
-  props<{ surveyId: string }>()
+  props<{ surveyId: string, version: string }>()
 )
 
 const fetchSurveyByIdSucceeded = createAction(
@@ -48,14 +48,28 @@ const submitSurveyFailed = createAction(
   '[Survey] Submit Survey Failed',
 )
 
+const cloneSurvey = createAction(
+  '[Survey] Clone Survey',
+  props<{ survey: Survey }>()
+)
+
+const cloneSurveySucceeded = createAction(
+  '[Survey] Clone Survey Succeeded',
+  props<{ survey: Survey }>()
+)
+
+const cloneSurveyFailed = createAction(
+  '[Survey] Clone Survey Failed',
+)
+
 const deleteSurvey = createAction(
   '[Survey] Delete Survey',
-  props<{ surveyId: string }>()
+  props<{ survey: Survey }>()
 )
 
 const deleteSurveySucceeded = createAction(
   '[Survey] Delete Survey Succeeded',
-  props<{ updatedSurveys: Array<Survey> }>()
+  props<{ survey: Survey }>()
 )
 
 const deleteSurveyFailed = createAction(
@@ -65,12 +79,12 @@ const deleteSurveyFailed = createAction(
 
 const restoreSurvey = createAction(
   '[Survey] Restore Survey',
-  props<{ surveyId: string }>()
+  props<{ survey: Survey }>()
 )
 
 const restoreSurveySucceeded = createAction(
   '[Survey] Restore Survey Succeeded',
-  props<{ updatedSurveys: Array<Survey> }>()
+  props<{ survey: Survey }>()
 )
 
 const restoreSurveyFailed = createAction(
@@ -80,12 +94,12 @@ const restoreSurveyFailed = createAction(
 
 const publishSurvey = createAction(
   '[Survey] Publish Survey',
-  props<{ surveyId: string }>()
+  props<{ survey: Survey }>()
 )
 
 const publishSurveySucceeded = createAction(
   '[Survey] Publish Survey Succeeded',
-  props<{ updatedSurveys: Array<Survey> }>()
+  props<{ survey: Survey }>()
 )
 
 const publishSurveyFailed = createAction(
@@ -94,12 +108,12 @@ const publishSurveyFailed = createAction(
 
 const unpublishSurvey = createAction(
   '[Survey] Unpublish Survey',
-  props<{ surveyId: string }>()
+  props<{ survey: Survey }>()
 )
 
 const unpublishSurveySucceeded = createAction(
   '[Survey] Unpublish Survey Succeeded',
-  props<{ updatedSurveys: Array<Survey> }>()
+  props<{ survey: Survey }>()
 )
 
 const unpublishSurveyFailed = createAction(
@@ -133,6 +147,9 @@ export const SurveyActions = {
   submitSurvey,
   submitSurveySucceeded,
   submitSurveyFailed,
+  cloneSurvey,
+  cloneSurveySucceeded,
+  cloneSurveyFailed,
   deleteSurvey,
   deleteSurveySucceeded,
   deleteSurveyFailed,
@@ -161,6 +178,9 @@ export type SurveyActionTypes =
   | typeof submitSurvey
   | typeof submitSurveySucceeded
   | typeof submitSurveyFailed
+  | typeof cloneSurvey
+  | typeof cloneSurveySucceeded
+  | typeof cloneSurveyFailed
   | typeof deleteSurvey
   | typeof deleteSurveySucceeded
   | typeof deleteSurveyFailed

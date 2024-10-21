@@ -7,12 +7,19 @@ import {SurveyAdminState} from "../../../../store/store";
 import {selectSurveyState} from "../../../../store/survey/reducer";
 import {WithSubscriptionsComponent} from "../../../../support/with-subscriptions-component";
 import {SurveyStatus} from "../../../../repository/dto/survey";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {AsyncPipe, NgForOf} from "@angular/common";
 import {TranslateModule} from "@ngx-translate/core";
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+  MatDatepickerToggle,
+  MatDateRangeInput,
+  MatDateRangePicker,
+  MatStartDate
+} from "@angular/material/datepicker";
 import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
@@ -45,7 +52,11 @@ export type SurveyFilterForm = FormGroup<{
     MatTooltip,
     MatLabel,
     MatIcon,
-    ToggleButtonComponent
+    ToggleButtonComponent,
+    MatDateRangeInput,
+    MatDateRangePicker,
+    MatStartDate,
+    MatSuffix
   ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss'

@@ -10,24 +10,20 @@ const routes: Routes = [
     component: DashboardComponent
   },
   {
-    path: 'form',
+    path: 'survey-form',
     loadComponent: () => import('./pages/survey-form/survey-form.component').then(module => module.SurveyFormComponent),
   },
   {
-    path: 'form/:surveyId',
+    path: 'survey-form/:surveyId',
     pathMatch: 'full',
     loadComponent: () => import('./pages/survey-form/survey-form.component').then(module => module.SurveyFormComponent),
   },
   {
-    path: 'section',
-    loadComponent: () => import('./pages/section-list/section-list.component').then(module => module.SectionListComponent),
-  },
-  {
-    path: 'section/form',
+    path: 'section-form',
     loadComponent: () => import('./pages/section-form/section-form.component').then(module => module.SectionFormComponent)
   },
   {
-    path: 'section/form/:sectionId',
+    path: 'section-form/:sectionId',
     pathMatch: 'full',
     loadComponent: () => import('./pages/section-form/section-form.component').then(module => module.SectionFormComponent)
   },

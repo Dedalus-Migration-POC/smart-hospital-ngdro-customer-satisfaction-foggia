@@ -6,18 +6,6 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{ 'admin.survey-list.search-filter.status' | translate }}</mat-label>
-      <mat-select
-        [formControl]="form.controls.status"
-        [value]="form.controls.status.value"
-      >
-        <mat-option *ngFor="let status of Object.values(SurveyStatus)" [value]="status">
-          {{ 'admin.survey-status.' + status | translate }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>{{ 'admin.survey-list.search-filter.version' | translate }}</mat-label>
       <mat-select
         [formControl]="form.controls.version"
@@ -25,6 +13,18 @@
       >
         <mat-option *ngFor="let version of (versions$ | async)" [value]="version">
           {{ version }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>{{ 'admin.survey-list.search-filter.status' | translate }}</mat-label>
+      <mat-select
+        [formControl]="form.controls.status"
+        [value]="form.controls.status.value"
+      >
+        <mat-option *ngFor="let status of Object.values(SurveyStatus)" [value]="status">
+          {{ 'admin.survey-status.' + status | translate }}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -42,6 +42,7 @@
       <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
       <mat-datepicker #endDatePicker></mat-datepicker>
     </mat-form-field>
+    
   </div>
 
   <div>

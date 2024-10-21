@@ -1,18 +1,14 @@
 import {Injectable} from '@angular/core'
 import {Actions, createEffect, ofType} from '@ngrx/effects'
-import {catchError, concatMap, map, withLatestFrom} from 'rxjs/operators'
+import {catchError, concatMap, map} from 'rxjs/operators'
 import {of} from 'rxjs'
-import {Store} from "@ngrx/store";
-import {SurveyAdminState} from "../store";
 import {SectionActions} from "./actions";
-import {selectSectionList} from "./reducer";
 import {CreateSectionRequest} from "../../repository/dto/create-section-request";
 import {SectionService} from "../../repository/section-service";
 
 @Injectable()
 export class SectionEffects {
   constructor(
-    private store: Store<SurveyAdminState>,
     private actions$: Actions,
     private sectionService: SectionService,
   ) {
@@ -39,8 +35,8 @@ export class SectionEffects {
   private readonly fetchSectionById$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SectionActions.fetchSectionById),
-      concatMap(({sectionId}) =>
-        this.sectionService.findById(sectionId).pipe(
+      concatMap(({section}) =>
+        this.sectionService.findById(section.id!.toString(), section.version.toString()).pipe(
           map((section) => SectionActions.fetchSectionByIdSucceeded({section})),
           catchError(() =>
             of(SectionActions.fetchSectionByIdFailed()),
@@ -61,6 +57,7 @@ export class SectionEffects {
             id: sectionForm.id ? Number(sectionForm.id) : undefined,
             name: sectionForm.name!,
             description: sectionForm.description ?? undefined,
+            version: sectionForm.version!,
             questions: sectionForm.questions.map(q => ({
               answerType: 'RATE',
               name: q!
@@ -80,20 +77,25 @@ export class SectionEffects {
     )
   })
 
+  private readonly cloneSection$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SectionActions.cloneSection),
+      concatMap(({section}) =>
+        this.sectionService.clone(section.id!.toString(), section.version.toString()).pipe(
+          map((section) => SectionActions.cloneSectionSucceeded({section})),
+          catchError(() => of(SectionActions.cloneSectionFailed())),
+        ),
+      ),
+    )
+  })
+
   private readonly deleteSection$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SectionActions.deleteSection),
-      withLatestFrom(this.store.select(selectSectionList)),
-      concatMap(([{sectionId}, {sections}]) =>
-        this.sectionService.delete(sectionId).pipe(
-          map(() => {
-            const deletedSection = {...sections.find(({id}) => id!.toString() === sectionId)!, deleted: true}
-            const newSections = sections.filter(({id}) => id!.toString() !== sectionId)
-            return SectionActions.deleteSectionSucceeded({updatedSections: [...newSections, deletedSection]})
-          }),
-          catchError(() =>
-            of(SectionActions.deleteSectionFailed()),
-          ),
+      concatMap(({section}) =>
+        this.sectionService.delete(section.id!.toString(), section.version.toString()).pipe(
+          map(() => SectionActions.deleteSectionSucceeded({section})),
+          catchError(() => of(SectionActions.deleteSectionFailed())),
         ),
       ),
     )
@@ -102,17 +104,10 @@ export class SectionEffects {
   private readonly restoreSection$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SectionActions.restoreSection),
-      withLatestFrom(this.store.select(selectSectionList)),
-      concatMap(([{sectionId}, {sections}]) =>
-        this.sectionService.restore(sectionId).pipe(
-          map(() => {
-            const restoredSection = {...sections.find(({id}) => id!.toString() === sectionId)!, deleted: false}
-            const newSections = sections.filter(({id}) => id!.toString() !== sectionId)
-            return SectionActions.restoreSectionSucceeded({updatedSections: [...newSections, restoredSection]})
-          }),
-          catchError(() =>
-            of(SectionActions.restoreSectionFailed()),
-          ),
+      concatMap(({section}) =>
+        this.sectionService.restore(section.id!.toString(), section.version.toString()).pipe(
+          map(() => SectionActions.restoreSectionSucceeded({section})),
+          catchError(() => of(SectionActions.restoreSectionFailed())),
         ),
       ),
     )

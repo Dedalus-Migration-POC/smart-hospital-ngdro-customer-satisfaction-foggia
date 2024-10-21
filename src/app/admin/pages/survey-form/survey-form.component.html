@@ -1,4 +1,14 @@
-<form [formGroup]="form">
+<ng-template #noSections>
+  <div class="head">
+    <h6>{{ 'admin.survey-form.title-sections-empty' | translate }}</h6>
+    <button mat-flat-button routerLink="/section-form">
+      <mat-icon>add</mat-icon>
+      <span>{{ 'admin.section-list.create-section-btn' | translate }}</span>
+    </button>
+  </div>
+</ng-template>
+
+<form [formGroup]="form" *ngIf="(sections$ | async)?.length; else noSections">
   <div class="head">
     <h6>{{ getTitlePlaceholder() | translate }}</h6>
     <div>

@@ -26,11 +26,14 @@ import {WithSubscriptionsComponent} from "../../support/with-subscriptions-compo
 import {SectionActions} from "../../store/section/actions";
 import {SurveyAdminState} from "../../store/store";
 import {selectSectionState} from "../../store/section/reducer";
+import {MatOption} from "@angular/material/core";
+import {MatSelect} from "@angular/material/select";
 
 export type SectionForm = FormGroup<{
-  id: FormControl<string | null>;
+  id: FormControl<number | null>;
   name: FormControl<string | null>;
   description: FormControl<string | null>;
+  version: FormControl<number | null>;
   questions: FormArray<FormControl<string | null>>
 }>
 
@@ -50,19 +53,27 @@ export type SectionForm = FormGroup<{
     TranslateModule,
     FormsModule,
     NgForOf,
-    NgIf, MatError, MatCard, AsyncPipe, MatProgressSpinner
+    NgIf, MatError, MatCard, AsyncPipe, MatProgressSpinner, MatOption, MatSelect
   ],
   templateUrl: './section-form.component.html',
   styleUrl: './section-form.component.scss'
 })
 export class SectionFormComponent extends WithSubscriptionsComponent implements OnInit, OnDestroy {
   editMode = false;
+  isSectionDeleted = false;
 
-  sectionForm!: SectionForm;
+  form: SectionForm = this.fb.group({
+    id: new FormControl<number | null>(null),
+    name: new FormControl<string | null>(null, Validators.required),
+    description: new FormControl<string | null>(null),
+    version: new FormControl<number | null>({value: 1, disabled: false}),
+    questions: this.fb.array<string | null>([])
+  });
 
   state$ = this.store.select(selectSectionState)
   sections$ = this.state$.pipe(map(({sections}) => sections));
   creating$ = this.state$.pipe(map(({creatingSection}) => creatingSection))
+  editingSectionId$ = this.state$.pipe(map(({editingSectionId}) => editingSectionId))
 
   constructor(
     private store: Store<SurveyAdminState>,
@@ -76,15 +87,13 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
     super();
   }
 
+  protected get versions() {
+    const length = this.form.controls.version.value!;
+    return Array.from({length}, (_, i) => i + 1).sort((a, b) => a > b ? 1 : -1)
+  }
+
   ngOnInit() {
     this.startActionsSubscription()
-
-    this.sectionForm = this.fb.group({
-      id: new FormControl<string | null>(null),
-      name: new FormControl<string | null>(null, Validators.required),
-      description: new FormControl<string | null>(null),
-      questions: this.fb.array<string | null>([])
-    });
 
     const sectionId = this.activatedRoute.snapshot.paramMap.get('sectionId');
     if (sectionId) {
@@ -92,31 +101,37 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
       this.subscriptions.push(this.sections$.pipe(
         take(1),
         map(sections => {
-          const section = sections.find(({id}) => id?.toString() === sectionId);
+          const section = sections.find((section) => section.id === Number(sectionId));
+          this.isSectionDeleted = section?.deleted ?? false
           if (section) {
             this.initializeForm(section);
           } else {
-            const text = `Section with id [${sectionId}] not found`
-            this.dialog.error({text, buttonsType: 'ok'})
-            throw new Error(text);
+            this.dialog.error({
+              text: `Section with id [${sectionId}] not found`,
+              buttonsType: 'ok',
+              onConfirm: () => this.router.navigate(["/"]),
+            })
           }
         })).subscribe())
     } else {
-      this.sectionForm.controls.questions.push(
+      this.form.controls.questions.push(
         new FormControl<string | null>(null, Validators.required)
       )
     }
   }
 
   private initializeForm(section: Section) {
-    this.sectionForm.patchValue({
-      id: section.id!.toString(),
+    console.log({section})
+    this.isSectionDeleted = section.deleted
+    this.form.patchValue({
+      id: section.id!,
       name: section.name,
+      version: section.version,
       description: section.description,
     })
 
     section.questions?.map(({name}) => {
-      this.sectionForm.controls.questions.push(
+      this.form.controls.questions.push(
         new FormControl(name, [Validators.required])
       )
     })
@@ -133,41 +148,59 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
             buttonsType: 'ok',
             text: this.translate.instant(`admin.section-form.section-${translation}-dialog`)
           })
-            .afterClosed().subscribe(() => this.router.navigate(['/section']))
+            .afterClosed().subscribe(() => this.router.navigate(['/']))
         })
       ).subscribe(),
 
       this.actions.pipe(
         ofType(SectionActions.submitSectionFailed),
-        tap(() => this.dialog.error({buttonsType: 'ok'}))
-      ).subscribe())
+        tap(() => this.dialog.error({
+          buttonsType: 'retry_cancel',
+          onConfirm: () => this.submit(),
+        }))
+      ).subscribe(),
+
+      this.actions.pipe(
+        ofType(SectionActions.restoreSectionSucceeded),
+        tap(({section}) => this.dialog.success({
+          buttonsType: 'ok',
+          onConfirm: () => this.initializeForm(section),
+        }))
+      ).subscribe(),
+
+      this.form.valueChanges.subscribe(value => console.log(value))
+    )
   }
 
   protected getTitlePlaceholder() {
     const prefix = 'admin.section-form.title'
-    const suffix = !this.sectionForm.controls['id'].value ? 'new' : 'edit'
+    const suffix = !this.form.controls['id'].value ? 'new' : 'edit'
     return `${prefix}-${suffix}`
   }
 
   protected addQuestion() {
-    this.sectionForm.controls.questions.push(new FormControl(null, [Validators.required]))
+    this.form.controls.questions.push(new FormControl(null, [Validators.required]))
     window.setTimeout(() => {
       window.scroll({behavior: 'smooth', top: document.body.scrollHeight})
     }, 100)
   }
 
   protected removeQuestion(index: number) {
-    this.sectionForm.controls.questions.removeAt(index)
-    this.sectionForm.markAsDirty()
+    this.form.controls.questions.removeAt(index)
+    this.form.markAsDirty()
   }
 
   protected submit() {
-    this.sectionForm.markAllAsTouched()
-    if (this.sectionForm.valid) {
-      console.log('VALID', this.sectionForm.value)
+    this.form.markAllAsTouched()
+    if (this.form.valid) {
+      console.log('VALID', this.form.value)
       this.store.dispatch(SectionActions.submitSection({
-        sectionForm: this.sectionForm.value
+        sectionForm: this.form.value
       }))
     }
+  }
+
+  protected restore() {
+    this.store.dispatch(SectionActions.restoreSection({section: this.form.value as Section}))
   }
 }

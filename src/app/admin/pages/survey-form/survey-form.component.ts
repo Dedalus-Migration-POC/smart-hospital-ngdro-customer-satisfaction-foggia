@@ -3,7 +3,7 @@ import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Val
 import {BehaviorSubject, map, Observable, take, tap} from "rxjs";
 import {Store} from "@ngrx/store";
 import {Actions, ofType} from "@ngrx/effects";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {SubmitSurveyOption, SurveyActions} from "../../store/survey/actions";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
@@ -71,6 +71,7 @@ export type SurveyForm = FormGroup<{
     MatDatepickerInput,
     MatTooltip,
     MatIconButton,
+    RouterLink,
   ],
   templateUrl: './survey-form.component.html',
   styleUrl: './survey-form.component.scss'
@@ -234,6 +235,7 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
 
   protected submit(submitOption: SubmitSurveyOption) {
     this.form.markAllAsTouched()
+    console.log(this.form.controls.startDate.errors)
     if (this.form.valid) {
       console.log('VALID', this.form.value)
       this.store.dispatch(SurveyActions.submitSurvey({

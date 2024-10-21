@@ -1,5 +1,5 @@
 import {createFeatureSelector, createReducer, createSelector, on} from "@ngrx/store";
-import {Survey} from "../../repository/dto/survey";
+import {Survey, SurveyStatus} from "../../repository/dto/survey";
 import {SubmitSurveyOption, SurveyActions} from "./actions";
 import {AppActions} from "../application/actions";
 import {SurveyAdminState} from "../store";
@@ -9,13 +9,14 @@ export enum SurveyOperatingStatus {
   PUBLISHING_UNPUBLISHING = 'PUBLISHING_UNPUBLISHING',
   CREATING = 'CREATING',
   CREATING_PUBLISHING = 'CREATING_PUBLISHING',
+  CLONING = 'CLONING',
 }
 
 export type State = {
   fetchingSurveys: boolean;
   fetchSurveysError: boolean;
   operatingStatus: {
-    surveyId: string;
+    surveyId: number;
     status: SurveyOperatingStatus;
   } | null;
   surveys: Array<Survey>;
@@ -76,7 +77,7 @@ export const reducer = createReducer(
     return {
       ...state,
       operatingStatus: {
-        surveyId: "",
+        surveyId: -1,
         status: statuses[submitOption],
       },
     }
@@ -97,18 +98,42 @@ export const reducer = createReducer(
   }),
   on(SurveyActions.submitSurveyFailed, (state) => ({
     ...state,
-    creatingSurvey: false,
+    operatingStatus: null,
+  })),
+  on(SurveyActions.cloneSurvey, (state, action) => ({
+    ...state,
+    operatingStatus: {
+      surveyId: action.survey.id!,
+      status: SurveyOperatingStatus.CLONING,
+    },
+  })),
+  on(SurveyActions.cloneSurveySucceeded, (state, action) => ({
+    ...state,
+    surveys: state.surveys.map(survey =>
+      survey.id === action.survey.id
+        ? {...action.survey}
+        : survey
+    ),
+    operatingStatus: null
+  })),
+  on(SurveyActions.cloneSurveyFailed, (state) => ({
+    ...state,
+    operatingStatus: null
   })),
   on(SurveyActions.deleteSurvey, (state, action) => ({
     ...state,
     operatingStatus: {
-      surveyId: action.surveyId,
+      surveyId: action.survey.id!,
       status: SurveyOperatingStatus.DELETING_RESTORING,
     },
   })),
   on(SurveyActions.deleteSurveySucceeded, (state, action) => ({
     ...state,
-    surveys: action.updatedSurveys,
+    surveys: state.surveys.map(survey =>
+      survey.id === action.survey.id
+        ? {...survey, deleted: true}
+        : survey
+    ),
     operatingStatus: null
   })),
   on(SurveyActions.deleteSurveyFailed, (state) => ({
@@ -118,13 +143,17 @@ export const reducer = createReducer(
   on(SurveyActions.restoreSurvey, (state, action) => ({
     ...state,
     operatingStatus: {
-      surveyId: action.surveyId,
+      surveyId: action.survey.id!,
       status: SurveyOperatingStatus.DELETING_RESTORING
     },
   })),
   on(SurveyActions.restoreSurveySucceeded, (state, action) => ({
     ...state,
-    surveys: action.updatedSurveys,
+    surveys: state.surveys.map(survey =>
+      survey.id === action.survey.id
+        ? {...survey, deleted: false}
+        : survey
+    ),
     operatingStatus: null
   })),
   on(SurveyActions.restoreSurveyFailed, (state) => ({
@@ -134,13 +163,17 @@ export const reducer = createReducer(
   on(SurveyActions.publishSurvey, (state, action) => ({
     ...state,
     operatingStatus: {
-      surveyId: action.surveyId,
+      surveyId: action.survey.id!,
       status: SurveyOperatingStatus.PUBLISHING_UNPUBLISHING
     },
   })),
   on(SurveyActions.publishSurveySucceeded, (state, action) => ({
     ...state,
-    surveys: action.updatedSurveys,
+    surveys: state.surveys.map(survey =>
+      survey.id === action.survey.id
+        ? {...survey, status: SurveyStatus.ACTIVE}
+        : survey
+    ),
     operatingStatus: null
   })),
   on(SurveyActions.publishSurveyFailed, (state) => ({
@@ -150,13 +183,17 @@ export const reducer = createReducer(
   on(SurveyActions.unpublishSurvey, (state, action) => ({
     ...state,
     operatingStatus: {
-      surveyId: action.surveyId,
+      surveyId: action.survey!.id!,
       status: SurveyOperatingStatus.PUBLISHING_UNPUBLISHING
     },
   })),
   on(SurveyActions.unpublishSurveySucceeded, (state, action) => ({
     ...state,
-    surveys: action.updatedSurveys,
+    surveys: state.surveys.map(survey =>
+      survey.id === action.survey.id
+        ? {...survey, status: SurveyStatus.INACTIVE}
+        : survey
+    ),
     operatingStatus: null
   })),
   on(SurveyActions.unpublishSurveyFailed, (state) => ({

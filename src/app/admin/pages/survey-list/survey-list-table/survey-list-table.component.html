@@ -3,7 +3,7 @@
   let-survey="survey"
   let-operatingStatus="operatingStatus"
 >
-  <mat-spinner *ngIf="operatingStatus && operatingStatus.surveyId === survey.id!.toString() && operatingStatus.status === SurveyOperatingStatus.PUBLISHING_UNPUBLISHING;
+  <mat-spinner *ngIf="operatingStatus && operatingStatus.surveyId === survey.id && operatingStatus.status === SurveyOperatingStatus.PUBLISHING_UNPUBLISHING;
       else notPublishing" diameter="20"></mat-spinner>
   <ng-template #notPublishing>
     <ng-container [ngSwitch]="survey.status">
@@ -18,11 +18,31 @@
 </ng-template>
 
 <ng-template
+  #editStatusButton
+  let-survey="survey"
+  let-operatingStatus="operatingStatus"
+>
+  <ng-container *ngIf="survey.status === SurveyStatus.ACTIVE ? 'clone' : 'edit'; let mode">
+    <mat-spinner *ngIf="operatingStatus && operatingStatus.surveyId === survey.id && operatingStatus.status === SurveyOperatingStatus.CLONING;
+      else notEditing" diameter="20"></mat-spinner>
+    <ng-template #notEditing>
+      <button mat-icon-button (click)="onEdit(survey)" [disabled]="survey.deleted">
+        <mat-icon
+          [matTooltip]="'admin.survey-list.actions-hints.' + mode | translate"
+          [style]="{visibility: survey.deleted ? 'hidden' : undefined}"
+        >{{ survey.status === SurveyStatus.ACTIVE ? 'file_copy' : 'edit' }}
+        </mat-icon>
+      </button>
+    </ng-template>
+  </ng-container>
+</ng-template>
+
+<ng-template
   #deleteStatusButton
   let-survey="survey"
   let-operatingStatus="operatingStatus"
 >
-  <mat-spinner *ngIf="operatingStatus && operatingStatus.surveyId === survey.id!.toString() && operatingStatus.status === SurveyOperatingStatus.DELETING_RESTORING;
+  <mat-spinner *ngIf="operatingStatus && operatingStatus.surveyId === survey.id && operatingStatus.status === SurveyOperatingStatus.DELETING_RESTORING;
       else notDeleting" diameter="20"></mat-spinner>
   <ng-template #notDeleting>
     <button
@@ -58,13 +78,11 @@
       {{ 'admin.survey-list.table-headers.actions' | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <button mat-icon-button (click)="editSurvey.emit(element)" [disabled]="element.deleted">
-        <mat-icon
-          [matTooltip]="'admin.survey-list.actions-hints.edit' | translate"
-          [style]="{visibility: element.deleted ? 'hidden' : undefined}"
-        >edit
-        </mat-icon>
-      </button>
+      <ng-container
+        *ngTemplateOutlet="
+        editStatusButton;
+        context: {survey: element, operatingStatus: operatingStatus$ | async}"
+      ></ng-container>
 
       <ng-container
         *ngTemplateOutlet="

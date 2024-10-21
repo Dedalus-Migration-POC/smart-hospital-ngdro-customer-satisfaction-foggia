@@ -3,11 +3,16 @@
   margin-bottom: 24px;
 
   > h6 {
+    max-width: 80%;
     margin-right: 32px;
   }
 
-  > div > button:not(:last-child) {
-    margin-right: 16px;
+  > div {
+    max-width: 20%;
+
+    > button:not(:last-child) {
+      margin-right: 16px;
+    }
   }
 }
 

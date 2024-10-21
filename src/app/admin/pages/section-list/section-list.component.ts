@@ -56,7 +56,7 @@ export class SectionListComponent extends WithSubscriptionsComponent implements 
   sections$ = this.state$.pipe(map(({sections}) => sections));
 
   protected async onEdit(section: Section) {
-    await this.router.navigate(['form', section.id], {relativeTo: this.activatedRoute})
+    await this.router.navigate(['section-form', section.id], {relativeTo: this.activatedRoute})
   }
 
   protected onDelete(section: Section) {
@@ -74,17 +74,17 @@ export class SectionListComponent extends WithSubscriptionsComponent implements 
           this.dialog.attention({
             buttonsType: 'ok',
             text: this.translate.instant('admin.section-list.dialog-confirm-delete'),
-            onConfirm: () => this.store.dispatch(SectionActions.deleteSection({sectionId: section.id!.toString()}))
+            onConfirm: () => this.store.dispatch(SectionActions.deleteSection({section}))
           })
         }
       })).subscribe())
   }
 
-  protected onRestore({id}: Section) {
+  protected onRestore(section: Section) {
     this.dialog.attention({
       buttonsType: 'ok',
       text: this.translate.instant('admin.section-list.dialog-confirm-restore'),
-      onConfirm: () => this.store.dispatch(SectionActions.restoreSection({sectionId: id!.toString()}))
+      onConfirm: () => this.store.dispatch(SectionActions.restoreSection({section}))
     })
   }
 

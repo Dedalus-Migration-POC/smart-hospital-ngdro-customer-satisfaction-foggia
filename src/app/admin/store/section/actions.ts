@@ -19,7 +19,7 @@ const fetchSectionsFailed = createAction(
 
 const fetchSectionById = createAction(
   '[Survey] Fetch Section by ID',
-  props<{ sectionId: string }>()
+  props<{ section: Section }>()
 )
 
 const fetchSectionByIdSucceeded = createAction(
@@ -45,14 +45,28 @@ const submitSectionFailed = createAction(
   '[Survey] Submit Section Failed',
 )
 
+const cloneSection = createAction(
+  '[Survey] Clone Section',
+  props<{ section: Section }>()
+)
+
+const cloneSectionSucceeded = createAction(
+  '[Survey] Clone Section Succeeded',
+  props<{ section: Section }>()
+)
+
+const cloneSectionFailed = createAction(
+  '[Survey] Clone Section Failed',
+)
+
 const deleteSection = createAction(
   '[Survey] Delete Section',
-  props<{ sectionId: string }>()
+  props<{ section: Section }>()
 )
 
 const deleteSectionSucceeded = createAction(
   '[Survey] Delete Section Succeeded',
-  props<{ updatedSections: Array<Section> }>()
+  props<{ section: Section }>()
 )
 
 const deleteSectionFailed = createAction(
@@ -61,12 +75,12 @@ const deleteSectionFailed = createAction(
 
 const restoreSection = createAction(
   '[Survey] Restore Section',
-  props<{ sectionId: string }>()
+  props<{ section: Section }>()
 )
 
 const restoreSectionSucceeded = createAction(
   '[Survey] Restore Section Succeeded',
-  props<{ updatedSections: Array<Section> }>()
+  props<{ section: Section }>()
 )
 
 const restoreSectionFailed = createAction(
@@ -87,6 +101,9 @@ export const SectionActions = {
   submitSection,
   submitSectionSucceeded,
   submitSectionFailed,
+  cloneSection,
+  cloneSectionSucceeded,
+  cloneSectionFailed,
   deleteSection,
   deleteSectionSucceeded,
   deleteSectionFailed,
@@ -106,6 +123,9 @@ export type SectionActionTypes =
   | typeof submitSection
   | typeof submitSectionSucceeded
   | typeof submitSectionFailed
+  | typeof cloneSection
+  | typeof cloneSectionSucceeded
+  | typeof cloneSectionFailed
   | typeof deleteSection
   | typeof deleteSectionSucceeded
   | typeof deleteSectionFailed

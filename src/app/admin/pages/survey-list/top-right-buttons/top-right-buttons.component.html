@@ -13,7 +13,7 @@
     <span>{{ 'admin.survey-list.view-analytics-btn' | translate }}</span>
   </button>
 
-  <button id="create-survey-btn" mat-flat-button routerLink="./form" [disabled]="!(sections$ | async)?.length"
+  <button id="create-survey-btn" mat-flat-button routerLink="/survey-form" [disabled]="!(sections$ | async)?.length"
   >
     <mat-icon>add</mat-icon>
     <span>{{ 'admin.survey-list.create-survey-btn' | translate }}</span>

@@ -55,8 +55,10 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
   surveys$: Observable<Array<Survey>> = this.state$.pipe(map(({surveys}) => surveys));
   sections$: Observable<Array<Section>> = this.store.select(selectSectionState).pipe(map(({sections}) => sections));
 
-  async onEdit(survey: Survey) {
-    await this.router.navigate(['form', survey.id], {relativeTo: this.activatedRoute})
+  async onEdit({survey, mode}: { survey: Survey, mode: 'edit' | 'clone' }) {
+    if (mode === 'edit')
+      await this.router.navigate(['survey-form', survey.id], {relativeTo: this.activatedRoute})
+    else this.store.dispatch(SurveyActions.cloneSurvey({survey}))
   }
 
   protected onDelete(survey: Survey) {
@@ -71,37 +73,49 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
       this.dialog.attention({
         buttonsType: 'yes_no',
         text: this.translate.instant('admin.survey-list.dialog-confirm-delete'),
-        onConfirm: () => this.store.dispatch(SurveyActions.deleteSurvey({surveyId: survey.id!.toString()}))
+        onConfirm: () => this.store.dispatch(SurveyActions.deleteSurvey({survey}))
       })
     }
   }
 
-  protected onRestore({id}: Section) {
+  protected onRestore(survey: Survey) {
     this.dialog.attention({
       buttonsType: 'yes_no',
       text: this.translate.instant('admin.survey-list.dialog-confirm-restore'),
-      onConfirm: () => this.store.dispatch(SurveyActions.restoreSurvey({surveyId: id!.toString()}))
+      onConfirm: () => this.store.dispatch(SurveyActions.restoreSurvey({survey}))
     })
   }
 
-  protected onPublish({id}: Section) {
+  protected onPublish(survey: Survey) {
     this.dialog.attention({
       buttonsType: 'yes_no',
       text: this.translate.instant('admin.survey-list.dialog-confirm-publish'),
-      onConfirm: () => this.store.dispatch(SurveyActions.publishSurvey({surveyId: id!.toString()}))
+      onConfirm: () => this.store.dispatch(SurveyActions.publishSurvey({survey}))
     })
   }
 
-  protected onUnpublish({id}: Section) {
+  protected onUnpublish(survey: Survey) {
     this.dialog.attention({
       buttonsType: 'yes_no',
       text: this.translate.instant('admin.survey-list.dialog-confirm-unpublish'),
-      onConfirm: () => this.store.dispatch(SurveyActions.unpublishSurvey({surveyId: id!.toString()}))
+      onConfirm: () => this.store.dispatch(SurveyActions.unpublishSurvey({survey}))
     })
   }
 
   private startSubscriptions() {
     this.addSubscriptions(
+      this.actions.pipe(
+        ofType(SurveyActions.cloneSurveySucceeded),
+        tap(async ({survey}) => await this.router.navigate(['survey-form', survey.id], {relativeTo: this.activatedRoute}))
+      ).subscribe(),
+
+      this.actions.pipe(
+        ofType(SurveyActions.cloneSurveyFailed),
+        tap(() => this.dialog.error({
+          buttonsType: 'ok',
+        }))
+      ).subscribe(),
+
       this.actions.pipe(
         ofType(SurveyActions.deleteSurveyFailed),
         tap(({survey}) => this.dialog.error({
@@ -115,6 +129,20 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
         tap(({survey}) => this.dialog.error({
           buttonsType: 'retry_cancel',
           onConfirm: () => this.onDelete(survey)
+        }))
+      ).subscribe(),
+
+      this.actions.pipe(
+        ofType(SurveyActions.publishSurveyFailed),
+        tap(() => this.dialog.error({
+          buttonsType: 'ok',
+        }))
+      ).subscribe(),
+
+      this.actions.pipe(
+        ofType(SurveyActions.unpublishSurveyFailed),
+        tap(() => this.dialog.error({
+          buttonsType: 'ok',
         }))
       ).subscribe()
     )
