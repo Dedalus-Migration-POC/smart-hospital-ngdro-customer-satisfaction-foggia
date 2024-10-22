@@ -20,12 +20,11 @@
     <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>{{ 'admin.section-list.search-filter.present-in' | translate }}</mat-label>
       <mat-select
-        [disabled]="!(surveys$ | async)?.length"
         [formControl]="form.controls.presentIn"
         [value]="form.controls.presentIn.value"
       >
-        <mat-option *ngFor="let survey of (surveys$ | async)" [value]="survey.id">
-          {{ survey.name }}
+        <mat-option *ngFor="let option of (presentInOptions$ | async)" [value]="option.id">
+          {{ option.value }}
         </mat-option>
       </mat-select>
     </mat-form-field>

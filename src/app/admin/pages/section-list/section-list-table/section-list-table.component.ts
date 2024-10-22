@@ -84,7 +84,10 @@ export class SectionListTableComponent extends DeletableEntityService<Section> {
       case "name":
         return section.name;
       case "present-in":
-        return (section.associatedSurveys ?? []).map(survey => survey.name).join(', ')
+        return (section.associatedSurveys ?? []).map(survey => {
+          const {name, version} = survey
+          return `${name} (v${version})`
+        }).sort((a, b) => a < b ? -1 : 1).join(', ')
       case 'version':
         return section.version.toString()
       default:

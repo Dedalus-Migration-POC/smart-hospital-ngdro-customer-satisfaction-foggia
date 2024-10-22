@@ -58,7 +58,13 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
   async onEdit({survey, mode}: { survey: Survey, mode: 'edit' | 'clone' }) {
     if (mode === 'edit')
       await this.router.navigate(['survey-form', survey.id], {relativeTo: this.activatedRoute})
-    else this.store.dispatch(SurveyActions.cloneSurvey({survey}))
+    else {
+      this.dialog.info({
+        buttonsType: 'yes_no',
+        text: this.translate.instant('admin.survey-list.dialog-confirm-clone', {name: survey.name}),
+        onConfirm: () => this.store.dispatch(SurveyActions.cloneSurvey({survey}))
+      })
+    }
   }
 
   protected onDelete(survey: Survey) {

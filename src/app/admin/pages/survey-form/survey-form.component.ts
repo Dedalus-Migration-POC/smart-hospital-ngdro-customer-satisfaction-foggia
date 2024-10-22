@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {BehaviorSubject, map, Observable, take, tap} from "rxjs";
+import {BehaviorSubject, combineLatest, map, Observable, take, tap} from "rxjs";
 import {Store} from "@ngrx/store";
 import {Actions, ofType} from "@ngrx/effects";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
@@ -10,7 +10,7 @@ import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatError, MatFormField, MatHint, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatCard} from "@angular/material/card";
-import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {DialogService} from "../../support/dialog-service";
 import {Section} from "../../repository/dto/section";
@@ -42,10 +42,15 @@ export type SurveyForm = FormGroup<{
   sections: FormArray<FormControl<Section | null>>
 }>
 
+type DateRange = {
+  minStartDate: string | null;
+  minEndDate: string | null;
+}
+
 @Component({
   selector: 'app-survey-form',
   standalone: true,
-  providers: [provideNativeDateAdapter()],
+  providers: [provideNativeDateAdapter(), DatePipe],
   imports: [
     MatButton,
     TranslateModule,
@@ -96,15 +101,10 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
   selectableSections$ = new BehaviorSubject<Array<Section>>([]);
   operatingStatus$ = this.state$.pipe(map(({operatingStatus}) => operatingStatus?.status))
 
-  protected dateRange$ = new BehaviorSubject<{
-    minStartDate: string | null;
-    maxStartDate: string | null;
-    minEndDate: string | null;
-  }>({
-    minStartDate: new Date().toISOString().slice(0, 10),
-    maxStartDate: null,
+  protected dateRange$: BehaviorSubject<DateRange> = new BehaviorSubject<DateRange>({
+    minStartDate: this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
     minEndDate: new Date().toISOString().slice(0, 10),
-  })
+  });
 
   constructor(
     private store: Store<SurveyAdminState>,
@@ -113,7 +113,8 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
     private dialog: DialogService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private datePipe: DatePipe
   ) {
     super();
   }
@@ -126,9 +127,9 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
   ngOnInit() {
     this.startActionsSubscription()
 
-    this.form.valueChanges.subscribe(value => {
+    combineLatest([this.form.valueChanges, this.dateRange$]).subscribe(([value, range]) => {
       console.log('form: ', this.form)
-      console.log(value)
+      console.log(value, range)
     })
 
     this.subscriptions.push(
@@ -140,9 +141,8 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
             sections.filter(section => !form.sections?.find(s => s?.id === section.id))
           )
           this.dateRange$.next({
-            minStartDate: !form.endDate ? null : form.endDate.toISOString().slice(0, 10),
-            maxStartDate: null,
-            minEndDate: !form.startDate ? null : form.startDate.toISOString().slice(0, 10),
+            minStartDate: this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
+            minEndDate: !form.startDate ? null : this.datePipe.transform(form.startDate, 'yyyy-MM-dd'),
           })
         })
       ).subscribe()
@@ -178,6 +178,7 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
   }
 
   private initializeForm(survey: Survey) {
+    console.log('aaaaaaaa', survey)
     this.form.patchValue({
       id: survey.id!.toString(),
       name: survey.name,
@@ -217,7 +218,7 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
 
   protected getTitlePlaceholder() {
     const prefix = 'admin.survey-form.title'
-    const suffix = !this.form.controls['id'].value ? 'new' : 'edit'
+    const suffix = !this.editMode ? 'new' : 'edit'
     return `${prefix}-${suffix}`
   }
 
@@ -235,11 +236,10 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
 
   protected submit(submitOption: SubmitSurveyOption) {
     this.form.markAllAsTouched()
-    console.log(this.form.controls.startDate.errors)
     if (this.form.valid) {
-      console.log('VALID', this.form.value)
+      console.log('VALID', this.form.getRawValue())
       this.store.dispatch(SurveyActions.submitSurvey({
-        surveyForm: this.form.value,
+        surveyForm: this.form.getRawValue(),
         submitOption
       }))
     }

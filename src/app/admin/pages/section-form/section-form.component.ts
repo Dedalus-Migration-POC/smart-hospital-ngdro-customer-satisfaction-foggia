@@ -66,7 +66,7 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
     id: new FormControl<number | null>(null),
     name: new FormControl<string | null>(null, Validators.required),
     description: new FormControl<string | null>(null),
-    version: new FormControl<number | null>({value: 1, disabled: false}),
+    version: new FormControl<number | null>({value: 1, disabled: true}),
     questions: this.fb.array<string | null>([])
   });
 
@@ -193,9 +193,9 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
   protected submit() {
     this.form.markAllAsTouched()
     if (this.form.valid) {
-      console.log('VALID', this.form.value)
+      console.log('VALID', this.form.getRawValue())
       this.store.dispatch(SectionActions.submitSection({
-        sectionForm: this.form.value
+        sectionForm: this.form.getRawValue()
       }))
     }
   }

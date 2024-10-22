@@ -84,8 +84,11 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
   operatingStatus$ = this.store.select(selectSurveyState).pipe(map(s => s.operatingStatus))
 
   protected handleColumn(survey: Survey, propertyName: string): string {
-    if (['validity'].includes(propertyName) && survey.dateRange) {
+    if (propertyName === 'validity' && survey.dateRange?.startDate) {
       const start = this.datePipe.transform(survey.dateRange.startDate, 'dd/MM/yyyy') as string;
+      if (!survey.dateRange.endDate) {
+        return start
+      }
       const end = this.datePipe.transform(survey.dateRange.endDate, 'dd/MM/yyyy') as string;
       return `${start} - ${end}`;
     }

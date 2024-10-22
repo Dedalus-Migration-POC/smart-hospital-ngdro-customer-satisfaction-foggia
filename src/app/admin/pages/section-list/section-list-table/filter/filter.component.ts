@@ -13,7 +13,7 @@ import {SurveyAdminState} from "../../../../store/store";
 import {WithSubscriptionsComponent} from "../../../../support/with-subscriptions-component";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
-import {selectSectionState} from "../../../../store/section/reducer";
+import {selectSectionList, selectSectionState} from "../../../../store/section/reducer";
 import {SectionActions} from "../../../../store/section/actions";
 import {selectSurveyState} from "../../../../store/survey/reducer";
 import {selectUser} from "../../../../store/application/reducer";
@@ -57,18 +57,17 @@ export type SectionFilterForm = FormGroup<{
   styleUrl: './filter.component.scss'
 })
 export class FilterComponent extends WithSubscriptionsComponent implements OnInit {
-  protected form!: SectionFilterForm;
+  protected form: SectionFilterForm = this.fb.group({
+    name: new FormControl<string | null>(null),
+    version: new FormControl<number | null>(null),
+    presentIn: new FormControl<number | null>(null),
+  });
 
   constructor(
     private store: Store<SurveyAdminState>,
     private fb: FormBuilder,
   ) {
     super();
-    this.form = this.fb.group({
-      name: new FormControl<string | null>(null),
-      version: new FormControl<number | null>(null),
-      presentIn: new FormControl<number | null>(null),
-    })
   }
 
   ngOnInit() {
@@ -78,7 +77,15 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
           debounceTime(500),
           distinctUntilChanged(),
         )
-        .subscribe(() => this.search())
+        .subscribe(() => this.search()),
+
+      this.surveys$.subscribe(surveys => {
+        if (surveys.length) {
+          this.form.controls.presentIn.enable()
+        } else {
+          this.form.controls.presentIn.disable()
+        }
+      })
     )
   }
 
@@ -88,6 +95,12 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
   surveyState$ = this.store.select(selectSurveyState)
   versions$ = this.state$.pipe(map(s => s.versions));
   surveys$ = this.surveyState$.pipe(map(s => s.surveys));
+  sections$ = this.store.select(selectSectionList)
+
+  presentInOptions$ = this.sections$.pipe(map(({sections}) => sections.map(section => (section.associatedSurveys ?? []).map(ass => {
+    const {id, name, version} = ass
+    return {id, value: `${name} (v${version})`}
+  })).flat().sort((a, b) => a.value < b.value ? -1 : 1)))
 
   protected search() {
     console.log('search term', this.form.value);

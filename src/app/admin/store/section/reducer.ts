@@ -2,6 +2,7 @@ import {createFeatureSelector, createReducer, createSelector, on} from "@ngrx/st
 import {SectionActions} from "./actions";
 import {Section} from "../../repository/dto/section";
 import {AppActions} from "../application/actions";
+import {SurveyAdminState} from "../store";
 
 const sortSections = (sections: Array<Section>): Array<Section> => {
   let res = [...sections]
@@ -140,11 +141,11 @@ export const reducer = createReducer(
 )
 
 export const selectSectionState = createFeatureSelector<State>('section');
-export const selectSectionList = createSelector(selectSectionState, ({
-                                                                       fetchingSections,
-                                                                       fetchSectionsError,
-                                                                       sections
-                                                                     }) => ({
+export const selectSectionList = createSelector((state: SurveyAdminState) => state.section, ({
+                                                                                               fetchingSections,
+                                                                                               fetchSectionsError,
+                                                                                               sections
+                                                                                             }) => ({
   fetchingSections,
   fetchSectionsError,
   sections

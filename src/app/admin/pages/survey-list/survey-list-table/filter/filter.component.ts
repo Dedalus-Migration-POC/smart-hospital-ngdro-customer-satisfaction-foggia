@@ -10,7 +10,7 @@ import {SurveyStatus} from "../../../../repository/dto/survey";
 import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {AsyncPipe, NgForOf} from "@angular/common";
+import {AsyncPipe, DatePipe, NgForOf} from "@angular/common";
 import {TranslateModule} from "@ngx-translate/core";
 import {
   MatDatepicker,
@@ -24,6 +24,7 @@ import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
 import {ToggleButtonComponent} from "../../../../components/toggle-button/toggle-button.component";
+import {provideNativeDateAdapter} from "@angular/material/core";
 
 export type SurveyFilterForm = FormGroup<{
   name: FormControl<string | null>;
@@ -36,6 +37,7 @@ export type SurveyFilterForm = FormGroup<{
 @Component({
   selector: 'app-survey-filter',
   standalone: true,
+  providers: [provideNativeDateAdapter(), DatePipe],
   imports: [
     ReactiveFormsModule,
     MatFormField,

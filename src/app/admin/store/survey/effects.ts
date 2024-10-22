@@ -15,6 +15,7 @@ const surveyFormToPersistRequest = (surveyForm: SurveyForm['value']): SurveyPers
   id: surveyForm.id ? Number(surveyForm.id) : undefined,
   name: surveyForm.name!,
   description: surveyForm.description ?? undefined,
+  version: surveyForm.version!,
   validityDates: {
     startDate: surveyForm.startDate!,
     endDate: surveyForm.endDate ?? undefined,
@@ -83,7 +84,12 @@ export class SurveyEffects {
     return this.actions$.pipe(
       ofType(SurveyActions.submitSurvey),
       filter(({submitOption}) => submitOption === 'publish'),
-      switchMap(({surveyForm}) => this.surveyService.create(surveyFormToPersistRequest(surveyForm))),
+      switchMap(({surveyForm}) => {
+        const request = surveyFormToPersistRequest(surveyForm)
+        return !request.id
+          ? this.surveyService.create(request)
+          : this.surveyService.update(request)
+      }),
       switchMap((survey) => this.surveyService.publish(survey.id!.toString(), survey.version.toString()).pipe(
         map(() => SurveyActions.submitSurveySucceeded({survey: {...survey, status: SurveyStatus.ACTIVE}}))
       )),
