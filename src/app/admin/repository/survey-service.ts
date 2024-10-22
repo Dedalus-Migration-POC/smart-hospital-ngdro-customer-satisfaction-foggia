@@ -46,7 +46,7 @@ export class SurveyService {
   }
 
   public unpublish(surveyId: string, version: string) {
-    return this.http.patch<void>(`${baseUrl}/unpublish/${surveyId}${version}`, null)
+    return this.http.patch<void>(`${baseUrl}/unpublish/${surveyId}/${version}`, null)
   }
 
   public print() {

@@ -20,9 +20,14 @@
       {{ 'admin.section-list.table-headers.actions' | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <button mat-icon-button (click)="onEdit.emit(element)">
-        <mat-icon [matTooltip]="'admin.section-list.actions-hints.edit' | translate">edit</mat-icon>
-      </button>
+      <app-toggle-button
+        [isActive]="!!element.associatedSurveys?.length"
+        activeIcon="file_copy"
+        inactiveIcon="edit"
+        [activeTooltip]="'admin.section-list.actions-hints.clone' | translate"
+        [inactiveTooltip]="'admin.section-list.actions-hints.edit' | translate"
+        (onClick)="onEdit.emit(element)"
+      ></app-toggle-button>
       <ng-template #idle>
         <button mat-icon-button (click)="changeDeletedStatus(element)">
           <mat-icon

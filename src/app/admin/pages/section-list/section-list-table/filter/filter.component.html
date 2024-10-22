@@ -38,11 +38,11 @@
     <app-toggle-button
       *ngIf="canShowDeleted$ | async"
       (onClick)="toggleDeleted()"
-      [activeLabel]="'admin.section-list.search-filter.show-deleted-btn' | translate"
-      [idleLabel]="'admin.section-list.search-filter.hide-deleted-btn' | translate"
-      [status]="(showDeleted$ | async) ?? false"
+      [activeTooltip]="'admin.section-list.search-filter.show-deleted-btn' | translate"
+      [inactiveTooltip]="'admin.section-list.search-filter.hide-deleted-btn' | translate"
+      [isActive]="(showDeleted$ | async) ?? false"
       activeIcon="delete"
-      idleIcon="restore"
+      inactiveIcon="restore"
     ></app-toggle-button>
   </div>
 </form>

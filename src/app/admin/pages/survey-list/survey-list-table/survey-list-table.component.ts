@@ -5,7 +5,7 @@ import {AsyncPipe, DatePipe, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet} fro
 import {combineLatest, map, Observable} from "rxjs";
 import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../../store/store";
-import {selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/reducer";
+import {selectSurveyList, selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/reducer";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -24,6 +24,7 @@ import {
   MatTable
 } from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
+import {MatProgressBar} from "@angular/material/progress-bar";
 
 @Component({
   selector: 'app-survey-list-table',
@@ -51,7 +52,8 @@ import {MatPaginator} from "@angular/material/paginator";
     MatRow,
     MatHeaderRowDef,
     MatRowDef,
-    MatPaginator
+    MatPaginator,
+    MatProgressBar
   ],
   templateUrl: './survey-list-table.component.html',
   styleUrl: './survey-list-table.component.scss'
@@ -64,6 +66,7 @@ export class SurveyListTableComponent implements OnInit {
   @Output("onPublish") publishSurvey: EventEmitter<Survey> = new EventEmitter();
   @Output("onUnpublish") unpublishSurvey: EventEmitter<Survey> = new EventEmitter();
 
+  loading$ = this.store.select(selectSurveyList).pipe(map(({fetchingSurveys}) => fetchingSurveys))
   datasource$!: Observable<Array<Survey>>;
   pageSizeOptions$!: Observable<Array<number>>;
   showDeleted$ = this.store.select(s => s.survey.showDeleted)

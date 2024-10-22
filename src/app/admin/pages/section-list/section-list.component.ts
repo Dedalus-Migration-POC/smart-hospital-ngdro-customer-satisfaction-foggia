@@ -56,7 +56,15 @@ export class SectionListComponent extends WithSubscriptionsComponent implements 
   sections$ = this.state$.pipe(map(({sections}) => sections));
 
   protected async onEdit(section: Section) {
-    await this.router.navigate(['section-form', section.id], {relativeTo: this.activatedRoute})
+    if (section.associatedSurveys?.length) {
+      this.dialog.info({
+        buttonsType: 'yes_no',
+        text: this.translate.instant('admin.section-list.dialog-confirm-clone', {name: section.name}),
+        onConfirm: () => this.store.dispatch(SectionActions.cloneSection({section}))
+      })
+    } else {
+      await this.router.navigate(['section-form', section.id], {relativeTo: this.activatedRoute})
+    }
   }
 
   protected onDelete(section: Section) {

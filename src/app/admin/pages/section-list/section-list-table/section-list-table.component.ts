@@ -33,6 +33,7 @@ import {MatSort, MatSortHeader, MatSortModule} from "@angular/material/sort";
 import {WithSubscriptionsComponent} from "../../../support/with-subscriptions-component";
 import {SectionActions} from "../../../store/section/actions";
 import {MatProgressBar} from "@angular/material/progress-bar";
+import {ToggleButtonComponent} from "../../../components/toggle-button/toggle-button.component";
 
 @Component({
   selector: 'app-section-list-table',
@@ -64,7 +65,8 @@ import {MatProgressBar} from "@angular/material/progress-bar";
     MatTooltip,
     MatSort,
     MatSortHeader,
-    MatProgressBar
+    MatProgressBar,
+    ToggleButtonComponent
   ],
   templateUrl: './section-list-table.component.html',
   styleUrl: './section-list-table.component.scss'

@@ -58,6 +58,7 @@
 
 <app-survey-filter></app-survey-filter>
 
+<mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
 <mat-table [dataSource]="(datasource$ | async)!" class="mat-elevation-z8">
   @for (surveyProperty of columns; track surveyProperty) {
     <ng-container *ngIf="surveyProperty !== 'actions'" [matColumnDef]="surveyProperty">
