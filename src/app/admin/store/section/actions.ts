@@ -4,91 +4,91 @@ import {SectionForm} from "../../pages/section-form/section-form.component";
 import {SectionFilterForm} from "../../pages/section-list/section-list-table/filter/filter.component";
 
 const fetchSections = createAction(
-  '[Survey] Fetch Sections',
+  '[Section] Fetch Sections',
   props<{ form: SectionFilterForm['value'] }>()
 )
 
 const fetchSectionsSucceeded = createAction(
-  '[Survey] Fetch Sections Succeeded',
+  '[Section] Fetch Sections Succeeded',
   props<{ sections: Array<Section> }>(),
 )
 
 const fetchSectionsFailed = createAction(
-  '[Survey] Fetch Sections Failed',
+  '[Section] Fetch Sections Failed',
 )
 
 const fetchSectionById = createAction(
-  '[Survey] Fetch Section by ID',
+  '[Section] Fetch Section by ID',
   props<{ section: Section }>()
 )
 
 const fetchSectionByIdSucceeded = createAction(
-  '[Survey] Fetch Section by ID Succeeded',
+  '[Section] Fetch Section by ID Succeeded',
   props<{ section: Section }>()
 )
 
 const fetchSectionByIdFailed = createAction(
-  '[Survey] Fetch Section by ID Failed',
+  '[Section] Fetch Section by ID Failed',
 )
 
 const submitSection = createAction(
-  '[Survey] Submit Section',
+  '[Section] Submit Section',
   props<{ sectionForm: SectionForm['value'] }>()
 )
 
 const submitSectionSucceeded = createAction(
-  '[Survey] Submit Section Succeeded',
+  '[Section] Submit Section Succeeded',
   props<{ section: Section }>()
 )
 
 const submitSectionFailed = createAction(
-  '[Survey] Submit Section Failed',
+  '[Section] Submit Section Failed',
 )
 
 const cloneSection = createAction(
-  '[Survey] Clone Section',
+  '[Section] Clone Section',
   props<{ section: Section }>()
 )
 
 const cloneSectionSucceeded = createAction(
-  '[Survey] Clone Section Succeeded',
+  '[Section] Clone Section Succeeded',
   props<{ section: Section }>()
 )
 
 const cloneSectionFailed = createAction(
-  '[Survey] Clone Section Failed',
+  '[Section] Clone Section Failed',
 )
 
 const deleteSection = createAction(
-  '[Survey] Delete Section',
+  '[Section] Delete Section',
   props<{ section: Section }>()
 )
 
 const deleteSectionSucceeded = createAction(
-  '[Survey] Delete Section Succeeded',
+  '[Section] Delete Section Succeeded',
   props<{ section: Section }>()
 )
 
 const deleteSectionFailed = createAction(
-  '[Survey] Delete Section Failed',
+  '[Section] Delete Section Failed',
 )
 
 const restoreSection = createAction(
-  '[Survey] Restore Section',
+  '[Section] Restore Section',
   props<{ section: Section }>()
 )
 
 const restoreSectionSucceeded = createAction(
-  '[Survey] Restore Section Succeeded',
+  '[Section] Restore Section Succeeded',
   props<{ section: Section }>()
 )
 
 const restoreSectionFailed = createAction(
-  '[Survey] Restore Section Failed',
+  '[Section] Restore Section Failed',
 )
 
 const toggleShowDeleted = createAction(
-  '[Survey] Toggle Show Deleted',
+  '[Section] Toggle Show Deleted',
 )
 
 export const SectionActions = {

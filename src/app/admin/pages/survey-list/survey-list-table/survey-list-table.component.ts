@@ -1,13 +1,11 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {Survey, SurveyStatus} from "../../../repository/dto/survey";
 import {AsyncPipe, DatePipe, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet} from "@angular/common";
-import {DeletableEntityService} from "../../../support/deletable-entity-service";
-import {map, Observable} from "rxjs";
+import {combineLatest, map, Observable} from "rxjs";
 import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../../store/store";
 import {selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/reducer";
-import {SurveyActions} from "../../../store/survey/actions";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -58,7 +56,7 @@ import {MatPaginator} from "@angular/material/paginator";
   templateUrl: './survey-list-table.component.html',
   styleUrl: './survey-list-table.component.scss'
 })
-export class SurveyListTableComponent extends DeletableEntityService<Survey> {
+export class SurveyListTableComponent implements OnInit {
   @Input({alias: "surveys", required: true}) surveys$!: Observable<Array<Survey>>;
   @Output("onEdit") editSurvey: EventEmitter<{ survey: Survey, mode: 'edit' | 'clone' }> = new EventEmitter();
   @Output("onDelete") deleteSurvey: EventEmitter<Survey> = new EventEmitter();
@@ -66,18 +64,30 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
   @Output("onPublish") publishSurvey: EventEmitter<Survey> = new EventEmitter();
   @Output("onUnpublish") unpublishSurvey: EventEmitter<Survey> = new EventEmitter();
 
+  datasource$!: Observable<Array<Survey>>;
+  pageSizeOptions$!: Observable<Array<number>>;
+  showDeleted$ = this.store.select(s => s.survey.showDeleted)
+
   constructor(
     private store: Store<SurveyAdminState>,
     private datePipe: DatePipe,
     private translate: TranslateService) {
-    super(store.select(s => s.survey.showDeleted), () => store.dispatch(SurveyActions.toggleShowDeleted()));
   }
 
-  override ngOnInit() {
-    this.entityList$ = this.surveys$
-    this.onDelete = this.deleteSurvey
-    this.onRestore = this.restoreSurvey
-    super.ngOnInit();
+  ngOnInit() {
+    this.datasource$ = combineLatest([this.surveys$, this.showDeleted$]).pipe(
+      map(([surveys, showDeleted]) => surveys.filter(entity => showDeleted ? true : !entity.deleted))
+    )
+    this.pageSizeOptions$ = this.surveys$.pipe(map(surveys => {
+        return Array.from(
+          {length: Math.ceil(surveys.length / 5)},
+          (_, i) => {
+            const value = (i + 1) * 5;
+            return value >= 30 ? Math.ceil(value / 10) * 10 : value;
+          }
+        ).filter((value, index, self) => self.indexOf(value) === index)
+      })
+    );
   }
 
   columns: string[] = ['name', 'version', 'status', 'validity', 'createdAt', 'actions']
@@ -107,6 +117,11 @@ export class SurveyListTableComponent extends DeletableEntityService<Survey> {
 
   protected onEdit(survey: Survey) {
     this.editSurvey.emit({survey, mode: survey.status === SurveyStatus.ACTIVE ? 'clone' : 'edit'});
+  }
+
+  protected changeDeletedStatus(entity: Survey) {
+    if (entity.deleted) this.restoreSurvey.emit(entity)
+    else this.deleteSurvey.emit(entity)
   }
 
   protected readonly SurveyOperatingStatus = SurveyOperatingStatus;

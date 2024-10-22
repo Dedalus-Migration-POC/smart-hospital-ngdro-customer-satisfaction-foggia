@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
-import {debounceTime, distinctUntilChanged, map, Observable} from "rxjs";
+import {debounceTime, distinctUntilChanged, map} from "rxjs";
 import {SurveyActions} from "../../../../store/survey/actions";
 import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../../../store/store";
@@ -10,7 +10,7 @@ import {SurveyStatus} from "../../../../repository/dto/survey";
 import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {AsyncPipe, DatePipe, NgForOf} from "@angular/common";
+import {AsyncPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {TranslateModule} from "@ngx-translate/core";
 import {
   MatDatepicker,
@@ -25,6 +25,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
 import {ToggleButtonComponent} from "../../../../components/toggle-button/toggle-button.component";
 import {provideNativeDateAdapter} from "@angular/material/core";
+import {selectUser} from "../../../../store/application/reducer";
 
 export type SurveyFilterForm = FormGroup<{
   name: FormControl<string | null>;
@@ -58,15 +59,17 @@ export type SurveyFilterForm = FormGroup<{
     MatDateRangeInput,
     MatDateRangePicker,
     MatStartDate,
-    MatSuffix
+    MatSuffix,
+    NgIf
   ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss'
 })
 export class FilterComponent extends WithSubscriptionsComponent implements OnInit {
-  @Input({alias: 'showDeleted', required: true}) showDeleted!: Observable<boolean>;
-  @Output('onToggleShowDeleted') toggleShowDeleted: EventEmitter<void> = new EventEmitter();
   protected form!: SurveyFilterForm;
+
+  showDeleted$ = this.store.select(s => s.survey.showDeleted)
+  canShowDeleted$ = this.store.select(selectUser).pipe(map((user) => user?.roles.includes('ROLE_ADMIN') ?? false))
 
   constructor(
     private store: Store<SurveyAdminState>,
@@ -89,7 +92,10 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
           debounceTime(500),
           distinctUntilChanged(),
         )
-        .subscribe(() => this.search())
+        .subscribe(() => {
+          console.log('survey filter form changed')
+          this.search()
+        })
     )
   }
 
@@ -98,6 +104,10 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
 
   protected search() {
     this.store.dispatch(SurveyActions.fetchSurveys({form: this.form.value}));
+  }
+
+  protected toggleShowDeleted() {
+    this.store.dispatch(SurveyActions.toggleShowDeleted())
   }
 
   protected readonly SurveyStatus = SurveyStatus;

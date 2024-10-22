@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -19,15 +19,15 @@ import {TranslateModule} from "@ngx-translate/core";
 import {Section} from "../../../repository/dto/section";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {Store} from "@ngrx/store";
-import {map, Observable} from "rxjs";
+import {combineLatest, map, Observable} from "rxjs";
 import {MatInput} from "@angular/material/input";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {FormsModule} from "@angular/forms";
-import {DeletableEntityService} from "../../../support/deletable-entity-service";
 import {MatTooltip} from "@angular/material/tooltip";
 import {SurveyAdminState} from "../../../store/store";
 import {selectSectionState} from "../../../store/section/reducer";
 import {SectionActions} from "../../../store/section/actions";
+import {Survey} from "../../../repository/dto/survey";
 
 @Component({
   selector: 'app-section-list-table',
@@ -58,21 +58,33 @@ import {SectionActions} from "../../../store/section/actions";
   templateUrl: './section-list-table.component.html',
   styleUrl: './section-list-table.component.scss'
 })
-export class SectionListTableComponent extends DeletableEntityService<Section> {
+export class SectionListTableComponent implements OnInit {
   @Input({alias: "sections", required: true}) sections$!: Observable<Array<Section>>;
   @Output("onEdit") onEdit: EventEmitter<Section> = new EventEmitter();
   @Output("onDelete") deleteSection: EventEmitter<Section> = new EventEmitter();
   @Output("onRestore") restoreSection: EventEmitter<Section> = new EventEmitter();
 
+  datasource$!: Observable<Array<Section>>;
+  pageSizeOptions$!: Observable<Array<number>>;
+  showDeleted$ = this.store.select(s => s.section.showDeleted)
+
   constructor(private store: Store<SurveyAdminState>) {
-    super(store.select(s => s.section.showDeleted), () => store.dispatch(SectionActions.toggleShowDeleted()));
   }
 
-  override ngOnInit() {
-    this.entityList$ = this.sections$
-    this.onDelete = this.deleteSection
-    this.onRestore = this.restoreSection
-    super.ngOnInit();
+  ngOnInit() {
+    this.datasource$ = combineLatest([this.sections$, this.showDeleted$]).pipe(
+      map(([sections, showDeleted]) => sections.filter(entity => showDeleted ? true : !entity.deleted))
+    )
+    this.pageSizeOptions$ = this.sections$.pipe(map(sections => {
+        return Array.from(
+          {length: Math.ceil(sections.length / 5)},
+          (_, i) => {
+            const value = (i + 1) * 5;
+            return value >= 30 ? Math.ceil(value / 10) * 10 : value;
+          }
+        ).filter((value, index, self) => self.indexOf(value) === index)
+      })
+    );
   }
 
   deletingId$ = this.store.select(selectSectionState).pipe(map(s => s.editingSectionId))
@@ -93,6 +105,15 @@ export class SectionListTableComponent extends DeletableEntityService<Section> {
       default:
         return ''
     }
+  }
+
+  protected toggleShowDeleted() {
+    this.store.dispatch(SectionActions.toggleShowDeleted())
+  }
+
+  protected changeDeletedStatus(entity: Survey) {
+    if (entity.deleted) this.restoreSection.emit(entity)
+    else this.deleteSection.emit(entity)
   }
 
 }

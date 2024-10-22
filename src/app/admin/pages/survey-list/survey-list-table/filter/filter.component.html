@@ -42,7 +42,7 @@
       <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
       <mat-datepicker #endDatePicker></mat-datepicker>
     </mat-form-field>
-    
+
   </div>
 
   <div>
@@ -51,11 +51,11 @@
     </button>
 
     <app-toggle-button
-      buttonType="mat-stroked-button"
-      (onClick)="toggleShowDeleted.emit()"
+      *ngIf="canShowDeleted$ | async"
+      (onClick)="toggleShowDeleted()"
       [activeLabel]="'admin.survey-list.search-filter.show-deleted-btn' | translate"
       [idleLabel]="'admin.survey-list.search-filter.hide-deleted-btn' | translate"
-      [status]="(showDeleted | async)!"
+      [status]="(showDeleted$ | async) ?? false"
       activeIcon="delete"
       idleIcon="restore"
     ></app-toggle-button>

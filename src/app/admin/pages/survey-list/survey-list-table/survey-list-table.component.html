@@ -56,10 +56,7 @@
   </ng-template>
 </ng-template>
 
-<app-survey-filter
-  [showDeleted]="showDeleted$"
-  (onToggleShowDeleted)="toggleShowDeleted()"
-></app-survey-filter>
+<app-survey-filter></app-survey-filter>
 
 <mat-table [dataSource]="(datasource$ | async)!" class="mat-elevation-z8">
   @for (surveyProperty of columns; track surveyProperty) {

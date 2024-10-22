@@ -57,6 +57,8 @@ export type SectionFilterForm = FormGroup<{
   styleUrl: './filter.component.scss'
 })
 export class FilterComponent extends WithSubscriptionsComponent implements OnInit {
+  showDeleted$ = this.store.select(s => s.section.showDeleted)
+
   protected form: SectionFilterForm = this.fb.group({
     name: new FormControl<string | null>(null),
     version: new FormControl<number | null>(null),
@@ -77,7 +79,10 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
           debounceTime(500),
           distinctUntilChanged(),
         )
-        .subscribe(() => this.search()),
+        .subscribe(() => {
+          console.log('section filter form changed')
+          this.search()
+        }),
 
       this.surveys$.subscribe(surveys => {
         if (surveys.length) {
