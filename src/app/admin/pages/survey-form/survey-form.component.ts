@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {BehaviorSubject, combineLatest, map, Observable, take, tap} from "rxjs";
 import {Store} from "@ngrx/store";
@@ -82,7 +82,6 @@ type DateRange = {
   styleUrl: './survey-form.component.scss'
 })
 export class SurveyFormComponent extends WithSubscriptionsComponent implements OnInit {
-  @ViewChild("surveyFields", {static: false}) surveyFieldsDiv!: ElementRef<HTMLDivElement>;
   editMode = false;
 
   form: SurveyForm = this.fb.group({

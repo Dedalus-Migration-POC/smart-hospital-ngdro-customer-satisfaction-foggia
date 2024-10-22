@@ -22,7 +22,7 @@ form {
 }
 
 .survey-fields {
-  width: max-content;
+  max-width: 768px;
 
   *:not(:last-child) {
     margin-right: 16px;

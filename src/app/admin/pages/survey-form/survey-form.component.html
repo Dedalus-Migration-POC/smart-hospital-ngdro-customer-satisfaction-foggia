@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <div #surveyFields class="survey-fields">
+  <div class="survey-fields">
 
     <mat-form-field appearance="outline" floatLabel="always" *ngIf="form.controls.name; let field">
       <mat-label>{{ 'admin.survey-form.survey-name-field' | translate }}</mat-label>
@@ -86,7 +86,7 @@
   </div>
 
   <mat-form-field
-    [style]="{maxWidth: !surveyFieldsDiv?.nativeElement ? '100%' : surveyFieldsDiv?.nativeElement?.clientWidth + 'px'}"
+    style="max-width: 768px"
     appearance="outline"
     floatLabel="always" *ngIf="form.controls.description; let field">
     <mat-label>{{ 'admin.survey-form.survey-description-field' | translate }}</mat-label>
@@ -94,7 +94,7 @@
   </mat-form-field>
 
   <mat-card *ngFor="let control of form.controls.sections.controls; let i = index"
-            [style]="{maxWidth: surveyFieldsDiv?.nativeElement?.clientWidth + 'px'}">
+            style="max-width: 768px">
     <div class="mat-section-select">
       <mat-form-field appearance="outline" floatLabel="always">
         <mat-label>{{ 'admin.survey-form.section-field-label' | translate : {index: i + 1} }}</mat-label>
