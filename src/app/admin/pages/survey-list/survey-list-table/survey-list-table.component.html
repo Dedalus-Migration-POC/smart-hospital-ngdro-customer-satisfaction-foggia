@@ -87,7 +87,7 @@
         context: { survey: element, operatingStatus: operatingStatus$ | async }"
       ></ng-container>
 
-      <ng-container [ngSwitch]="element.status">
+      <ng-container [ngSwitch]="element.status" *ngIf="!element.deleted">
         <ng-container
           *ngTemplateOutlet="
           publishStatusButton;

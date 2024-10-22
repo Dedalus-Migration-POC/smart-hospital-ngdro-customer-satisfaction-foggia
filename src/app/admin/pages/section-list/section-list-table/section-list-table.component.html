@@ -1,14 +1,17 @@
-<mat-table [dataSource]="(datasource$ | async)!" class="mat-elevation-z8">
+<mat-progress-bar mode="indeterminate" *ngIf="(state$ | async)?.fetchingSections"></mat-progress-bar>
+<mat-table
+  matSort
+  [dataSource]="dataSource"
+  class="mat-elevation-z8"
+>
   @for (column of columns; track column) {
     <ng-container *ngIf="column !== 'actions'" [matColumnDef]="column">
-      <mat-header-cell *matHeaderCellDef>
+      <mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="column === 'present-in'">
         {{ 'admin.section-list.table-headers.' + column | translate }}
       </mat-header-cell>
-      <ng-container *matCellDef="let element">
-        <mat-cell [class.deleted]="element.deleted">
-          {{ handleColumn(element, column) }}
-        </mat-cell>
-      </ng-container>
+      <mat-cell *matCellDef="let element" [class.deleted]="element.deleted">
+        {{ handleColumn(element, column) }}
+      </mat-cell>
     </ng-container>
   }
 
@@ -36,4 +39,8 @@
 </mat-table>
 
 
-<mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+<mat-paginator #secPaginator
+               [pageSize]="pageSize"
+               [pageIndex]="pageIndex"
+               [length]="length"
+               [pageSizeOptions]="[5, 10, 20]"></mat-paginator>

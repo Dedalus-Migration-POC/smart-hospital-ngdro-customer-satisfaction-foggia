@@ -101,7 +101,7 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
       this.subscriptions.push(this.sections$.pipe(
         take(1),
         map(sections => {
-          const section = sections.find((section) => section.id === Number(sectionId));
+          const section = (sections?.content ?? []).find((section) => section.id === Number(sectionId));
           this.isSectionDeleted = section?.deleted ?? false
           if (section) {
             this.initializeForm(section);

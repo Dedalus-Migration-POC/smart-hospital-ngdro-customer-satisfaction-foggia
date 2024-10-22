@@ -72,7 +72,7 @@ export class SectionListComponent extends WithSubscriptionsComponent implements 
           })
         } else {
           this.dialog.attention({
-            buttonsType: 'ok',
+            buttonsType: 'yes_no',
             text: this.translate.instant('admin.section-list.dialog-confirm-delete'),
             onConfirm: () => this.store.dispatch(SectionActions.deleteSection({section}))
           })
@@ -82,7 +82,7 @@ export class SectionListComponent extends WithSubscriptionsComponent implements 
 
   protected onRestore(section: Section) {
     this.dialog.attention({
-      buttonsType: 'ok',
+      buttonsType: 'yes_no',
       text: this.translate.instant('admin.section-list.dialog-confirm-restore'),
       onConfirm: () => this.store.dispatch(SectionActions.restoreSection({section}))
     })

@@ -4,13 +4,11 @@ import {Store} from "@ngrx/store";
 import {map, Observable, tap} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Survey} from "../../repository/dto/survey";
-import {Section} from "../../repository/dto/section";
 import {WithSubscriptionsComponent} from "../../support/with-subscriptions-component";
 import {SurveyActions} from "../../store/survey/actions";
 import {DialogService} from "../../support/dialog-service";
 import {Actions, ofType} from "@ngrx/effects";
 import {SurveyAdminState} from "../../store/store";
-import {selectSectionState} from "../../store/section/reducer";
 import {selectSurveyState} from "../../store/survey/reducer";
 import {SurveyListTableComponent} from "./survey-list-table/survey-list-table.component";
 import {AsyncPipe, NgIf} from "@angular/common";
@@ -53,7 +51,6 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
 
   state$ = this.store.select(selectSurveyState)
   surveys$: Observable<Array<Survey>> = this.state$.pipe(map(({surveys}) => surveys));
-  sections$: Observable<Array<Section>> = this.store.select(selectSectionState).pipe(map(({sections}) => sections));
 
   async onEdit({survey, mode}: { survey: Survey, mode: 'edit' | 'clone' }) {
     if (mode === 'edit')

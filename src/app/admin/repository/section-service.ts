@@ -4,6 +4,7 @@ import {Section} from "./dto/section";
 import {CreateSectionRequest} from "./dto/create-section-request";
 import {PagedList} from "./dto/paged_list";
 import {FilterSectionRequest} from "./dto/filter-section-request";
+import {TablePagination} from "../support/domain/table-pagination";
 
 const baseUrl = '/api/v1/survey/section'
 
@@ -13,8 +14,8 @@ export class SectionService {
 
   }
 
-  public find(request: FilterSectionRequest) {
-    return this.http.post<PagedList<Section>>(baseUrl, request)
+  public find(request: FilterSectionRequest, filter?: TablePagination) {
+    return this.http.post<PagedList<Section>>(baseUrl, request, {params: filter})
   }
 
   public findById(sectionId: string, version: string) {

@@ -3,50 +3,69 @@ import {SectionActions} from "./actions";
 import {Section} from "../../repository/dto/section";
 import {AppActions} from "../application/actions";
 import {SurveyAdminState} from "../store";
+import {TablePagination} from "../../support/domain/table-pagination";
+import {FormControl, FormGroup} from "@angular/forms";
+import {PagedList} from "../../repository/dto/paged_list";
 
-const sortSections = (sections: Array<Section>): Array<Section> => {
-  let res = [...sections]
-  res.sort((a, b) => a.name < b.name ? -1 : 1)
-  return res
-}
+export type SectionFilterForm = FormGroup<{
+  name: FormControl<string | null>;
+  version: FormControl<number | null>;
+  presentIn: FormControl<number | null>
+}>
 
 export type State = {
   fetchingSections: boolean;
   fetchSectionsError: boolean;
-  sections: Array<Section>;
+  sections: PagedList<Section> | null;
   creatingSection: boolean;
   editingSectionId: number | null;
   versions: Set<number>;
   showDeleted: boolean;
+  searchCriteria: {
+    filter: SectionFilterForm['value'];
+    tablePagination: TablePagination | undefined;
+  }
 }
 
 const initialState: State = {
   fetchingSections: false,
   fetchSectionsError: false,
-  sections: [],
+  sections: null,
   creatingSection: false,
   editingSectionId: null,
   versions: new Set([1]),
   showDeleted: false,
+  searchCriteria: {
+    filter: {},
+    tablePagination: {
+      size: 5,
+      sort: 'name,asc'
+    }
+  }
 }
 
 export const reducer = createReducer(
   initialState,
+  //FIXME remove it
   on(AppActions.initializeSucceeded, (state, action) => ({
     ...state,
-    sections: sortSections(action.sections),
-    versions: new Set<number>(action.sections.map(({version}) => version).filter(Boolean).sort((a, b) => a > b ? 1 : -1))
+    //versions: new Set<number>(action.sections.map(({version}) => version).filter(Boolean).sort((a, b) => a > b ? 1 : -1))
   })),
-  on(SectionActions.fetchSections, (state) => ({
+  on(SectionActions.fetchSections, (state, {form, tablePagination}) => ({
     ...state,
     fetchingSections: true,
     fetchSectionsError: false,
+    searchCriteria: {
+      filter: {...state.searchCriteria.filter, ...form},
+      tablePagination: {...state.searchCriteria.tablePagination, ...tablePagination},
+    }
   })),
   on(SectionActions.fetchSectionsSucceeded, (state, action) => ({
     ...state,
     fetchingSections: false,
     fetchSectionsError: false,
-    sections: sortSections(action.sections)
+    sections: action.response,
+    versions: new Set<number>(action.response.content.map(({version}) => version).filter(Boolean).sort((a, b) => a > b ? 1 : -1))
   })),
   on(SectionActions.fetchSectionsFailed, (state) => ({
     ...state,
@@ -60,7 +79,10 @@ export const reducer = createReducer(
   on(SectionActions.fetchSectionByIdSucceeded, (state, action) => ({
     ...state,
     fetchingSections: false,
-    sections: sortSections([...state.sections, action.section])
+    sections: {
+      ...state.sections!,
+      content: [...state.sections!.content, action.section]
+    }
   })),
   on(SectionActions.fetchSectionByIdFailed, (state) => ({
     ...state,
@@ -73,11 +95,10 @@ export const reducer = createReducer(
   on(SectionActions.submitSectionSucceeded, (state, action) => ({
     ...state,
     creatingSection: false,
-    sections: sortSections(state.sections.map(section =>
-      section.id === action.section.id
-        ? {...action.section}
-        : section
-    ))
+    sections: {
+      ...state.sections!,
+      content: [action.section, ...state.sections!.content]
+    }
   })),
   on(SectionActions.submitSectionFailed, (state) => ({
     ...state,
@@ -89,11 +110,10 @@ export const reducer = createReducer(
   })),
   on(SectionActions.cloneSectionSucceeded, (state, action) => ({
     ...state,
-    sections: state.sections.map(section =>
-      section.id === action.section.id
-        ? {...action.section}
-        : section
-    ),
+    sections: {
+      ...state.sections!,
+      content: [action.section, ...state.sections!.content]
+    },
     editingSectionId: null
   })),
   on(SectionActions.cloneSectionFailed, (state) => ({
@@ -106,11 +126,14 @@ export const reducer = createReducer(
   })),
   on(SectionActions.deleteSectionSucceeded, (state, action) => ({
     ...state,
-    sections: state.sections.map(section =>
-      section.id === action.section.id
-        ? {...section, deleted: true}
-        : section
-    ),
+    sections: {
+      ...state.sections!,
+      content: state.sections!.content.map(section =>
+        section.id === action.section.id
+          ? {...section, deleted: true}
+          : section
+      )
+    },
     editingSectionId: null
   })),
   on(SectionActions.deleteSectionFailed, (state) => ({
@@ -123,11 +146,14 @@ export const reducer = createReducer(
   })),
   on(SectionActions.restoreSectionSucceeded, (state, action) => ({
     ...state,
-    sections: state.sections.map(section =>
-      section.id === action.section.id
-        ? {...section, deleted: false}
-        : section
-    ),
+    sections: {
+      ...state.sections!,
+      content: state.sections!.content.map(section =>
+        section.id === action.section.id
+          ? {...section, deleted: false}
+          : section
+      )
+    },
     editingSectionId: null
   })),
   on(SectionActions.restoreSectionFailed, (state) => ({
@@ -141,6 +167,9 @@ export const reducer = createReducer(
 )
 
 export const selectSectionState = createFeatureSelector<State>('section');
+export const selectSectionSearchCriteria = createSelector((state: SurveyAdminState) => state.section, (({
+                                                                                                          searchCriteria
+                                                                                                        }) => searchCriteria))
 export const selectSectionList = createSelector((state: SurveyAdminState) => state.section, ({
                                                                                                fetchingSections,
                                                                                                fetchSectionsError,

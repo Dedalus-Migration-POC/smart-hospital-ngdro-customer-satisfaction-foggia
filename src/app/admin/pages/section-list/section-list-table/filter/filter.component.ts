@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MatError, MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
@@ -13,18 +13,12 @@ import {SurveyAdminState} from "../../../../store/store";
 import {WithSubscriptionsComponent} from "../../../../support/with-subscriptions-component";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
-import {selectSectionList, selectSectionState} from "../../../../store/section/reducer";
+import {SectionFilterForm, selectSectionList, selectSectionState} from "../../../../store/section/reducer";
 import {SectionActions} from "../../../../store/section/actions";
 import {selectSurveyState} from "../../../../store/survey/reducer";
 import {selectUser} from "../../../../store/application/reducer";
 import {ToggleButtonComponent} from "../../../../components/toggle-button/toggle-button.component";
 import {MatTooltip} from "@angular/material/tooltip";
-
-export type SectionFilterForm = FormGroup<{
-  name: FormControl<string | null>;
-  version: FormControl<number | null>;
-  presentIn: FormControl<number | null>
-}>
 
 @Component({
   selector: 'app-section-filter',
@@ -79,10 +73,7 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
           debounceTime(500),
           distinctUntilChanged(),
         )
-        .subscribe(() => {
-          console.log('section filter form changed')
-          this.search()
-        }),
+        .subscribe(() => this.store.dispatch(SectionActions.fetchSections({form: this.form.value}))),
 
       this.surveys$.subscribe(surveys => {
         if (surveys.length) {
@@ -102,15 +93,10 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
   surveys$ = this.surveyState$.pipe(map(s => s.surveys));
   sections$ = this.store.select(selectSectionList)
 
-  presentInOptions$ = this.sections$.pipe(map(({sections}) => sections.map(section => (section.associatedSurveys ?? []).map(ass => {
+  presentInOptions$ = this.sections$.pipe(map(({sections}) => (sections?.content ?? []).map(section => (section.associatedSurveys ?? []).map(ass => {
     const {id, name, version} = ass
     return {id, value: `${name} (v${version})`}
   })).flat().sort((a, b) => a.value < b.value ? -1 : 1)))
-
-  protected search() {
-    console.log('search term', this.form.value);
-    this.store.dispatch(SectionActions.fetchSections({form: this.form.value}));
-  }
 
   protected toggleDeleted() {
     this.store.dispatch(SectionActions.toggleShowDeleted());

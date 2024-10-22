@@ -1,16 +1,18 @@
 import {createAction, props} from '@ngrx/store'
 import {Section} from "../../repository/dto/section";
 import {SectionForm} from "../../pages/section-form/section-form.component";
-import {SectionFilterForm} from "../../pages/section-list/section-list-table/filter/filter.component";
+import {TablePagination} from "../../support/domain/table-pagination";
+import {SectionFilterForm} from "./reducer";
+import {PagedList} from "../../repository/dto/paged_list";
 
 const fetchSections = createAction(
   '[Section] Fetch Sections',
-  props<{ form: SectionFilterForm['value'] }>()
+  props<{ form?: SectionFilterForm['value']; tablePagination?: Partial<TablePagination> }>()
 )
 
 const fetchSectionsSucceeded = createAction(
   '[Section] Fetch Sections Succeeded',
-  props<{ sections: Array<Section> }>(),
+  props<{ response: PagedList<Section> }>(),
 )
 
 const fetchSectionsFailed = createAction(

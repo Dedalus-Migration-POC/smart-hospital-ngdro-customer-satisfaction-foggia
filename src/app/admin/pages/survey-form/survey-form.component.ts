@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {BehaviorSubject, combineLatest, map, Observable, take, tap} from "rxjs";
+import {BehaviorSubject, combineLatest, map, take, tap} from "rxjs";
 import {Store} from "@ngrx/store";
 import {Actions, ofType} from "@ngrx/effects";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
@@ -27,7 +27,7 @@ import {
   MatDateRangePicker
 } from "@angular/material/datepicker";
 import {SurveyAdminState} from "../../store/store";
-import {selectSectionState} from "../../store/section/reducer";
+import {selectSectionList, selectSectionState} from "../../store/section/reducer";
 import {selectSurveyState, SurveyOperatingStatus} from "../../store/survey/reducer";
 import {withLatestFrom} from "rxjs/operators";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -96,7 +96,8 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
 
   state$ = this.store.select(selectSurveyState)
   surveys$ = this.state$.pipe(map(({surveys}) => surveys));
-  sections$ = this.store.select(selectSectionState).pipe(map(({sections}) => sections));
+  sections$ = this.store.select(selectSectionList).pipe(map(({sections}) => sections?.content ?? []))
+  sectionResponse$ = this.store.select(selectSectionState).pipe(map(({sections}) => sections));
   selectableSections$ = new BehaviorSubject<Array<Section>>([]);
   operatingStatus$ = this.state$.pipe(map(({operatingStatus}) => operatingStatus?.status))
 
@@ -133,11 +134,11 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
 
     this.subscriptions.push(
       this.form.valueChanges.pipe(
-        withLatestFrom(this.sections$),
+        withLatestFrom(this.sectionResponse$),
         tap(([form, sections]) => {
           console.log('Selected sections:', this.form.get('sectionIds')?.value);
           this.selectableSections$.next(
-            sections.filter(section => !form.sections?.find(s => s?.id === section.id))
+            (sections?.content ?? []).filter(section => !form.sections?.find(s => s?.id === section.id))
           )
           this.dateRange$.next({
             minStartDate: this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
@@ -177,7 +178,6 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
   }
 
   private initializeForm(survey: Survey) {
-    console.log('aaaaaaaa', survey)
     this.form.patchValue({
       id: survey.id!.toString(),
       name: survey.name,
@@ -248,17 +248,6 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
     const section = this.form.controls.sections.at(idx)
     this.form.controls.sections.removeAt(idx)
     this.form.controls.sections.insert(newIdx, section)
-  }
-
-  protected getSectionById(sectionId: number): Observable<Section> {
-    return this.sections$.pipe(
-      map(s => {
-        console.log('sections', s)
-        const found = s.find(sec => sec.id === sectionId)!
-        console.log('found', found)
-        return found
-      }),
-    )
   }
 
   protected readonly SurveyOperatingStatus = SurveyOperatingStatus;

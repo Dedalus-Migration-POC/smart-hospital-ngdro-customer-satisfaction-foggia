@@ -32,7 +32,7 @@ export class TopRightButtonsComponent {
   ) {
   }
 
-  sections$: Observable<Array<Section>> = this.store.select(selectSectionState).pipe(map(({sections}) => sections));
+  sections$: Observable<Array<Section> | undefined> = this.store.select(selectSectionState).pipe(map(({sections}) => sections?.content));
 
   protected print() {
     this.dialog.open<PrintSurveyDialogComponent>(PrintSurveyDialogComponent, {

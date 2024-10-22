@@ -1,14 +1,18 @@
 import {Injectable} from '@angular/core'
 import {Actions, createEffect, ofType} from '@ngrx/effects'
-import {catchError, concatMap, map} from 'rxjs/operators'
+import {catchError, concatMap, map, withLatestFrom} from 'rxjs/operators'
 import {of} from 'rxjs'
 import {SectionActions} from "./actions";
 import {CreateSectionRequest} from "../../repository/dto/create-section-request";
 import {SectionService} from "../../repository/section-service";
+import {Store} from "@ngrx/store";
+import {SurveyAdminState} from "../store";
+import {selectSectionSearchCriteria} from "./reducer";
 
 @Injectable()
 export class SectionEffects {
   constructor(
+    private store: Store<SurveyAdminState>,
     private actions$: Actions,
     private sectionService: SectionService,
   ) {
@@ -17,13 +21,14 @@ export class SectionEffects {
   private readonly fetchSections$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SectionActions.fetchSections),
-      concatMap(({form}) =>
+      withLatestFrom(this.store.select(selectSectionSearchCriteria)),
+      concatMap(([_, {filter, tablePagination}]) =>
         this.sectionService.find({
-          name: form.name ?? undefined,
-          version: form.version ?? undefined,
-          associatedSurveyIds: form.presentIn ? [form.presentIn] : undefined,
-        }).pipe(
-          map((response) => SectionActions.fetchSectionsSucceeded({sections: response.content})),
+          name: filter.name ?? undefined,
+          version: filter.version ?? undefined,
+          associatedSurveyIds: filter.presentIn ? [filter.presentIn] : undefined,
+        }, tablePagination).pipe(
+          map((response) => SectionActions.fetchSectionsSucceeded({response})),
           catchError(() =>
             of(SectionActions.fetchSectionsFailed()),
           ),
