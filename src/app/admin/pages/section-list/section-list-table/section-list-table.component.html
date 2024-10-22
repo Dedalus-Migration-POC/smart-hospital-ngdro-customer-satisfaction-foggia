@@ -28,14 +28,18 @@
         [inactiveTooltip]="'admin.section-list.actions-hints.edit' | translate"
         (onClick)="onEdit.emit(element)"
       ></app-toggle-button>
-      <ng-template #idle>
-        <button mat-icon-button (click)="changeDeletedStatus(element)">
-          <mat-icon
-            [matTooltip]="'admin.section-list.actions-hints.' + (element.deleted ? 'restore' : 'delete') | translate">{{ element.deleted ? 'restore' : 'delete' }}
-          </mat-icon>
-        </button>
+      <ng-template #notDeleting>
+        <app-toggle-button
+          [isActive]="!element.deleted"
+          activeIcon="delete"
+          inactiveIcon="restore"
+          [activeTooltip]="'admin.section-list.actions-hints.delete' | translate"
+          [inactiveTooltip]="'admin.section-list.actions-hints.restore' | translate"
+          (onClick)="changeDeletedStatus(element)"
+        ></app-toggle-button>
       </ng-template>
-      <mat-spinner *ngIf="(deletingId$ | async) === element.id?.toString(); else idle" diameter="20"></mat-spinner>
+      <mat-spinner *ngIf="(deletingId$ | async) === element.id?.toString(); else notDeleting"
+                   diameter="20"></mat-spinner>
     </mat-cell>
   </ng-container>
 
