@@ -54,8 +54,8 @@ export class SurveyEffects {
   private readonly fetchSurveyById$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.fetchSurveyById),
-      switchMap(({surveyId, version}) =>
-        this.surveyService.findById(surveyId, version).pipe(
+      switchMap(({surveyId}) =>
+        this.surveyService.findById(surveyId).pipe(
           map((survey) => SurveyActions.fetchSurveyByIdSucceeded({survey})),
           catchError(() =>
             of(SurveyActions.fetchSurveyByIdFailed()),
@@ -91,7 +91,7 @@ export class SurveyEffects {
           ? this.surveyService.create(request)
           : this.surveyService.update(request)
       }),
-      switchMap((survey) => this.surveyService.publish(survey.id!.toString(), survey.version.toString()).pipe(
+      switchMap((survey) => this.surveyService.publish(survey.id!.toString()).pipe(
         map(() => SurveyActions.submitSurveySucceeded({survey: {...survey, status: SurveyStatus.ACTIVE}}))
       )),
       catchError(() => of(SurveyActions.submitSurveyFailed())),
@@ -102,7 +102,7 @@ export class SurveyEffects {
     return this.actions$.pipe(
       ofType(SurveyActions.cloneSurvey),
       concatMap(({survey}) =>
-        this.surveyService.clone(survey.id!.toString(), survey.version.toString()).pipe(
+        this.surveyService.clone(survey.id!.toString()).pipe(
           map((survey) => SurveyActions.cloneSurveySucceeded({survey})),
           catchError(() =>
             of(SurveyActions.cloneSurveyFailed()),
@@ -116,7 +116,7 @@ export class SurveyEffects {
     return this.actions$.pipe(
       ofType(SurveyActions.deleteSurvey),
       concatMap(({survey}) =>
-        this.surveyService.delete(survey.id!.toString(), survey.version.toString()).pipe(
+        this.surveyService.delete(survey.id!.toString()).pipe(
           map(() => SurveyActions.deleteSurveySucceeded({survey})),
           catchError(() => of(SurveyActions.deleteSurveyFailed({survey}))),
         ),
@@ -128,7 +128,7 @@ export class SurveyEffects {
     return this.actions$.pipe(
       ofType(SurveyActions.restoreSurvey),
       switchMap(({survey}) =>
-        this.surveyService.restore(survey.id!.toString(), survey.version.toString()).pipe(
+        this.surveyService.restore(survey.id!.toString()).pipe(
           map(() => SurveyActions.restoreSurveySucceeded({survey})),
           catchError(() => of(SurveyActions.restoreSurveyFailed({survey}))),
         ),
@@ -140,7 +140,7 @@ export class SurveyEffects {
     return this.actions$.pipe(
       ofType(SurveyActions.publishSurvey),
       switchMap(({survey}) =>
-        this.surveyService.publish(survey.id!.toString(), survey.version.toString()).pipe(
+        this.surveyService.publish(survey.id!.toString()).pipe(
           map(() => SurveyActions.publishSurveySucceeded({survey})),
           catchError(() => of(SurveyActions.publishSurveyFailed())),),
       ),
@@ -151,7 +151,7 @@ export class SurveyEffects {
     return this.actions$.pipe(
       ofType(SurveyActions.unpublishSurvey),
       switchMap(({survey}) =>
-        this.surveyService.unpublish(survey.id!.toString(), survey.version.toString()).pipe(
+        this.surveyService.unpublish(survey.id!.toString()).pipe(
           map(() => SurveyActions.unpublishSurveySucceeded({survey})),
           catchError(() => of(SurveyActions.unpublishSurveyFailed()))
         ),

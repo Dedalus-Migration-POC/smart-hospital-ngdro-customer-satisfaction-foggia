@@ -18,8 +18,8 @@ export class SectionService {
     return this.http.post<PagedList<Section>>(baseUrl, request, {params: filter})
   }
 
-  public findById(sectionId: string, version: string) {
-    return this.http.get<Section>(`${baseUrl}/${sectionId}/${version}`)
+  public findById(sectionId: string) {
+    return this.http.get<Section>(`${baseUrl}/${sectionId}`)
   }
 
   public create(section: CreateSectionRequest) {
@@ -30,15 +30,15 @@ export class SectionService {
     return this.http.post<Section>(`${baseUrl}/update`, section)
   }
 
-  public clone(sectionId: string, version: string) {
-    return this.http.get<Section>(`${baseUrl}/clone/${sectionId}/${version}`)
+  public clone(sectionId: string) {
+    return this.http.get<Section>(`${baseUrl}/clone/${sectionId}`)
   }
 
-  public delete(sectionId: string, version: string) {
-    return this.http.delete<void>(`${baseUrl}/${sectionId}/${version}`)
+  public delete(sectionId: string) {
+    return this.http.delete<void>(`${baseUrl}/${sectionId}`)
   }
 
-  public restore(sectionId: string, version: string) {
-    return this.http.patch<void>(`${baseUrl}/restore/${sectionId}/${version}`, null)
+  public restore(sectionId: string) {
+    return this.http.patch<void>(`${baseUrl}/restore/${sectionId}`, null)
   }
 }

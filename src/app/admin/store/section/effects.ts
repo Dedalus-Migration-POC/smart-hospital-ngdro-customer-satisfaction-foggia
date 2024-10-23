@@ -41,7 +41,7 @@ export class SectionEffects {
     return this.actions$.pipe(
       ofType(SectionActions.fetchSectionById),
       concatMap(({section}) =>
-        this.sectionService.findById(section.id!.toString(), section.version.toString()).pipe(
+        this.sectionService.findById(section.id!.toString()).pipe(
           map((section) => SectionActions.fetchSectionByIdSucceeded({section})),
           catchError(() =>
             of(SectionActions.fetchSectionByIdFailed()),
@@ -86,7 +86,7 @@ export class SectionEffects {
     return this.actions$.pipe(
       ofType(SectionActions.cloneSection),
       concatMap(({section}) =>
-        this.sectionService.clone(section.id!.toString(), section.version.toString()).pipe(
+        this.sectionService.clone(section.id!.toString()).pipe(
           map((section) => SectionActions.cloneSectionSucceeded({section})),
           catchError(() => of(SectionActions.cloneSectionFailed())),
         ),
@@ -98,7 +98,7 @@ export class SectionEffects {
     return this.actions$.pipe(
       ofType(SectionActions.deleteSection),
       concatMap(({section}) =>
-        this.sectionService.delete(section.id!.toString(), section.version.toString()).pipe(
+        this.sectionService.delete(section.id!.toString()).pipe(
           map(() => SectionActions.deleteSectionSucceeded({section})),
           catchError(() => of(SectionActions.deleteSectionFailed())),
         ),
@@ -110,7 +110,7 @@ export class SectionEffects {
     return this.actions$.pipe(
       ofType(SectionActions.restoreSection),
       concatMap(({section}) =>
-        this.sectionService.restore(section.id!.toString(), section.version.toString()).pipe(
+        this.sectionService.restore(section.id!.toString()).pipe(
           map(() => SectionActions.restoreSectionSucceeded({section})),
           catchError(() => of(SectionActions.restoreSectionFailed())),
         ),

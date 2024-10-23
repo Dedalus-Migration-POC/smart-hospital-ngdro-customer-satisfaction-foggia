@@ -19,7 +19,7 @@ export class SurveyService {
     return this.http.post<PagedList<Survey>>(baseUrl, request, {params: filter})
   }
 
-  public findById(id: string, version: string) {
+  public findById(id: string) {
     return this.http.get<Survey>(`${baseUrl}/${id}`)
   }
 
@@ -31,24 +31,24 @@ export class SurveyService {
     return this.http.post<Survey>(`${baseUrl}/update`, survey)
   }
 
-  public clone(surveyId: string, version: string) {
-    return this.http.get<Survey>(`${baseUrl}/clone/${surveyId}/${version}`)
+  public clone(surveyId: string) {
+    return this.http.get<Survey>(`${baseUrl}/clone/${surveyId}`)
   }
 
-  public delete(surveyId: string, version: string) {
-    return this.http.delete<void>(`${baseUrl}/${surveyId}/${version}`)
+  public delete(surveyId: string) {
+    return this.http.delete<void>(`${baseUrl}/${surveyId}`)
   }
 
-  public restore(surveyId: string, version: string) {
-    return this.http.patch<void>(`${baseUrl}/restore/${surveyId}/${version}`, null)
+  public restore(surveyId: string) {
+    return this.http.patch<void>(`${baseUrl}/restore/${surveyId}`, null)
   }
 
-  public publish(surveyId: string, version: string) {
-    return this.http.patch<void>(`${baseUrl}/publish/${surveyId}/${version}`, null)
+  public publish(surveyId: string) {
+    return this.http.patch<void>(`${baseUrl}/publish/${surveyId}`, null)
   }
 
-  public unpublish(surveyId: string, version: string) {
-    return this.http.patch<void>(`${baseUrl}/unpublish/${surveyId}/${version}`, null)
+  public unpublish(surveyId: string) {
+    return this.http.patch<void>(`${baseUrl}/unpublish/${surveyId}`, null)
   }
 
   public print(request: PrintSurveyRequest) {
