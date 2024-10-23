@@ -3,7 +3,7 @@
 </div>
 
 <div>
-  <button mat-stroked-button (click)="print()">
+  <button mat-stroked-button (click)="print()" [disabled]="!(surveys$ | async)?.length">
     <mat-icon>print</mat-icon>
     <span>{{ 'admin.survey-list.print-surveys-btn' | translate }}</span>
   </button>

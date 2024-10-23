@@ -7,7 +7,7 @@ import {SurveyActions} from "./actions";
 import {Store} from "@ngrx/store";
 import {SurveyPersistRequest} from "../../repository/dto/survey-persist-request";
 import {SurveyAdminState} from "../store";
-import {selectSectionSearchCriteria, selectSurveyList} from "./reducer";
+import {selectSectionSearchCriteria} from "./reducer";
 import {SurveyStatus} from "../../repository/dto/survey";
 import {SurveyForm} from "../../pages/survey-form/survey-form.component";
 
@@ -162,16 +162,18 @@ export class SurveyEffects {
   private readonly printSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.printSurvey),
-      withLatestFrom(this.store.select(selectSurveyList)),
-      switchMap(([{printSurveyForm}, {surveys}]) => {
-          console.log(printSurveyForm)
-          return this.surveyService.print().pipe(
-            map(() => SurveyActions.printSurveySucceeded()),
-            catchError(() =>
-              of(SurveyActions.printSurveyFailed()),
-            ),
-          )
-        }
+      switchMap(({printSurveyForm}) => this.surveyService.print({
+          surveyId: printSurveyForm.survey!.id!,
+          healthcareUnitId: printSurveyForm.healthcareUnit!.id,
+          structure: printSurveyForm.structure!,
+          copies: printSurveyForm.copies!,
+        }).pipe(
+          map((document) => SurveyActions.printSurveySucceeded({document})),
+          catchError((err) => {
+            console.log(err)
+            return of(SurveyActions.printSurveyFailed())
+          }),
+        )
       ),
     )
   })

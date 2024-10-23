@@ -7,7 +7,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {TranslateModule} from "@ngx-translate/core";
-import {debounceTime, distinctUntilChanged, map} from "rxjs";
+import {combineLatest, debounceTime, distinctUntilChanged, map} from "rxjs";
 import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../../../store/store";
 import {WithSubscriptionsComponent} from "../../../../support/with-subscriptions-component";
@@ -19,6 +19,8 @@ import {selectSurveyState} from "../../../../store/survey/reducer";
 import {selectUser} from "../../../../store/application/reducer";
 import {ToggleButtonComponent} from "../../../../components/toggle-button/toggle-button.component";
 import {MatTooltip} from "@angular/material/tooltip";
+import {SurveyUtils} from "../../../../support/survey-utils";
+import {Survey} from "../../../../repository/dto/survey";
 
 @Component({
   selector: 'app-section-filter',
@@ -93,10 +95,11 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
   surveys$ = this.surveyState$.pipe(map(s => s.surveys));
   sections$ = this.store.select(selectSectionList)
 
-  presentInOptions$ = this.sections$.pipe(map(({sections}) => (sections?.content ?? []).map(section => (section.associatedSurveys ?? []).map(ass => {
-    const {id, name, version} = ass
-    return {id, value: `${name} (v${version})`}
-  })).flat().sort((a, b) => a.value < b.value ? -1 : 1)))
+  presentInOptions$ = combineLatest([this.sections$, this.surveys$]).pipe(
+    map(([{sections}, surveys]) => (sections?.content ?? []).map(section => (section.associatedSurveys ?? []).map(ass => ({
+      id: ass.id,
+      value: SurveyUtils.getNameAndVersion(surveys!.content, ass as Survey)
+    }))).flat().sort((a, b) => a.value < b.value ? -1 : 1)))
 
   protected toggleDeleted() {
     this.store.dispatch(SectionActions.toggleShowDeleted());

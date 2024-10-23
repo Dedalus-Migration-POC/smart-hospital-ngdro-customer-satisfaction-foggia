@@ -11,6 +11,7 @@ import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../../store/store";
 import {MatDialog} from "@angular/material/dialog";
 import {PrintSurveyDialogComponent} from "../print-survey-dialog/print-survey-dialog.component";
+import {selectSurveyList} from "../../../store/survey/reducer";
 
 @Component({
   selector: 'app-top-right-buttons',
@@ -32,13 +33,14 @@ export class TopRightButtonsComponent {
   ) {
   }
 
+  surveys$: Observable<Array<Section> | undefined> = this.store.select(selectSurveyList).pipe(map(({surveys}) => surveys?.content));
   sections$: Observable<Array<Section> | undefined> = this.store.select(selectSectionState).pipe(map(({sections}) => sections?.content));
 
   protected print() {
     this.dialog.open<PrintSurveyDialogComponent>(PrintSurveyDialogComponent, {
-      width: '360px',
+      width: '480px',
       maxWidth: '480px',
-      minHeight: '480px',
+      minHeight: '560px',
       hasBackdrop: true,
       disableClose: true,
     })

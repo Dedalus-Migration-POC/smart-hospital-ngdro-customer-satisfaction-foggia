@@ -157,16 +157,16 @@
       "title": "Stampa fogli",
       "select-survey-label": "Questionario",
       "select-unit-label": "Unità operativa",
-      "units": {
-        "cardio": "Cardiologia"
-      },
       "structure-type-label": "Tipologia struttura",
       "structure-type-radio": {
         "department": "Reparto",
         "ambulatory": "Ambulatorio"
       },
       "copies-to-print": "Copie da stampare",
-      "button": "Stampa"
+      "button": "Stampa",
+      "form-validations": {
+        "required-field": "Campo obbligatorio"
+      }
     },
     "section-list": {
       "title": "Sezioni",

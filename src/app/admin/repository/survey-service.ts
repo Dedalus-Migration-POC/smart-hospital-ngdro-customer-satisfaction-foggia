@@ -5,6 +5,7 @@ import {SurveyPersistRequest} from "./dto/survey-persist-request";
 import {FilterSurveyRequest} from "./dto/filter-survey-request";
 import {PagedList} from "./dto/paged_list";
 import {TablePagination} from "../support/domain/table-pagination";
+import {PrintSurveyRequest} from "./dto/print-survey-request";
 
 const baseUrl = '/api/v1/survey'
 
@@ -50,7 +51,7 @@ export class SurveyService {
     return this.http.patch<void>(`${baseUrl}/unpublish/${surveyId}/${version}`, null)
   }
 
-  public print() {
-    return this.http.post<void>(`${baseUrl}/print`, null)
+  public print(request: PrintSurveyRequest) {
+    return this.http.post<string>(`${baseUrl}/print`, request, {responseType: 'text' as 'json'})
   }
 }

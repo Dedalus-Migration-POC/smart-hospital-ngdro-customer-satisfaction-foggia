@@ -32,6 +32,7 @@ import {selectSurveyState, SurveyOperatingStatus} from "../../store/survey/reduc
 import {withLatestFrom} from "rxjs/operators";
 import {MatTooltip} from "@angular/material/tooltip";
 import {SurveyNameValidator} from "../../support/form-validators";
+import {SectionUtils} from "../../support/section-utils";
 
 export type SurveyForm = FormGroup<{
   id: FormControl<string | null>;
@@ -267,4 +268,5 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
 
   protected readonly SurveyOperatingStatus = SurveyOperatingStatus;
   protected readonly document = document;
+  protected readonly SectionUtils = SectionUtils;
 }

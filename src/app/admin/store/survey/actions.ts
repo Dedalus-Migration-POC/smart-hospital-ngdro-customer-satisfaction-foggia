@@ -129,6 +129,7 @@ const printSurvey = createAction(
 
 const printSurveySucceeded = createAction(
   '[Survey] Print Survey Succeeded',
+  props<{ document: string }>()
 )
 
 const printSurveyFailed = createAction(
