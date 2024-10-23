@@ -76,7 +76,7 @@ export class SectionListTableComponent extends WithSubscriptionsComponent implem
   @Output("onDelete") deleteSection: EventEmitter<Section> = new EventEmitter();
   @Output("onRestore") restoreSection: EventEmitter<Section> = new EventEmitter();
 
-  @ViewChild('secPaginator') paginator!: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   pageIndex = 0;
@@ -85,7 +85,6 @@ export class SectionListTableComponent extends WithSubscriptionsComponent implem
 
 
   state$ = this.store.select(selectSectionState)
-  pageable$ = this.state$.pipe(map(({sections}) => sections))
   sections$ = this.state$.pipe(map(({sections}) => sections?.content ?? []))
   dataSource = new MatTableDataSource<Section>();
   pageSizeOptions$!: Observable<Array<number>>;
@@ -98,6 +97,7 @@ export class SectionListTableComponent extends WithSubscriptionsComponent implem
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    //FIXME non appaiono nel paginator
     this.pageSizeOptions$ = this.sections$.pipe(map(sections => {
         return Array.from(
           {length: Math.ceil(sections.length / 5)},
@@ -133,6 +133,7 @@ export class SectionListTableComponent extends WithSubscriptionsComponent implem
           }))
         }
       }),
+
       this.paginator.page.subscribe(({pageIndex, pageSize}) => {
         this.store.dispatch(SectionActions.fetchSections({
           tablePagination: {

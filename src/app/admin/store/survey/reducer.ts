@@ -1,8 +1,18 @@
 import {createFeatureSelector, createReducer, createSelector, on} from "@ngrx/store";
 import {Survey, SurveyStatus} from "../../repository/dto/survey";
 import {SubmitSurveyOption, SurveyActions} from "./actions";
-import {AppActions} from "../application/actions";
 import {SurveyAdminState} from "../store";
+import {FormControl, FormGroup} from "@angular/forms";
+import {TablePagination} from "../../support/domain/table-pagination";
+import {PagedList} from "../../repository/dto/paged_list";
+
+export type SurveyFilterForm = FormGroup<{
+  name: FormControl<string | null>;
+  status: FormControl<SurveyStatus | null>;
+  version: FormControl<number | null>;
+  startDate: FormControl<Date | null>
+  endDate: FormControl<Date | null>
+}>
 
 export enum SurveyOperatingStatus {
   DELETING_RESTORING = 'DELETING_RESTORING',
@@ -19,37 +29,48 @@ export type State = {
     surveyId: number;
     status: SurveyOperatingStatus;
   } | null;
-  surveys: Array<Survey>;
+  surveys: PagedList<Survey> | null;
   versions: Set<number>;
   showDeleted: boolean;
+  searchCriteria: {
+    filter: SurveyFilterForm['value'];
+    tablePagination: TablePagination | undefined;
+  }
 }
 
 const initialState: State = {
   fetchingSurveys: false,
   fetchSurveysError: false,
   operatingStatus: null,
-  surveys: [],
+  surveys: null,
   versions: new Set([1]),
   showDeleted: false,
+  searchCriteria: {
+    filter: {},
+    tablePagination: {
+      size: 5,
+      sort: 'name,asc'
+    }
+  }
 }
 
 export const reducer = createReducer(
   initialState,
-  on(AppActions.initializeSucceeded, (state, action) => ({
-    ...state,
-    surveys: action.surveys,
-    versions: new Set<number>(action.surveys.map(({version}) => version).filter(Boolean).sort((a, b) => a > b ? 1 : -1))
-  })),
-  on(SurveyActions.fetchSurveys, (state) => ({
+  on(SurveyActions.fetchSurveys, (state, {form, tablePagination}) => ({
     ...state,
     fetchingSurveys: true,
     fetchSurveysError: false,
+    searchCriteria: {
+      filter: {...state.searchCriteria.filter, ...form},
+      tablePagination: {...state.searchCriteria.tablePagination, ...tablePagination},
+    }
   })),
   on(SurveyActions.fetchSurveysSucceeded, (state, action) => ({
     ...state,
     fetchingSurveys: false,
     fetchSurveysError: false,
     surveys: action.surveys,
+    versions: new Set<number>(action.surveys.content.map(({version}) => version).filter(Boolean).sort((a, b) => a > b ? 1 : -1))
   })),
   on(SurveyActions.fetchSurveysFailed, (state) => ({
     ...state,
@@ -63,7 +84,10 @@ export const reducer = createReducer(
   on(SurveyActions.fetchSurveyByIdSucceeded, (state, action) => ({
     ...state,
     fetchingSurveys: false,
-    surveys: [...state.surveys, action.survey]
+    surveys: {
+      ...state.surveys!,
+      content: state.surveys!.content.map(s => s.id === action.survey.id ? action.survey : s)
+    }
   })),
   on(SurveyActions.fetchSurveyByIdFailed, (state) => ({
     ...state,
@@ -82,20 +106,15 @@ export const reducer = createReducer(
       },
     }
   }),
-  on(SurveyActions.submitSurveySucceeded, (state, action) => {
-    if (state.surveys.some(s => s.id === action.survey.id)) {
-      return {
-        ...state,
-        operatingStatus: null,
-        surveys: [...state.surveys.filter(s => s.id !== action.survey.id), action.survey]
-      }
+  on(SurveyActions.submitSurveySucceeded, (state, action) => ({
+    ...state,
+    creatingSection: false,
+    operatingStatus: null,
+    surveys: {
+      ...state.surveys!,
+      content: [action.survey, ...state.surveys!.content]
     }
-    return {
-      ...state,
-      operatingStatus: null,
-      surveys: [...state.surveys, action.survey]
-    }
-  }),
+  })),
   on(SurveyActions.submitSurveyFailed, (state) => ({
     ...state,
     operatingStatus: null,
@@ -109,11 +128,10 @@ export const reducer = createReducer(
   })),
   on(SurveyActions.cloneSurveySucceeded, (state, action) => ({
     ...state,
-    surveys: state.surveys.map(survey =>
-      survey.id === action.survey.id
-        ? {...action.survey}
-        : survey
-    ),
+    surveys: {
+      ...state.surveys!,
+      content: [action.survey, ...state.surveys!.content]
+    },
     operatingStatus: null
   })),
   on(SurveyActions.cloneSurveyFailed, (state) => ({
@@ -127,13 +145,17 @@ export const reducer = createReducer(
       status: SurveyOperatingStatus.DELETING_RESTORING,
     },
   })),
+  //FIXME se ruolo != admin rimuovere dall'array
   on(SurveyActions.deleteSurveySucceeded, (state, action) => ({
     ...state,
-    surveys: state.surveys.map(survey =>
-      survey.id === action.survey.id
-        ? {...survey, deleted: true}
-        : survey
-    ),
+    surveys: {
+      ...state.surveys!,
+      content: state.surveys!.content.map(survey =>
+        survey.id === action.survey.id
+          ? {...survey, deleted: true}
+          : survey
+      )
+    },
     operatingStatus: null
   })),
   on(SurveyActions.deleteSurveyFailed, (state) => ({
@@ -149,11 +171,14 @@ export const reducer = createReducer(
   })),
   on(SurveyActions.restoreSurveySucceeded, (state, action) => ({
     ...state,
-    surveys: state.surveys.map(survey =>
-      survey.id === action.survey.id
-        ? {...survey, deleted: false}
-        : survey
-    ),
+    surveys: {
+      ...state.surveys!,
+      content: state.surveys!.content.map(survey =>
+        survey.id === action.survey.id
+          ? {...survey, deleted: false}
+          : survey
+      )
+    },
     operatingStatus: null
   })),
   on(SurveyActions.restoreSurveyFailed, (state) => ({
@@ -169,11 +194,14 @@ export const reducer = createReducer(
   })),
   on(SurveyActions.publishSurveySucceeded, (state, action) => ({
     ...state,
-    surveys: state.surveys.map(survey =>
-      survey.id === action.survey.id
-        ? {...survey, status: SurveyStatus.ACTIVE}
-        : survey
-    ),
+    surveys: {
+      ...state.surveys!,
+      content: state.surveys!.content.map(survey =>
+        survey.id === action.survey.id
+          ? {...survey, status: SurveyStatus.ACTIVE}
+          : survey
+      )
+    },
     operatingStatus: null
   })),
   on(SurveyActions.publishSurveyFailed, (state) => ({
@@ -189,11 +217,14 @@ export const reducer = createReducer(
   })),
   on(SurveyActions.unpublishSurveySucceeded, (state, action) => ({
     ...state,
-    surveys: state.surveys.map(survey =>
-      survey.id === action.survey.id
-        ? {...survey, status: SurveyStatus.INACTIVE}
-        : survey
-    ),
+    surveys: {
+      ...state.surveys!,
+      content: state.surveys!.content.map(survey =>
+        survey.id === action.survey.id
+          ? {...survey, status: SurveyStatus.INACTIVE}
+          : survey
+      )
+    },
     operatingStatus: null
   })),
   on(SurveyActions.unpublishSurveyFailed, (state) => ({
@@ -207,6 +238,9 @@ export const reducer = createReducer(
 )
 
 export const selectSurveyState = createFeatureSelector<State>('survey');
+export const selectSectionSearchCriteria = createSelector((state: SurveyAdminState) => state.survey, (({
+                                                                                                         searchCriteria
+                                                                                                       }) => searchCriteria))
 export const selectSurveyList = createSelector((state: SurveyAdminState) => state.survey, ({
                                                                                              fetchingSurveys,
                                                                                              fetchSurveysError,

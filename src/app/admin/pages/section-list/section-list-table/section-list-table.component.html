@@ -48,8 +48,11 @@
 </mat-table>
 
 
-<mat-paginator #secPaginator
-               [pageSize]="pageSize"
-               [pageIndex]="pageIndex"
-               [length]="length"
-               [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+<mat-paginator
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex"
+  [length]="length"
+  [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+
+<span *ngIf="!dataSource.data.length"
+      class="datasource-empty">{{ 'admin.section-list.datasource-empty' | translate }}</span>

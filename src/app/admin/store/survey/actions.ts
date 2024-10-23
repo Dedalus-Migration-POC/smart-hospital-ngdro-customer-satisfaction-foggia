@@ -2,18 +2,20 @@ import {createAction, props} from '@ngrx/store'
 import {Survey} from "../../repository/dto/survey";
 import {SurveyForm} from "../../pages/survey-form/survey-form.component";
 import {PrintSurveyForm} from "../../pages/survey-list/print-survey-dialog/print-survey-dialog.component";
-import {SurveyFilterForm} from "../../pages/survey-list/survey-list-table/filter/filter.component";
+import {PagedList} from "../../repository/dto/paged_list";
+import {TablePagination} from "../../support/domain/table-pagination";
+import {SurveyFilterForm} from "./reducer";
 
 export type SubmitSurveyOption = 'save' | 'publish'
 
 const fetchSurveys = createAction(
   '[Survey] Fetch Surveys',
-  props<{ form: SurveyFilterForm['value'] }>(),
+  props<{ form?: SurveyFilterForm['value']; tablePagination?: Partial<TablePagination> }>(),
 )
 
 const fetchSurveysSucceeded = createAction(
   '[Survey] Fetch Surveys Succeeded',
-  props<{ surveys: Array<Survey> }>(),
+  props<{ surveys: PagedList<Survey> }>(),
 )
 
 const fetchSurveysFailed = createAction(

@@ -81,7 +81,7 @@ export const reducer = createReducer(
     fetchingSections: false,
     sections: {
       ...state.sections!,
-      content: [...state.sections!.content, action.section]
+      content: state.sections!.content.map(s => s.id === action.section.id ? action.section : s)
     }
   })),
   on(SectionActions.fetchSectionByIdFailed, (state) => ({

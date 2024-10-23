@@ -1,6 +1,4 @@
 import {createAction, props} from '@ngrx/store'
-import {Survey} from "../../repository/dto/survey";
-import {Section} from "../../repository/dto/section";
 import {UserRole} from "../../repository/dto/user";
 
 const initialize = createAction(
@@ -9,7 +7,7 @@ const initialize = createAction(
 
 const initializeSucceeded = createAction(
   '[Survey] Initialize Succeeded',
-  props<{ surveys: Array<Survey>, sections: Array<Section> }>(),
+  //props<{  }>(),
 )
 
 const initializeFailed = createAction(

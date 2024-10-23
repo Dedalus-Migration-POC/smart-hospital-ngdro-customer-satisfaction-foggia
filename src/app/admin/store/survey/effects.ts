@@ -7,7 +7,7 @@ import {SurveyActions} from "./actions";
 import {Store} from "@ngrx/store";
 import {SurveyPersistRequest} from "../../repository/dto/survey-persist-request";
 import {SurveyAdminState} from "../store";
-import {selectSurveyList} from "./reducer";
+import {selectSectionSearchCriteria, selectSurveyList} from "./reducer";
 import {SurveyStatus} from "../../repository/dto/survey";
 import {SurveyForm} from "../../pages/survey-form/survey-form.component";
 
@@ -35,13 +35,14 @@ export class SurveyEffects {
   private readonly fetchSurveys$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.fetchSurveys),
-      switchMap(({form}) => this.surveyService.find({
-          name: form.name ?? undefined,
-          status: form.status ?? undefined,
-          version: form.version ?? undefined,
-          dateRange: {startDate: form.startDate ?? undefined, endDate: form.endDate ?? undefined}
-        }).pipe(
-          map((response) => SurveyActions.fetchSurveysSucceeded({surveys: response.content})),
+      withLatestFrom(this.store.select(selectSectionSearchCriteria)),
+      switchMap(([_, {filter, tablePagination}]) => this.surveyService.find({
+          name: filter.name ?? undefined,
+          status: filter.status ?? undefined,
+          version: filter.version ?? undefined,
+          dateRange: {startDate: filter.startDate ?? undefined, endDate: filter.endDate ?? undefined}
+        }, tablePagination).pipe(
+          map((surveys) => SurveyActions.fetchSurveysSucceeded({surveys})),
           catchError(() =>
             of(SurveyActions.fetchSurveysFailed()),
           ),

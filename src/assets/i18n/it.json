@@ -93,6 +93,7 @@
       "view-analytics-btn": "Vedi analitiche",
       "print-surveys-btn": "Stampa fogli",
       "search-survey-label": "Cerca un questionario",
+      "datasource-empty": "Non ci sono questionari da mostrare",
       "search-filter": {
         "name": "Nome",
         "status": "Stato",
@@ -167,6 +168,7 @@
       "title": "Sezioni",
       "create-section-btn": "Nuova sezione",
       "search-section-label": "Cerca una sezione",
+      "datasource-empty": "Non ci sono sezioni da mostrare",
       "search-filter": {
         "name": "Nome",
         "status": "Stato",

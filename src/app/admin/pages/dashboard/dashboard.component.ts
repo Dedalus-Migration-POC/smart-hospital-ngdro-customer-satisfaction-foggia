@@ -5,10 +5,11 @@ import {TopRightButtonsComponent} from "../survey-list/top-right-buttons/top-rig
 import {map} from "rxjs";
 import {AsyncPipe, NgIf} from "@angular/common";
 import {ScaffoldComponent} from "../../components/scaffold/scaffold.component";
-import {AppActions} from "../../store/application/actions";
 import {selectApplicationState} from "../../store/application/reducer";
 import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../store/store";
+import {SurveyActions} from "../../store/survey/actions";
+import {SectionActions} from "../../store/section/actions";
 
 @Component({
   selector: 'app-dashboard',
@@ -45,7 +46,8 @@ export class DashboardComponent implements OnInit {
   }
 
   protected initialize() {
-    this.store.dispatch(AppActions.initialize())
+    this.store.dispatch(SurveyActions.fetchSurveys({}))
+    this.store.dispatch(SectionActions.fetchSections({}))
   }
 
   state$ = this.store.select(selectApplicationState)

@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormControl, ReactiveFormsModule} from "@angular/forms";
 import {debounceTime, distinctUntilChanged, map} from "rxjs";
 import {SurveyActions} from "../../../../store/survey/actions";
 import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../../../store/store";
-import {selectSurveyState} from "../../../../store/survey/reducer";
+import {selectSurveyState, SurveyFilterForm} from "../../../../store/survey/reducer";
 import {WithSubscriptionsComponent} from "../../../../support/with-subscriptions-component";
 import {SurveyStatus} from "../../../../repository/dto/survey";
 import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
@@ -26,14 +26,6 @@ import {MatIcon} from "@angular/material/icon";
 import {ToggleButtonComponent} from "../../../../components/toggle-button/toggle-button.component";
 import {provideNativeDateAdapter} from "@angular/material/core";
 import {selectUser} from "../../../../store/application/reducer";
-
-export type SurveyFilterForm = FormGroup<{
-  name: FormControl<string | null>;
-  status: FormControl<SurveyStatus | null>;
-  version: FormControl<number | null>;
-  startDate: FormControl<Date | null>
-  endDate: FormControl<Date | null>
-}>
 
 @Component({
   selector: 'app-survey-filter',
@@ -66,7 +58,13 @@ export type SurveyFilterForm = FormGroup<{
   styleUrl: './filter.component.scss'
 })
 export class FilterComponent extends WithSubscriptionsComponent implements OnInit {
-  protected form!: SurveyFilterForm;
+  protected form: SurveyFilterForm = this.fb.group({
+    name: new FormControl<string | null>(null),
+    status: new FormControl<SurveyStatus | null>(null),
+    version: new FormControl<number | null>(null),
+    startDate: new FormControl<Date | null>(null),
+    endDate: new FormControl<Date | null>(null),
+  });
 
   showDeleted$ = this.store.select(s => s.survey.showDeleted)
   canShowDeleted$ = this.store.select(selectUser).pipe(map((user) => user?.roles.includes('ROLE_ADMIN') ?? false))
@@ -76,13 +74,6 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
     private fb: FormBuilder,
   ) {
     super();
-    this.form = this.fb.group({
-      name: new FormControl<string | null>(null),
-      status: new FormControl<SurveyStatus | null>(null),
-      version: new FormControl<number | null>(null),
-      startDate: new FormControl<Date | null>(null),
-      endDate: new FormControl<Date | null>(null),
-    })
   }
 
   ngOnInit() {

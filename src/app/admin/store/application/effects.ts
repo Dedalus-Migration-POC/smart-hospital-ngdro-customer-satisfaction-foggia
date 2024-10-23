@@ -2,8 +2,7 @@ import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {SurveyService} from "../../repository/survey-service";
 import {AppActions} from "./actions";
-import {catchError, concatMap} from "rxjs/operators";
-import {forkJoin, map, of} from "rxjs";
+import {map} from "rxjs";
 import {SectionService} from "../../repository/section-service";
 import {User, UserRole} from "../../repository/dto/user";
 
@@ -17,24 +16,25 @@ export class AppEffects {
   ) {
   }
 
-  private readonly initialize$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(AppActions.initialize),
-      concatMap(() =>
-        forkJoin([
-          this.surveyService.find({}),
-          this.sectionService.find({})
-        ]).pipe(
-          map(([{content: surveys}, {content: sections}]) =>
-            AppActions.initializeSucceeded({surveys, sections})
-          ),
-          catchError(() =>
-            of(AppActions.initializeFailed())
-          )
-        ),
-      ),
-    )
-  })
+  //FIXME implementare login
+  // private readonly initialize$ = createEffect(() => {
+  //   return this.actions$.pipe(
+  //     ofType(AppActions.initialize),
+  //     concatMap(() =>
+  //       forkJoin([
+  //         this.surveyService.find({}),
+  //         this.sectionService.find({})
+  //       ]).pipe(
+  //         map(([{content: surveys}, {content: sections}]) =>
+  //           AppActions.initializeSucceeded({surveys, sections})
+  //         ),
+  //         catchError(() =>
+  //           of(AppActions.initializeFailed())
+  //         )
+  //       ),
+  //     ),
+  //   )
+  // })
 
   private readonly login$ = createEffect(() => {
     return this.actions$.pipe(

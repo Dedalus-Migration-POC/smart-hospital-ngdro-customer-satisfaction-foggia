@@ -4,6 +4,7 @@ import {Survey} from "./dto/survey";
 import {SurveyPersistRequest} from "./dto/survey-persist-request";
 import {FilterSurveyRequest} from "./dto/filter-survey-request";
 import {PagedList} from "./dto/paged_list";
+import {TablePagination} from "../support/domain/table-pagination";
 
 const baseUrl = '/api/v1/survey'
 
@@ -13,8 +14,8 @@ export class SurveyService {
 
   }
 
-  public find(request: FilterSurveyRequest) {
-    return this.http.post<PagedList<Survey>>(baseUrl, request)
+  public find(request: FilterSurveyRequest, filter?: TablePagination) {
+    return this.http.post<PagedList<Survey>>(baseUrl, request, {params: filter})
   }
 
   public findById(id: string, version: string) {

@@ -70,7 +70,7 @@ export class PrintSurveyDialogComponent extends WithSubscriptionsComponent imple
     });
   }
 
-  surveys$: Observable<Array<Section>> = this.store.select(selectSurveyState).pipe(map(({surveys}) => surveys));
+  surveys$: Observable<Array<Section>> = this.store.select(selectSurveyState).pipe(map(({surveys}) => surveys?.content ?? []));
 
   ngOnInit() {
     this.addSubscriptions(
@@ -97,7 +97,7 @@ export class PrintSurveyDialogComponent extends WithSubscriptionsComponent imple
   printSurveyForm!: PrintSurveyForm
 
   state$ = this.store.select(selectSurveyState)
-  disabled$: Observable<boolean> = this.state$.pipe(map(({surveys}) => !surveys.length));
+  disabled$: Observable<boolean> = this.state$.pipe(map(({surveys}) => !surveys?.content?.length));
 
   units = [
     {value: 'cardio', viewValue: 'cardio'},

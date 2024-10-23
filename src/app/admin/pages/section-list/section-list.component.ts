@@ -72,7 +72,7 @@ export class SectionListComponent extends WithSubscriptionsComponent implements 
       take(1),
       map(({surveys}) => {
         console.log(surveys)
-        if (surveys.some(({sections}) => !!sections.find(({id}) => id === section.id))) {
+        if ((surveys?.content ?? []).some(({sections}) => !!sections.find(({id}) => id === section.id))) {
           console.log('found')
           this.dialog.error({
             buttonsType: 'ok',

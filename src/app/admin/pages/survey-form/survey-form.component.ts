@@ -154,7 +154,7 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
       this.surveys$.pipe(
         take(1),
         map(surveys => {
-          const survey = surveys.find(({id}) => id?.toString() === surveyId);
+          const survey = (surveys?.content ?? []).find(({id}) => id?.toString() === surveyId);
           if (survey) {
             this.initializeForm(survey);
           } else {

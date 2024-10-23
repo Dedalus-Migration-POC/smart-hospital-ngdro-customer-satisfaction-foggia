@@ -50,7 +50,7 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
 
 
   state$ = this.store.select(selectSurveyState)
-  surveys$: Observable<Array<Survey>> = this.state$.pipe(map(({surveys}) => surveys));
+  surveys$: Observable<Array<Survey>> = this.state$.pipe(map(({surveys}) => surveys?.content ?? []));
 
   async onEdit({survey, mode}: { survey: Survey, mode: 'edit' | 'clone' }) {
     if (mode === 'edit')

@@ -76,7 +76,7 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
         .subscribe(() => this.store.dispatch(SectionActions.fetchSections({form: this.form.value}))),
 
       this.surveys$.subscribe(surveys => {
-        if (surveys.length) {
+        if ((surveys?.content ?? []).length) {
           this.form.controls.presentIn.enable()
         } else {
           this.form.controls.presentIn.disable()
