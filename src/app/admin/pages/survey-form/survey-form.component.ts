@@ -10,7 +10,7 @@ import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {MatError, MatFormField, MatHint, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatCard} from "@angular/material/card";
-import {AsyncPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, DatePipe, JsonPipe, NgForOf, NgIf, NgSwitch, NgSwitchCase} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {DialogService} from "../../support/dialog-service";
 import {Section} from "../../repository/dto/section";
@@ -31,6 +31,7 @@ import {selectSectionList, selectSectionState} from "../../store/section/reducer
 import {selectSurveyState, SurveyOperatingStatus} from "../../store/survey/reducer";
 import {withLatestFrom} from "rxjs/operators";
 import {MatTooltip} from "@angular/material/tooltip";
+import {SurveyNameValidator} from "../../support/form-validators";
 
 export type SurveyForm = FormGroup<{
   id: FormControl<string | null>;
@@ -77,6 +78,9 @@ type DateRange = {
     MatTooltip,
     MatIconButton,
     RouterLink,
+    NgSwitch,
+    NgSwitchCase,
+    JsonPipe,
   ],
   templateUrl: './survey-form.component.html',
   styleUrl: './survey-form.component.scss'
@@ -86,7 +90,11 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
 
   form: SurveyForm = this.fb.group({
     id: new FormControl<string | null>(null),
-    name: new FormControl<string | null>(null, Validators.required),
+    name: new FormControl<string | null>(null, {
+      validators: [Validators.required],
+      asyncValidators: [this.nameValidator.validate.bind(this.nameValidator)],
+      updateOn: 'blur'
+    }),
     version: new FormControl<number | null>({value: 1, disabled: true}),
     description: new FormControl<string | null>(null),
     startDate: new FormControl<Date | null>(null, Validators.required),
@@ -114,7 +122,8 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
     private fb: FormBuilder,
     private dialog: DialogService,
     private translate: TranslateService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private nameValidator: SurveyNameValidator,
   ) {
     super();
   }
@@ -124,12 +133,18 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
     return Array.from({length}, (_, i) => i + 1).sort((a, b) => a > b ? 1 : -1)
   }
 
+  protected hasError(field: FormControl<any>, error: string, translationSuffix: string) {
+    if ((field.touched || field.dirty) && field.errors && Object.keys(field.errors as Record<string, boolean>).includes(error)) {
+      console.log(field.errors, error, translationSuffix)
+      return this.translate.instant(`admin.survey-form.validators.${translationSuffix}`)
+    }
+  }
+
   ngOnInit() {
     this.startActionsSubscription()
 
     combineLatest([this.form.valueChanges, this.dateRange$]).subscribe(([value, range]) => {
-      console.log('form: ', this.form)
-      console.log(value, range)
+      console.log('errors: ', this.form.controls.name.errors)
     })
 
     this.subscriptions.push(

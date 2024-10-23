@@ -141,13 +141,17 @@
       "survey-end-date-field": "Data fine validità",
       "section-field-label": "Sezione {{index}}",
       "add-section-item": "Aggiungi sezione",
-      "required-field": "Campo obbligatorio",
       "remove-section-btn": "Rimuovi sezione",
       "section-question-label": "Domanda {{index}}",
       "survey-created-dialog": "Il questionario è stato creato correttamente",
       "survey-edited-dialog": "Il questionario è stato aggiornato correttamente",
       "move-up-btn": "Sposta su",
-      "move-down-btn": "Sposta su"
+      "move-down-btn": "Sposta su",
+      "validators": {
+        "required-field": "Campo obbligatorio",
+        "name-already-exists": "Nome già utilizzato",
+        "name-min-length": "Deve contenere almeno 2 caratteri"
+      }
     },
     "print-survey-dialog": {
       "title": "Stampa fogli",
@@ -206,9 +210,13 @@
       "section-description-field": "Descrizione sezione",
       "question-item": "Domanda {{index}}",
       "add-question-item": "Aggiungi domanda",
-      "required-field": "Campo obbligatorio",
       "section-created-dialog": "La sezione è stata creata correttamente",
-      "section-edited-dialog": "La sezione è stata aggiornata correttamente"
+      "section-edited-dialog": "La sezione è stata aggiornata correttamente",
+      "validators": {
+        "required-field": "Campo obbligatorio",
+        "name-already-exists": "Nome già utilizzato",
+        "name-min-length": "Deve contenere almeno 2 caratteri"
+      }
     }
   }
 }

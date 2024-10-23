@@ -29,11 +29,15 @@
 
   <div class="section-fields">
 
-    <mat-form-field appearance="outline" floatLabel="always" style="width: calc(100% - 156px)">
+    <mat-form-field appearance="outline" floatLabel="always" *ngIf="form.controls.name; let field"
+                    style="width: calc(100% - 156px)">
       <mat-label>{{ 'admin.section-form.section-name-field' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="form.controls.name" [readonly]="isSectionDeleted">
+      <input matInput type="text" [formControl]="form.controls.name" [readonly]="isSectionDeleted"/>
+      <mat-error *ngIf="hasError(field, 'required', 'required-field') as msg">{{ msg }}
+      </mat-error>
+      <mat-error *ngIf="hasError(field, 'minlength', 'name-min-length') as msg">{{ msg }}</mat-error>
       <mat-error
-        *ngIf="form.controls.name.hasError('required')">{{ 'admin.section-form.required-field' | translate }}
+        *ngIf="hasError(field, 'alreadyExists', 'name-already-exists') as msg">{{ msg }}
       </mat-error>
     </mat-form-field>
 
@@ -49,7 +53,7 @@
         </mat-option>
       </mat-select>
       <mat-error
-        *ngIf="field.hasError('required')">{{ 'admin.section-form.required-field' | translate }}
+        *ngIf="field.hasError('required')">{{ 'admin.section-form.validators.required-field' | translate }}
       </mat-error>
     </mat-form-field>
 
@@ -68,7 +72,7 @@
       <input matInput type="text" [formControl]="control" [readonly]="isSectionDeleted">
       <mat-icon *ngIf="i > 0" class="remove-qst" matSuffix (click)="removeQuestion(i)">remove</mat-icon>
       <mat-error
-        *ngIf="control.hasError('required')">{{ 'admin.section-form.required-field' | translate }}
+        *ngIf="control.hasError('required')">{{ 'admin.section-form.validators.required-field' | translate }}
       </mat-error>
     </mat-form-field>
 

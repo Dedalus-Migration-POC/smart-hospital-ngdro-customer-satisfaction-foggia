@@ -28,6 +28,7 @@ import {SurveyAdminState} from "../../store/store";
 import {selectSectionState} from "../../store/section/reducer";
 import {MatOption} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
+import {SectionNameValidator} from "../../support/form-validators";
 
 export type SectionForm = FormGroup<{
   id: FormControl<number | null>;
@@ -64,7 +65,11 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
 
   form: SectionForm = this.fb.group({
     id: new FormControl<number | null>(null),
-    name: new FormControl<string | null>(null, Validators.required),
+    name: new FormControl<string | null>(null, {
+      validators: [Validators.required],
+      asyncValidators: [this.nameValidator.validate.bind(this.nameValidator)],
+      updateOn: 'blur'
+    }),
     description: new FormControl<string | null>(null),
     version: new FormControl<number | null>({value: 1, disabled: true}),
     questions: this.fb.array<string | null>([])
@@ -82,7 +87,8 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
     private fb: FormBuilder,
     private dialog: DialogService,
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private nameValidator: SectionNameValidator,
   ) {
     super();
   }
@@ -90,6 +96,13 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
   protected get versions() {
     const length = this.form.controls.version.value!;
     return Array.from({length}, (_, i) => i + 1).sort((a, b) => a > b ? 1 : -1)
+  }
+
+  protected hasError(field: FormControl<any>, error: string, translationSuffix: string) {
+    if ((field.touched || field.dirty) && field.errors && Object.keys(field.errors as Record<string, boolean>).includes(error)) {
+      console.log(field.errors, error, translationSuffix)
+      return this.translate.instant(`admin.section-form.validators.${translationSuffix}`)
+    }
   }
 
   ngOnInit() {
