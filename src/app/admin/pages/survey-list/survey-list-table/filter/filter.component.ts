@@ -24,13 +24,12 @@ import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
 import {ToggleButtonComponent} from "../../../../components/toggle-button/toggle-button.component";
-import {provideNativeDateAdapter} from "@angular/material/core";
 import {selectUser} from "../../../../store/application/reducer";
 
 @Component({
   selector: 'app-survey-filter',
   standalone: true,
-  providers: [provideNativeDateAdapter(), DatePipe],
+  providers: [DatePipe],
   imports: [
     ReactiveFormsModule,
     MatFormField,

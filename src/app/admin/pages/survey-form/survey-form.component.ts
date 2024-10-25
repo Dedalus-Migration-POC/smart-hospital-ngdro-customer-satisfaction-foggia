@@ -15,7 +15,7 @@ import {MatIcon} from "@angular/material/icon";
 import {DialogService} from "../../support/dialog-service";
 import {Section} from "../../repository/dto/section";
 import {Survey} from "../../repository/dto/survey";
-import {MatOption, provideNativeDateAdapter} from "@angular/material/core";
+import {MatOption} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {WithSubscriptionsComponent} from "../../support/with-subscriptions-component";
@@ -52,7 +52,7 @@ type DateRange = {
 @Component({
   selector: 'app-survey-form',
   standalone: true,
-  providers: [provideNativeDateAdapter(), DatePipe],
+  providers: [DatePipe],
   imports: [
     MatButton,
     TranslateModule,
@@ -156,10 +156,19 @@ export class SurveyFormComponent extends WithSubscriptionsComponent implements O
           this.selectableSections$.next(
             (sections?.content ?? []).filter(section => !form.sections?.find(s => s?.id === section.id))
           )
-          this.dateRange$.next({
-            minStartDate: this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
-            minEndDate: !form.startDate ? null : this.datePipe.transform(form.startDate, 'yyyy-MM-dd'),
-          })
+          if (form.startDate) {
+            this.dateRange$.pipe(
+              map((range) => {
+                this.dateRange$.next({
+                  minStartDate: range.minStartDate,
+                  minEndDate: this.datePipe.transform(
+                    form.startDate,
+                    'yyyy-MM-dd',
+                  ),
+                })
+              }),
+            )
+          }
         })
       ).subscribe()
     )
