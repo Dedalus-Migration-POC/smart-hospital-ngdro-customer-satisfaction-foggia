@@ -12,7 +12,7 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {DesignAngularKitModule, provideDesignAngularKit} from "design-angular-kit";
 import {LayoutModule} from "../layout/layout.module";
 import {APP_BASE_HREF} from "@angular/common";
-import {HttpBackend} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpBackend} from "@angular/common/http";
 import {MultiTranslateHttpLoader} from "ngx-translate-multi-http-loader";
 import {SurveyListComponent} from "./pages/survey-list/survey-list.component";
 import {NotFoundComponent} from "./pages/not-found/not-found.component";
@@ -23,10 +23,11 @@ import {APP_DATE_FORMATS} from "./config/date-adapter";
 import {effects, reducers} from "./store/store";
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from "@angular/material-moment-adapter";
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from "@angular/material/core";
+import {AuthInterceptor} from "./config/auth.interceptor";
 
 @NgModule({
   declarations: [
-    AdminComponent
+    AdminComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +55,11 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from "@angular/material/
     {provide: DateAdapter, useClass: MomentDateAdapter},
     {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}},
     {provide: APP_BASE_HREF, useValue: window.location.origin + '/ui/'},
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
     provideDesignAngularKit({
       translateLoader: (itPrefix: string, itSuffix: string) => ({
         provide: TranslateLoader,

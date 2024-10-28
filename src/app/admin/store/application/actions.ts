@@ -1,43 +1,43 @@
 import {createAction, props} from '@ngrx/store'
-import {UserRole} from "../../repository/dto/user";
+import {User, UserRole} from "../../repository/dto/user";
 
 const initialize = createAction(
-  '[Survey] Initialize',
+  '[SurveyApp] Initialize',
 )
 
 const initializeSucceeded = createAction(
-  '[Survey] Initialize Succeeded',
-  //props<{  }>(),
+  '[SurveyApp] Initialize Succeeded',
+  props<{ user: User }>(),
 )
 
 const initializeFailed = createAction(
-  '[Survey] Initialize Failed',
+  '[SurveyApp] Initialize Failed',
 )
 
 const login = createAction(
-  '[Survey] Login',
+  '[SurveyApp] Login',
   props<{ userRole: UserRole }>(),
 )
 
 const loginSucceeded = createAction(
-  '[Survey] Login Succeeded',
-  props<{ user: any }>(),
+  '[SurveyApp] Login Succeeded',
+  props<{ user: User }>(),
 )
 
 const loginFailed = createAction(
-  '[Survey] Login Failed',
+  '[SurveyApp] Login Failed',
 )
 
 const logout = createAction(
-  '[Survey] Logout',
+  '[SurveyApp] Logout',
 )
 
 const logoutSucceeded = createAction(
-  '[Survey] Logout Succeeded',
+  '[SurveyApp] Logout Succeeded',
 )
 
 const logoutFailed = createAction(
-  '[Survey] Logout Failed',
+  '[SurveyApp] Logout Failed',
 )
 
 export const AppActions = {

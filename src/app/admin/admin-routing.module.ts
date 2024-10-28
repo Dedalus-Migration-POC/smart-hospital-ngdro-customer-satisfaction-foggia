@@ -2,12 +2,18 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {NotFoundComponent} from "./pages/not-found/not-found.component";
 import {DashboardComponent} from "./pages/dashboard/dashboard.component";
+import {UserRouteGuard} from "./config/user.route-guard";
 
 const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    component: DashboardComponent
+    component: DashboardComponent,
+    canActivate: [UserRouteGuard]
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login.component').then(module => module.LoginComponent),
   },
   {
     path: 'survey-form',

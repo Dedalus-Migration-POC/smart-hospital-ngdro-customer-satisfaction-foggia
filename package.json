@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "start:admin": "ng serve --configuration admin/development --port 4201",
+    "start:admin-dev": "ng serve --configuration admin/development --proxy-config src/proxy-dev.conf.js --port 4201",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
