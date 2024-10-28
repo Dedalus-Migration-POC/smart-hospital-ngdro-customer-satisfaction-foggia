@@ -1,6 +1,7 @@
 {
   "name": "customer-satisfaction-foggia",
   "version": "1.0.0",
+  "description": "Policlinico Foggia - Customer satisfaction",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
