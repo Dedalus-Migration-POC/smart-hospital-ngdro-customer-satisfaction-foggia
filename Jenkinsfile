@@ -4,6 +4,6 @@ buildAngular(
   null,
   null,
   null,
-  null,
+  ['admin', ''],
   [skipOutputPath: true, legacyPeerDeps: false, useBaseHref: true]
 )
