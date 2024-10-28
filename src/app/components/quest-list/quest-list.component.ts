@@ -50,7 +50,7 @@ import { IQuestionnaireQuestionsList } from 'src/app/pages/questionnaire/state/s
 export class QuestListComponent implements OnInit {
   @Input() title!: string
   @Input() id!: string
-  @Input() questionsList!: IQuestionnaireQuestionsList[]
+  @Input() questions!: IQuestionnaireQuestionsList[]
   @Input() sectionTitle!: string
   @Input() sectionId!: string
   @Input() activeStep!: number
@@ -65,11 +65,9 @@ export class QuestListComponent implements OnInit {
 
   formGroup = new FormGroup({})
 
-  votes = ['1', '2', '3', '4', '5']
-
-  createGroup(questionsList: IQuestionnaireQuestionsList[]): FormGroup {
+  createGroup(questions: IQuestionnaireQuestionsList[]): FormGroup {
     const form = new FormGroup({})
-    questionsList.forEach((x) => {
+    questions.forEach((x) => {
       form.addControl(x.id, new FormControl('', Validators.required))
     })
 
@@ -77,12 +75,12 @@ export class QuestListComponent implements OnInit {
   }
   sendQuestionnaireLoading$ = this.store.select(selectSendQuestionnaireLoading)
   ngOnInit() {
-    this.formGroup = this.createGroup(this.questionsList)
+    this.formGroup = this.createGroup(this.questions)
   }
 
   error = false
   getError(id: string) {
-    if (!this.formGroup.get(id)?.value && this.error) {
+    if (!this.formGroup?.get(id.toString())?.value && this.error) {
       return true
     }
     return false
@@ -125,9 +123,9 @@ export class QuestListComponent implements OnInit {
         payload: {
           title: this.sectionTitle,
           id: this.sectionId,
-          questionsList: Object.keys(this.formGroup.value).map((el, i) => ({
+          questions: Object.keys(this.formGroup.value).map((el, i) => ({
             id: el,
-            vote: Object.values(this.formGroup.value)[i],
+            answerId: Object.values(this.formGroup.value)[i],
           })),
         },
       }),
@@ -157,9 +155,9 @@ export class QuestListComponent implements OnInit {
         payload: {
           title: this.sectionTitle,
           id: this.sectionId,
-          questionsList: Object.keys(this.formGroup.value).map((el, i) => ({
+          questions: Object.keys(this.formGroup.value).map((el, i) => ({
             id: el,
-            vote: Object.values(this.formGroup.value)[i],
+            answerId: Object.values(this.formGroup.value)[i],
           })),
         },
       }),
@@ -172,14 +170,14 @@ export class QuestListComponent implements OnInit {
           this.store.dispatch(
             sendQuestionnaire({
               payload: {
-                title: this.title,
-                id: this.id,
+                name: this.title,
+                surveyId: this.id,
                 sections: questionnaire,
               },
             }),
           ),
             console.log('+++submit', {
-              title: this.title,
+              name: this.title,
               id: this.id,
               sections: questionnaire,
             })

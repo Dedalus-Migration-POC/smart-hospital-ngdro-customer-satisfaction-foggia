@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router'
 
 const routes: Routes = [
   {
-    path: ':unit/:structureType/:questType',
+    path: 'survey/:surveyId/:healthcareUnitId/:structure', //survey/1/1/structure
     loadChildren: () =>
       import('src/app/pages/auth/auth.module').then((m) => m.AuthModule),
   },

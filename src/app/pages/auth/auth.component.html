@@ -1,6 +1,6 @@
 <app-otp-card
-  [structureType]="structureType"
-  [unit]="unit"
+  [structureType]="structureType === 'AMBULATORY' ? 'ambulatorio' : 'reparto'"
+  [unit]="(healthcareUnit$ | async)?.name || ''"
   [questType]="questType"
   (sendOtp)="sendOtp($event)"
 ></app-otp-card>

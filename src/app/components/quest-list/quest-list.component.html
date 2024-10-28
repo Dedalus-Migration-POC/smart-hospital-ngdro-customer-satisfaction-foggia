@@ -1,25 +1,29 @@
 <form [formGroup]="formGroup" class="ps-0 mt-4">
-  <div *ngFor="let question of questionsList" class="quest-row">
+  <div *ngFor="let question of questions" class="quest-row">
     <div class="question-title">
-      {{ question.title }}
+      {{ question.name }}
       <div *ngIf="getError(question.id)" class="quest-error">
         <it-icon name="error" [color]="'danger'"></it-icon>
         {{ 'quest.quest-error-required' | translate }}
       </div>
     </div>
     <fieldset [id]="question.id" class="quest-options">
-      <legend class="d-none">{{ question.title }}</legend>
-      <div class="form-check form-check-inline" *ngFor="let vote of votes">
+      <legend class="d-none">{{ question.name }}</legend>
+      <div
+        class="form-check form-check-inline"
+        *ngFor="let vote of question?.answers"
+      >
         <input
           type="radio"
           [formControlName]="question.id"
           [attr.name]="question.id"
-          [id]="question.id + '-' + vote"
-          [value]="vote"
+          [id]="question.id + '-' + vote.id"
+          [value]="vote.id"
         />
-        <label [for]="question.id + '-' + vote">{{
-          'quest.vote.' + vote | translate
-        }}</label>
+        <label [for]="question.id + '-' + vote.id">
+          {{ vote.name }}
+          <!-- {{'quest.vote.' + vote | translate}} -->
+        </label>
       </div>
     </fieldset>
   </div>

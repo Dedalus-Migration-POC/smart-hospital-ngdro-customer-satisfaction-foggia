@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store'
 import { SmartHospitalState } from 'src/app/store/reducers'
 import { selectQuestionnaireData } from '../auth/state/selectors'
 import { fetchQuestionnaire } from '../auth/state/actions'
+import { map } from 'rxjs'
 
 @Component({
   selector: 'app-quest',
@@ -13,11 +14,7 @@ import { fetchQuestionnaire } from '../auth/state/actions'
 export class QuestComponent implements OnInit {
   constructor(private store: Store<SmartHospitalState>) {}
 
-  ngOnInit(): void {
-    this.store.dispatch(
-      fetchQuestionnaire({ payload: { otp: '123', consent: true } }),
-    )
-  }
+  ngOnInit(): void {}
   questionnaire$ = this.store.select(selectQuestionnaireData)
   activeStep = 0
 
