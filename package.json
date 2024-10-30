@@ -1,11 +1,11 @@
 {
   "name": "customer-satisfaction-foggia",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.6",
   "description": "Policlinico Foggia - Customer satisfaction",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.js",
-    "start:admin": "ng serve --configuration admin/development --port 4201",
+    "start:admin": "ng serve --configuration admin/development --proxy-config src/proxy.conf.js --port 4201",
     "start:admin-dev": "ng serve --configuration admin/development --proxy-config src/proxy-dev.conf.js --port 4201",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
