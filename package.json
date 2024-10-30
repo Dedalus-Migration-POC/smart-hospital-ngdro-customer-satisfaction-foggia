@@ -1,10 +1,12 @@
 {
   "name": "customer-satisfaction-foggia",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.1",
+  "description": "Policlinico Foggia - Customer satisfaction",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.js",
-    "start:admin": "ng serve --configuration admin/development",
+    "start:admin": "ng serve --configuration admin/development --port 4201",
+    "start:admin-dev": "ng serve --configuration admin/development --proxy-config src/proxy-dev.conf.js --port 4201",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -19,6 +21,7 @@
     "@angular/core": "^18.1.0",
     "@angular/forms": "^18.1.0",
     "@angular/material": "^18.1.2",
+    "@angular/material-moment-adapter": "^18.2.9",
     "@angular/platform-browser": "^18.1.0",
     "@angular/platform-browser-dynamic": "^18.1.0",
     "@angular/router": "^18.1.0",
@@ -47,7 +50,8 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "prettier": "^3.3.2",
-    "typescript": "~5.5.2"
+    "typescript": "~5.5.2",
+    "winston": "^3.15.0"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

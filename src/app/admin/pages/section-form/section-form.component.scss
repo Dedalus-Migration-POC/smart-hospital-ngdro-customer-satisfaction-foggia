@@ -1,0 +1,40 @@
+.head {
+  display: flex;
+  margin-bottom: 24px;
+
+  > h6 {
+    max-width: 80%;
+    margin-right: 32px;
+  }
+
+  > div {
+    max-width: 20%;
+
+    > button:not(:last-child) {
+      margin-right: 16px;
+    }
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 768px;
+}
+
+.section-fields {
+  width: 100%;
+
+  *:not(:last-child) {
+    margin-right: 16px;
+  }
+}
+
+mat-card {
+  max-width: 768px;
+  padding: 16px;
+}
+
+.remove-qst {
+  cursor: pointer;
+}

@@ -1,0 +1,19 @@
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  button {
+    margin-left: 32px;
+  }
+
+  h6 {
+    margin: 0 !important;
+  }
+}
+
+.create-section-btn {
+  display: flex;
+  justify-content: space-evenly;
+}

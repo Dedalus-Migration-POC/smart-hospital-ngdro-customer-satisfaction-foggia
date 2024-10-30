@@ -1,0 +1,30 @@
+.mat-mdc-table {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+mat-cell.INACTIVE {
+  color: #cdcd05;
+  font-weight: bold;
+}
+
+mat-cell.ACTIVE {
+  color: #05a605;
+  font-weight: bold;
+}
+
+mat-cell.EXPIRED {
+  color: #b60808;
+  font-weight: bold;
+}
+
+mat-cell.deleted {
+  text-decoration: line-through;
+  color: #ff0000;
+}
+
+.datasource-empty {
+  position: relative;
+  bottom: 40px;
+  left: 20px;
+}

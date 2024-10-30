@@ -1,0 +1,15 @@
+mat-toolbar {
+  border-bottom: 1px solid #CAC4D0;
+}
+
+mat-toolbar-row {
+  padding: 0 64px;
+
+  img {
+    cursor: pointer;
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

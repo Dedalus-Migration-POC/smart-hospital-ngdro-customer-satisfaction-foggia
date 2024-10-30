@@ -1,0 +1,21 @@
+<div>
+  <h6>{{ 'admin.survey-list.title' | translate }}</h6>
+</div>
+
+<div>
+  <button mat-stroked-button (click)="print()" [disabled]="!(surveys$ | async)?.length">
+    <mat-icon>print</mat-icon>
+    <span>{{ 'admin.survey-list.print-surveys-btn' | translate }}</span>
+  </button>
+
+  <button mat-stroked-button (click)="viewAnalytics()">
+    <mat-icon>query_stats</mat-icon>
+    <span>{{ 'admin.survey-list.view-analytics-btn' | translate }}</span>
+  </button>
+
+  <button id="create-survey-btn" mat-flat-button routerLink="/survey-form" [disabled]="!(sections$ | async)?.length"
+  >
+    <mat-icon>add</mat-icon>
+    <span>{{ 'admin.survey-list.create-survey-btn' | translate }}</span>
+  </button>
+</div>

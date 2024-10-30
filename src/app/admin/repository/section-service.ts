@@ -1,0 +1,44 @@
+import {Injectable} from "@angular/core";
+import {HttpClient} from "@angular/common/http";
+import {Section} from "./dto/section";
+import {CreateSectionRequest} from "./dto/create-section-request";
+import {PagedList} from "./dto/paged_list";
+import {FilterSectionRequest} from "./dto/filter-section-request";
+import {TablePagination} from "../support/domain/table-pagination";
+
+const baseUrl = '/api/v1/survey/section'
+
+@Injectable({providedIn: 'root'})
+export class SectionService {
+  constructor(private http: HttpClient) {
+
+  }
+
+  public find(request: FilterSectionRequest, filter?: TablePagination) {
+    return this.http.post<PagedList<Section>>(baseUrl, request, {params: filter})
+  }
+
+  public findById(sectionId: string) {
+    return this.http.get<Section>(`${baseUrl}/${sectionId}`)
+  }
+
+  public create(section: CreateSectionRequest) {
+    return this.http.post<Section>(`${baseUrl}/create`, section)
+  }
+
+  public update(section: CreateSectionRequest) {
+    return this.http.post<Section>(`${baseUrl}/update`, section)
+  }
+
+  public clone(sectionId: string) {
+    return this.http.get<Section>(`${baseUrl}/clone/${sectionId}`)
+  }
+
+  public delete(sectionId: string) {
+    return this.http.delete<void>(`${baseUrl}/${sectionId}`)
+  }
+
+  public restore(sectionId: string) {
+    return this.http.patch<void>(`${baseUrl}/restore/${sectionId}`, null)
+  }
+}

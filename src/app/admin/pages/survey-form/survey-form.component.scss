@@ -1,0 +1,73 @@
+.head {
+  display: flex;
+  margin-bottom: 24px;
+
+  > h6 {
+    max-width: 80%;
+    margin-right: 32px;
+  }
+
+  > div {
+    max-width: 20%;
+
+    > button:not(:last-child) {
+      margin-right: 16px;
+    }
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.survey-fields {
+  max-width: 768px;
+
+  *:not(:last-child) {
+    margin-right: 16px;
+  }
+}
+
+mat-card {
+  min-height: 130px;
+  max-width: 768px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.mat-section-select {
+  display: flex;
+  justify-content: space-between;
+
+  > button {
+    margin-left: 12px;
+  }
+}
+
+.section-questions {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+
+  > span:first-child {
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  > span:last-child {
+    font-size: 16px;
+  }
+}
+
+.card-bottom {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.move-buttons {
+  position: absolute;
+  right: 10px;
+  top: 80px;
+}

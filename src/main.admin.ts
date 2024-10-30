@@ -1,6 +1,6 @@
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
-import { AdminModule } from './admin/admin.module';
+import {AdminModule} from './app/admin/admin.module';
 
 platformBrowserDynamic().bootstrapModule(AdminModule, {
   ngZoneEventCoalescing: true

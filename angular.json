@@ -97,7 +97,7 @@
             "admin/production": {
               "browser": "src/main.admin.ts",
               "styles": [
-                "src/admin/style/styles.scss"
+                "src/app/admin/style/styles.scss"
               ],
               "budgets": [
                 {
@@ -116,7 +116,7 @@
             "admin/integration": {
               "browser": "src/main.admin.ts",
               "styles": [
-                "src/admin/style/styles.scss"
+                "src/app/admin/style/styles.scss"
               ],
               "budgets": [
                 {
@@ -135,7 +135,7 @@
             "admin/development": {
               "browser": "src/main.admin.ts",
               "styles": [
-                "src/admin/style/styles.scss"
+                "src/app/admin/style/styles.scss"
               ],
               "optimization": false,
               "extractLicenses": false,
@@ -146,6 +146,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "src/proxy.conf.js"
+          },
           "configurations": {
             "production": {
               "buildTarget": "customer-satisfaction-foggia:build:production"
@@ -189,5 +192,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

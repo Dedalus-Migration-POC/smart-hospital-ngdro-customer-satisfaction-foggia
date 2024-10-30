@@ -1,0 +1,34 @@
+form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1 1;
+  padding: 0 16px;
+  border: 1px solid #fff !important;
+  border-collapse: collapse !important;
+  border-top-left-radius: 0.5em !important;
+  border-top-right-radius: 0.5em !important;
+  background-color: #fff !important;
+  z-index: 3;
+  box-shadow: var(--mat-app-elevation-shadow-level-8, none);
+
+  > div:first-child {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    padding-top: 16px;
+
+    > .mat-mdc-form-field {
+      margin-right: 12px;
+    }
+  }
+
+  > div:last-child {
+    width: 20%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+}
