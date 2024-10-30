@@ -36,6 +36,6 @@ export class QuestionnaireService {
     if (this.IS_DEV) {
       return of(true).pipe(delay(500))
     }
-    return this.http.post<any>(`api/v1/survey/answer`, payload)
+    return this.http.post<any>(`/api/v1/survey/answer`, payload)
   }
 }
