@@ -114,5 +114,16 @@
                [pageSizeOptions]="[5,10,20]"
 ></mat-paginator>
 
+<ng-container *ngIf="error$ | async else noErr">
+  <span class="datasource-empty">
+    <button type="button" mat-icon-button (click)="initialize()">
+      <mat-icon [matTooltip]="'retry' | translate">restore</mat-icon>
+    </button>
+      <span>{{ 'error' | translate }}</span>
+  </span>
+</ng-container>
+
+<ng-template #noErr>
 <span *ngIf="!dataSource.data.length"
       class="datasource-empty">{{ 'admin.survey-list.datasource-empty' | translate }}</span>
+</ng-template>

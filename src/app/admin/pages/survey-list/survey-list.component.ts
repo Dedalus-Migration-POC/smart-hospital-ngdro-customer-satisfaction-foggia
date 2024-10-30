@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {Store} from "@ngrx/store";
 import {map, Observable, tap} from "rxjs";
@@ -35,7 +35,7 @@ import {MatCard, MatCardContent} from "@angular/material/card";
       (onUnpublish)="onUnpublish($event)"
     ></app-survey-list-table>`,
 })
-export class SurveyListComponent extends WithSubscriptionsComponent {
+export class SurveyListComponent extends WithSubscriptionsComponent implements OnInit {
   constructor(
     private store: Store<SurveyAdminState>,
     private actions: Actions,
@@ -46,6 +46,10 @@ export class SurveyListComponent extends WithSubscriptionsComponent {
   ) {
     super();
     this.startSubscriptions();
+  }
+
+  ngOnInit() {
+    this.store.dispatch(SurveyActions.fetchSurveys({}))
   }
 
 

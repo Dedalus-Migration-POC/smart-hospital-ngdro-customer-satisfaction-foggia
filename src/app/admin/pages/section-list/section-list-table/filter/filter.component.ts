@@ -75,7 +75,10 @@ export class FilterComponent extends WithSubscriptionsComponent implements OnIni
           debounceTime(500),
           distinctUntilChanged(),
         )
-        .subscribe(() => this.store.dispatch(SectionActions.fetchSections({form: this.form.value}))),
+        .subscribe((formChange) => {
+          console.log({formChange})
+          this.store.dispatch(SectionActions.fetchSections({form: this.form.value}))
+        }),
 
       this.surveys$.subscribe(surveys => {
         if ((surveys?.content ?? []).length) {

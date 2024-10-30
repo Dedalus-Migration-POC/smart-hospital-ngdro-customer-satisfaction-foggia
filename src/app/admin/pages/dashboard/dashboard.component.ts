@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {SurveyListComponent} from "../survey-list/survey-list.component";
 import {SectionListComponent} from "../section-list/section-list.component";
 import {TopRightButtonsComponent} from "../survey-list/top-right-buttons/top-right-buttons.component";
@@ -8,8 +8,6 @@ import {ScaffoldComponent} from "../../components/scaffold/scaffold.component";
 import {selectApplicationState} from "../../store/application/reducer";
 import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../store/store";
-import {SurveyActions} from "../../store/survey/actions";
-import {SectionActions} from "../../store/section/actions";
 
 @Component({
   selector: 'app-dashboard',
@@ -23,10 +21,7 @@ import {SectionActions} from "../../store/section/actions";
     ScaffoldComponent
   ],
   template: `
-    <app-scaffold [loading]="initializing$"
-                  [error]="initializeError$"
-                  (onErrorRetryCallback)="initialize()"
-    >
+    <app-scaffold [loading]="initializing$" [error]="initializeError$">
       <ng-container *ngIf="!(initializing$ | async) && !(initializeError$ | async)">
         <app-top-right-buttons></app-top-right-buttons>
         <app-survey-list></app-survey-list>
@@ -36,18 +31,8 @@ import {SectionActions} from "../../store/section/actions";
     </app-scaffold>
   `,
 })
-export class DashboardComponent implements OnInit {
-
+export class DashboardComponent {
   constructor(private store: Store<SurveyAdminState>) {
-  }
-
-  ngOnInit() {
-    this.initialize()
-  }
-
-  protected initialize() {
-    this.store.dispatch(SurveyActions.fetchSurveys({}))
-    this.store.dispatch(SectionActions.fetchSections({}))
   }
 
   state$ = this.store.select(selectApplicationState)

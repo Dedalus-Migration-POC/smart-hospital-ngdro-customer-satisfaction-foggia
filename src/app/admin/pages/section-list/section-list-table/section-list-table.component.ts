@@ -27,7 +27,7 @@ import {MatCheckbox} from "@angular/material/checkbox";
 import {FormsModule} from "@angular/forms";
 import {MatTooltip} from "@angular/material/tooltip";
 import {SurveyAdminState} from "../../../store/store";
-import {selectSectionState} from "../../../store/section/reducer";
+import {selectSectionList, selectSectionState} from "../../../store/section/reducer";
 import {Survey} from "../../../repository/dto/survey";
 import {MatSort, MatSortHeader, MatSortModule} from "@angular/material/sort";
 import {WithSubscriptionsComponent} from "../../../support/with-subscriptions-component";
@@ -85,6 +85,8 @@ export class SectionListTableComponent extends WithSubscriptionsComponent implem
 
 
   state$ = this.store.select(selectSectionState)
+  loading$ = this.store.select(selectSectionList).pipe(map(({fetchingSections}) => fetchingSections))
+  error$ = this.store.select(selectSectionList).pipe(map(({fetchSectionsError}) => fetchSectionsError))
   sections$ = this.state$.pipe(map(({sections}) => sections?.content ?? []))
   dataSource = new MatTableDataSource<Section>();
   pageSizeOptions$!: Observable<Array<number>>;
@@ -95,6 +97,7 @@ export class SectionListTableComponent extends WithSubscriptionsComponent implem
   }
 
   ngOnInit() {
+    this.initialize()
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     //FIXME non appaiono nel paginator
@@ -143,6 +146,10 @@ export class SectionListTableComponent extends WithSubscriptionsComponent implem
         }))
       })
     )
+  }
+
+  protected initialize() {
+    this.store.dispatch(SectionActions.fetchSections({}))
   }
 
   deletingId$ = this.store.select(selectSectionState).pipe(map(s => s.editingSectionId))

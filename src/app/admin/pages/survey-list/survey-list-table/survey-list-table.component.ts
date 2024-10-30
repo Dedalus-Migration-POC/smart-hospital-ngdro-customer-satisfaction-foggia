@@ -7,7 +7,7 @@ import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../../store/store";
 import {selectSurveyList, selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/reducer";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {MatIconButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
 import {FilterComponent} from "./filter/filter.component";
@@ -63,7 +63,8 @@ import {SurveyActions} from "../../../store/survey/actions";
     MatRowDef,
     MatPaginator,
     MatProgressBar,
-    ToggleButtonComponent
+    ToggleButtonComponent,
+    MatButton
   ],
   templateUrl: './survey-list-table.component.html',
   styleUrl: './survey-list-table.component.scss'
@@ -85,9 +86,13 @@ export class SurveyListTableComponent extends WithSubscriptionsComponent impleme
 
   state$ = this.store.select(selectSurveyState)
   loading$ = this.store.select(selectSurveyList).pipe(map(({fetchingSurveys}) => fetchingSurveys))
+  error$ = this.store.select(selectSurveyList).pipe(map(({fetchSurveysError}) => fetchSurveysError))
   dataSource = new MatTableDataSource<Survey>();
   pageSizeOptions$!: Observable<Array<number>>;
   showDeleted$ = this.store.select(s => s.survey.showDeleted)
+
+  columns: string[] = ['name', 'version', 'status', 'validity', 'createdAt', 'actions']
+  operatingStatus$ = this.store.select(selectSurveyState).pipe(map(s => s.operatingStatus))
 
   constructor(
     private store: Store<SurveyAdminState>,
@@ -147,8 +152,9 @@ export class SurveyListTableComponent extends WithSubscriptionsComponent impleme
     )
   }
 
-  columns: string[] = ['name', 'version', 'status', 'validity', 'createdAt', 'actions']
-  operatingStatus$ = this.store.select(selectSurveyState).pipe(map(s => s.operatingStatus))
+  protected initialize() {
+    this.store.dispatch(SurveyActions.fetchSurveys({}))
+  }
 
   protected handleColumn(survey: Survey, propertyName: string): string {
     if (propertyName === 'validity' && survey.dateRange?.startDate) {
