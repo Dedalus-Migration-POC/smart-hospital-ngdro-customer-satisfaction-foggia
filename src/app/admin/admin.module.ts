@@ -12,7 +12,7 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {DesignAngularKitModule, provideDesignAngularKit} from "design-angular-kit";
 import {LayoutModule} from "../layout/layout.module";
 import {APP_BASE_HREF} from "@angular/common";
-import {HTTP_INTERCEPTORS, HttpBackend} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpBackend, provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
 import {MultiTranslateHttpLoader} from "ngx-translate-multi-http-loader";
 import {SurveyListComponent} from "./pages/survey-list/survey-list.component";
 import {NotFoundComponent} from "./pages/not-found/not-found.component";
@@ -50,6 +50,7 @@ import {AuthInterceptor} from "./config/auth.interceptor";
   providers: [
     MatPaginatorIntl,
     provideAnimations(),
+    provideHttpClient(withInterceptorsFromDi()),
     {provide: MAT_DATE_LOCALE, useValue: 'it'},
     {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS},
     {provide: DateAdapter, useClass: MomentDateAdapter},
