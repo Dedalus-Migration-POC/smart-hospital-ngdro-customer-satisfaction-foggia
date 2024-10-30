@@ -14,7 +14,7 @@ export interface HealthcareUnit {
 })
 export class QuestionnaireService {
   constructor(private http: HttpClient) {}
-  private readonly IS_DEV = true
+  private readonly IS_DEV = false
 
   sendOtp(
     otp: string,

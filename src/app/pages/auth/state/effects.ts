@@ -19,9 +19,8 @@ export class AuthEffects {
       concatMap((action) =>
         this.questionnaireService.sendOtp(action.otp, action.payload).pipe(
           map(() => {
-            this.store.dispatch(
-              fetchQuestionnaire({ surveyId: action.payload.surveyId }),
-            )
+            this.router.navigate([`/questionnaire/${action.payload.surveyId}`])
+
             return QuestionnaireActions.sendOtpSuccess()
           }),
           catchError((error) => {
@@ -45,7 +44,6 @@ export class AuthEffects {
       concatMap((action) =>
         this.questionnaireService.fetchQuestionnaire(action.surveyId).pipe(
           map((data) => {
-            this.router.navigate(['/questionnaire'])
             return QuestionnaireActions.fetchQuestionnaireSuccess({ data })
           }),
           catchError((error) => {

@@ -6,7 +6,7 @@ import { TranslateModule } from '@ngx-translate/core'
 import { DesignAngularKitModule } from 'design-angular-kit'
 import { AuthRoutingModule } from './auth-routing.module'
 import { OtpCardComponent } from 'src/app/components/otp-card/otp-card.component'
-
+import { LoadingFullScreenComponent } from 'src/app/components/loading-full-screen/loading-full-screen.component'
 
 @NgModule({
   declarations: [AuthComponent],
@@ -16,10 +16,9 @@ import { OtpCardComponent } from 'src/app/components/otp-card/otp-card.component
     ReactiveFormsModule,
     TranslateModule,
     DesignAngularKitModule,
-    OtpCardComponent
-
-
+    OtpCardComponent,
+    LoadingFullScreenComponent,
   ],
   exports: [],
 })
-export class AuthModule { }
+export class AuthModule {}

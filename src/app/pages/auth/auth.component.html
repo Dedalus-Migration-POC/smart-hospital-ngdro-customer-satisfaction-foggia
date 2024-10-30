@@ -1,6 +1,9 @@
+<app-loading-full-screen *ngIf="loading$ | async"></app-loading-full-screen>
+
 <app-otp-card
+  *ngIf="healthcareUnit$ | async"
   [structureType]="structureType === 'AMBULATORY' ? 'ambulatorio' : 'reparto'"
   [unit]="(healthcareUnit$ | async)?.name || ''"
-  [questType]="questType"
+  [questType]="(survey$ | async)?.name || ''"
   (sendOtp)="sendOtp($event)"
 ></app-otp-card>

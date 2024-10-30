@@ -121,7 +121,6 @@ export class QuestListComponent implements OnInit {
     this.store.dispatch(
       setQuestionnaire({
         payload: {
-          title: this.sectionTitle,
           id: this.sectionId,
           questions: Object.keys(this.formGroup.value).map((el, i) => ({
             id: el,
@@ -153,7 +152,6 @@ export class QuestListComponent implements OnInit {
     this.store.dispatch(
       setQuestionnaire({
         payload: {
-          title: this.sectionTitle,
           id: this.sectionId,
           questions: Object.keys(this.formGroup.value).map((el, i) => ({
             id: el,
@@ -170,17 +168,11 @@ export class QuestListComponent implements OnInit {
           this.store.dispatch(
             sendQuestionnaire({
               payload: {
-                name: this.title,
                 surveyId: this.id,
                 sections: questionnaire,
               },
             }),
-          ),
-            console.log('+++submit', {
-              name: this.title,
-              id: this.id,
-              sections: questionnaire,
-            })
+          )
         }),
       )
       .subscribe()

@@ -12,9 +12,20 @@ import { map } from 'rxjs'
   styleUrls: ['./quest.component.scss'],
 })
 export class QuestComponent implements OnInit {
-  constructor(private store: Store<SmartHospitalState>) {}
+  constructor(
+    private store: Store<SmartHospitalState>,
+    private activatedRoute: ActivatedRoute,
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.activatedRoute.params.subscribe((params) => {
+      if (params['surveyId']) {
+        this.store.dispatch(
+          fetchQuestionnaire({ surveyId: params['surveyId'] }),
+        )
+      }
+    })
+  }
   questionnaire$ = this.store.select(selectQuestionnaireData)
   activeStep = 0
 

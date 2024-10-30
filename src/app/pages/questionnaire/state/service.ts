@@ -5,7 +5,7 @@ import { delay, of } from 'rxjs'
 export interface IQuestionnaire {
   id?: string
   surveyId?: string
-  name: string
+  name?: string
   sections: IQuestionnaireSection[]
 }
 export interface IQuestionnaireSection {

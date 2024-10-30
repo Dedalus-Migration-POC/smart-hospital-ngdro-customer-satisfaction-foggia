@@ -9,8 +9,11 @@
       <div
         class="go-to-evaluate"
         [innerHTML]="
-          'otp.go-to-evaluate'
-            | translate: { unit: unit, structureType: structureType }
+          structureType === 'ambulatorio'
+            ? ('otp.go-to-evaluate-ambulatory'
+              | translate: { unit: unit, structureType: structureType })
+            : ('otp.go-to-evaluate-department'
+              | translate: { unit: unit, structureType: structureType })
         "
       ></div>
       <h2 class="h5">{{ 'otp.authentication' | translate }}</h2>
@@ -42,19 +45,16 @@
             formControlName="consent"
             required
           />
-          <label for="consent" class="mb-0">
-            <span id="consent-help"
-              >{{ 'otp.consent' | translate }}
-              <button
-                type="button"
-                class="btn p-0 consent-info-button"
-                (click)="consentMadal.toggle()"
-              >
+          <label for="consent" class="mb-0 consent-help">
+            <span>
+              {{ 'otp.consent' | translate }}
+
+              <a [routerLink]="['#']" class="consent-link">
                 {{ 'otp.consent-link' | translate }}
-              </button>
+              </a>
               {{ 'otp.consent-2' | translate }}
-            </span></label
-          >
+            </span>
+          </label>
           <div
             *ngIf="this.otpInputForm.value.consent === false && showError"
             class="disabled-error"
@@ -82,7 +82,7 @@
     </div>
   </div>
 
-  <it-modal #consentMadal="itModal" size="xl">
+  <!-- <it-modal #consentMadal="itModal" size="xl">
     <ng-container modalTitle>{{
       'otp.consent-modal-title' | translate
     }}</ng-container>
@@ -110,5 +110,5 @@
         {{ 'otp.consent-modal-accept' | translate }}
       </button>
     </ng-container>
-  </it-modal>
+  </it-modal> -->
 </div>

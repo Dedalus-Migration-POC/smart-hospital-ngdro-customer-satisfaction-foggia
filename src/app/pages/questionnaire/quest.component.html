@@ -16,8 +16,8 @@
       <h2 class="h3">{{ section.name }}</h2>
       <div class="required-tag">{{ 'quest.required-tag' | translate }}</div>
       <app-quest-list
-        [title]="(questionnaire$ | async)!.name"
-        [id]="(questionnaire$ | async)!.id"
+        [title]="(questionnaire$ | async)!.name!"
+        [id]="(questionnaire$ | async)?.id!"
         [questions]="section.questions"
         [sectionTitle]="section.name"
         [sectionId]="section.id"

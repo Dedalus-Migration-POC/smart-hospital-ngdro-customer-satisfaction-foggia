@@ -8,7 +8,7 @@ const routes: Routes = [
       import('src/app/pages/auth/auth.module').then((m) => m.AuthModule),
   },
   {
-    path: 'questionnaire',
+    path: 'questionnaire/:surveyId',
     loadChildren: () =>
       import('src/app/pages/questionnaire/quest.module').then(
         (m) => m.QuestModule,

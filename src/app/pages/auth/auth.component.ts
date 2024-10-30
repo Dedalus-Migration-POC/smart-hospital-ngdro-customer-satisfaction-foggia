@@ -2,8 +2,13 @@ import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { Store } from '@ngrx/store'
 import { SmartHospitalState } from 'src/app/store/reducers'
-import { getHealthcareUnit, sendOtp } from './state/actions'
-import { selectHealthcareUnit } from './state/selectors'
+import { fetchQuestionnaire, getHealthcareUnit, sendOtp } from './state/actions'
+import {
+  selectHealthcareUnit,
+  selectLoading,
+  selectQuestionnaireData,
+  selectQuestionnaireLoading,
+} from './state/selectors'
 
 @Component({
   selector: 'app-auth',
@@ -29,9 +34,18 @@ export class AuthComponent implements OnInit {
           getHealthcareUnit({ healthcareUnitId: params['healthcareUnitId'] }),
         )
       }
+      if (params['surveyId']) {
+        this.store.dispatch(
+          fetchQuestionnaire({ surveyId: params['surveyId'] }),
+        )
+      }
     })
   }
   healthcareUnit$ = this.store.select(selectHealthcareUnit)
+  survey$ = this.store.select(selectQuestionnaireData)
+  loading$ =
+    this.store.select(selectLoading) ||
+    this.store.select(selectQuestionnaireLoading)
 
   sendOtp(form: { otp: string; consent: boolean }) {
     this.store.dispatch(

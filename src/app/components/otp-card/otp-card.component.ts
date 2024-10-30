@@ -12,6 +12,7 @@ import {
 import { SmartHospitalState } from 'src/app/store/reducers'
 import { Store } from '@ngrx/store'
 import { selectQuestionnaireLoading } from 'src/app/pages/auth/state/selectors'
+import { RouterModule } from '@angular/router'
 
 @Component({
   selector: 'app-otp-card',
@@ -22,6 +23,7 @@ import { selectQuestionnaireLoading } from 'src/app/pages/auth/state/selectors'
     TranslateModule,
     FormsModule,
     ReactiveFormsModule,
+    RouterModule,
   ],
   templateUrl: './otp-card.component.html',
   styleUrls: ['./otp-card.component.scss'],
