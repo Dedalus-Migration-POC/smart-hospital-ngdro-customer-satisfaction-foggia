@@ -25,17 +25,18 @@ export interface IQuestionnaireAnswers {
   id: string | number
   value: string
 }
+const baseUrl = '/survey/api/v1/survey'
+
 @Injectable({
   providedIn: 'root',
 })
 export class QuestionnaireService {
   constructor(private http: HttpClient) {}
   private readonly IS_DEV = false
-
   sendQuestionnaire(payload: IQuestionnaire) {
     if (this.IS_DEV) {
       return of(true).pipe(delay(500))
     }
-    return this.http.post<any>(`/api/v1/survey/answer`, payload)
+    return this.http.post<any>(`${baseUrl}/answer`, payload)
   }
 }

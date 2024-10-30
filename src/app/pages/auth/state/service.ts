@@ -8,6 +8,7 @@ export interface HealthcareUnit {
   name: string
   departments: string[]
 }
+const baseUrl = '/survey/api/v1/survey'
 
 @Injectable({
   providedIn: 'root',
@@ -23,22 +24,20 @@ export class QuestionnaireService {
     if (this.IS_DEV) {
       return of(true).pipe(delay(500))
     }
-    return this.http.post<any>(`/api/v1/survey/check-otp?otp=${otp}`, payload)
+    return this.http.post<any>(`${baseUrl}/check-otp?otp=${otp}`, payload)
   }
 
   fetchQuestionnaire(surveyId: string) {
     if (this.IS_DEV) {
       return of(QUEST_LIST).pipe(delay(500))
     }
-    return this.http.get<any>(`/api/v1/survey/${surveyId}`)
+    return this.http.get<any>(`${baseUrl}/${surveyId}`)
   }
 
   getHealthcareUnit(healthcareUnitId: string) {
     if (this.IS_DEV) {
       return of(healthcareUnit).pipe(delay(500))
     }
-    return this.http.get<any>(
-      `/api/v1/survey/healthcare-unit/${healthcareUnitId}`,
-    )
+    return this.http.get<any>(`${baseUrl}/healthcare-unit/${healthcareUnitId}`)
   }
 }
