@@ -8,6 +8,7 @@ export class BaseUrlInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    console.log({url: request.url})
     return next.handle(request.clone({url: window.location.origin + request.url}))
   }
 }

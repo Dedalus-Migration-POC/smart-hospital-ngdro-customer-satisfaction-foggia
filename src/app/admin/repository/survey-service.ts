@@ -7,7 +7,7 @@ import {PagedList} from "./dto/paged_list";
 import {TablePagination} from "../support/domain/table-pagination";
 import {PrintSurveyRequest} from "./dto/print-survey-request";
 
-const baseUrl = '/api/v1/survey'
+const baseUrl = '/survey/api/v1/survey'
 
 @Injectable({providedIn: 'root'})
 export class SurveyService {

@@ -6,7 +6,7 @@ import {PagedList} from "./dto/paged_list";
 import {FilterSectionRequest} from "./dto/filter-section-request";
 import {TablePagination} from "../support/domain/table-pagination";
 
-const baseUrl = '/api/v1/survey/section'
+const baseUrl = '/survey/api/v1/survey/section'
 
 @Injectable({providedIn: 'root'})
 export class SectionService {
