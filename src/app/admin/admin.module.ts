@@ -24,6 +24,7 @@ import {effects, reducers} from "./store/store";
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from "@angular/material-moment-adapter";
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from "@angular/material/core";
 import {AuthInterceptor} from "./config/auth.interceptor";
+import {BaseUrlInterceptor} from "./config/baseUrl.interceptor";
 
 @NgModule({
   declarations: [
@@ -56,6 +57,11 @@ import {AuthInterceptor} from "./config/auth.interceptor";
     {provide: DateAdapter, useClass: MomentDateAdapter},
     {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}},
     {provide: APP_BASE_HREF, useValue: window.location.origin + '/ui/'},
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: BaseUrlInterceptor,
+      multi: true
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
