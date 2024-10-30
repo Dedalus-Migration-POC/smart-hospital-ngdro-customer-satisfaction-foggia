@@ -1,9 +1,9 @@
 buildAngular(
   ['customer-satisfaction-foggia'],
   'customer-satisfaction-foggia',
+  ['integration', 'staging', 'production', 'admin/integration', 'admin/staging', 'admin/production'],
   null,
   null,
-  ['admin/development', 'admin/integration', 'admin/production', ''],
   null,
   [skipOutputPath: true, legacyPeerDeps: false, useBaseHref: true]
 )

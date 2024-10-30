@@ -132,6 +132,25 @@
               ],
               "outputHashing": "all"
             },
+            "admin/staging": {
+              "browser": "src/main.admin.ts",
+              "styles": [
+                "src/app/admin/style/styles.scss"
+              ],
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2MB",
+                  "maximumError": "4MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2MB",
+                  "maximumError": "4MB"
+                }
+              ],
+              "outputHashing": "all"
+            },
             "admin/development": {
               "browser": "src/main.admin.ts",
               "styles": [
