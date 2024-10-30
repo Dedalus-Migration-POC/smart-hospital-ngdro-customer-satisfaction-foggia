@@ -56,7 +56,7 @@ import {BaseUrlInterceptor} from "./config/baseUrl.interceptor";
     {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS},
     {provide: DateAdapter, useClass: MomentDateAdapter},
     {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}},
-    {provide: APP_BASE_HREF, useValue: window.location.origin + '/ui/'},
+    {provide: APP_BASE_HREF, useValue: window.location.origin + '/admin-ui/'},
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BaseUrlInterceptor,
