@@ -45,6 +45,7 @@ import { BaseUrlInterceptor } from './utils/baseUrl.interceptor'
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BaseUrlInterceptor,
+      multi: true,
     },
     provideDesignAngularKit({
       translateLoader: (itPrefix: string, itSuffix: string) => ({
