@@ -8,7 +8,12 @@ import {
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core'
-import { HTTP_INTERCEPTORS, HttpBackend } from '@angular/common/http'
+import {
+  HTTP_INTERCEPTORS,
+  HttpBackend,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http'
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader'
 import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
@@ -35,7 +40,12 @@ import { BaseUrlInterceptor } from './utils/baseUrl.interceptor'
     LayoutModule,
   ],
   providers: [
+    provideHttpClient(withInterceptorsFromDi()),
     { provide: APP_BASE_HREF, useValue: window.location.origin + '/ui/' },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: BaseUrlInterceptor,
+    },
     provideDesignAngularKit({
       translateLoader: (itPrefix: string, itSuffix: string) => ({
         provide: TranslateLoader,
@@ -47,11 +57,6 @@ import { BaseUrlInterceptor } from './utils/baseUrl.interceptor'
         deps: [HttpBackend],
       }),
     }),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: BaseUrlInterceptor,
-      multi: true,
-    },
   ],
   bootstrap: [AppComponent],
 })
