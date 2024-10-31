@@ -1,0 +1,26 @@
+<div class="card-wrapper card-teaser-wrapper justify-content-center error-card">
+  <div class="card card-teaser">
+    <div class="card-body text-center">
+      <img
+        [src]="
+          type === 'expired'
+            ? 'assets/images/error-expired.png'
+            : type === 'compiled'
+              ? 'assets/images/error-compiled.png'
+              : type === 'notFound'
+                ? 'assets/images/error-notfound.png'
+                : ''
+        "
+        alt=""
+        class="img-error"
+      />
+      <h1 class="card-title h2">
+        {{ 'quest.error.title.' + type | translate }}
+      </h1>
+      <p
+        class="card-text fs-6"
+        [innerHTML]="'quest.error.info.' + type | translate"
+      ></p>
+    </div>
+  </div>
+</div>

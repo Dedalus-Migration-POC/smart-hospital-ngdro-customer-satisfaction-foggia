@@ -1,8 +1,15 @@
 <app-loading-full-screen *ngIf="loading$ | async"></app-loading-full-screen>
 
+<app-error-card
+  *ngIf="(error$ | async)?.flag && !(survey$ | async)"
+  [type]="(error$ | async)?.type"
+></app-error-card>
+
 <app-otp-card
-  *ngIf="healthcareUnit$ | async"
-  [structureType]="structureType === 'AMBULATORY' ? 'ambulatorio' : 'reparto'"
+  *ngIf="(healthcareUnit$ | async) && (survey$ | async)"
+  [structureType]="
+    structureType.toUpperCase() === 'AMBULATORY' ? 'ambulatorio' : 'reparto'
+  "
   [unit]="(healthcareUnit$ | async)?.name || ''"
   [questType]="(survey$ | async)?.name || ''"
   (sendOtp)="sendOtp($event)"

@@ -7,6 +7,7 @@ import {
   selectHealthcareUnit,
   selectLoading,
   selectQuestionnaireData,
+  selectQuestionnaireError,
   selectQuestionnaireLoading,
 } from './state/selectors'
 
@@ -46,7 +47,7 @@ export class AuthComponent implements OnInit {
   loading$ =
     this.store.select(selectLoading) ||
     this.store.select(selectQuestionnaireLoading)
-
+  error$ = this.store.select(selectQuestionnaireError)
   sendOtp(form: { otp: string; consent: boolean }) {
     this.store.dispatch(
       sendOtp({

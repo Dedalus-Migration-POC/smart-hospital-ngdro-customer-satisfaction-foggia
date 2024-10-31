@@ -52,6 +52,18 @@
       "4": "Buono",
       "5": "Eccellente"
     },
+    "error": {
+      "title": {
+        "expired": "Questionario scaduto!",
+        "compiled": "Questionario già compilato!",
+        "notFound": "Questionario non trovato!"
+      },
+      "info": {
+        "expired": "Questo questionario è scaduto e non è più disponibile per la compilazione. <br>Ti ringraziamo per l’interesse!",
+        "compiled": "Questo questionario è già stato compilato e non può essere inviato di nuovo. <br>Grazie per il tuo feedback!",
+        "notFound": "Verifica che l’URL sia corretta oppure utilizza il QR code presente sul foglio per accedere al link esatto."
+      }
+    },
     "forward-button-disabled-description": "Per procedere compila il questionario",
     "send-button-description": "Invia il questionario",
     "send-quest-error": "Ci dispiace, è avvenuto un'errore. Chiediamo di riprovare",

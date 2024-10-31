@@ -1,33 +1,40 @@
-<h1 class="h2 mt-5 mb-3" *ngIf="questionnaire$ | async as questionnaire">
-  {{ questionnaire.name }}
-</h1>
+<app-error-card
+  *ngIf="(questionnaireError$ | async)?.flag && !(questionnaire$ | async)"
+  [type]="(questionnaireError$ | async)?.type"
+></app-error-card>
 
-<it-steppers-container
-  [activeStep]="activeStep"
-  [showForwardButton]="false"
-  [showConfirmButton]="false"
-  showBackButton="false"
->
-  <it-steppers-item
-    *ngFor="let section of (questionnaire$ | async)?.sections; index as i"
-    [label]="'0' + (i + 1) + '. ' + section.name"
+<ng-container *ngIf="questionnaire$ | async as questionnaire">
+  <h1 class="h2 mt-5 mb-3">
+    {{ questionnaire.name }}
+  </h1>
+
+  <it-steppers-container
+    [activeStep]="activeStep"
+    [showForwardButton]="false"
+    [showConfirmButton]="false"
+    showBackButton="false"
   >
-    <div class="container">
-      <h2 class="h3">{{ section.name }}</h2>
-      <div class="required-tag">{{ 'quest.required-tag' | translate }}</div>
-      <app-quest-list
-        [title]="(questionnaire$ | async)!.name!"
-        [id]="(questionnaire$ | async)?.id!"
-        [questions]="section.questions"
-        [sectionTitle]="section.name"
-        [sectionId]="section.id"
-        [activeStep]="activeStep"
-        [showConfirmButton]="
-          activeStep === ((questionnaire$ | async)?.sections)!.length - 1
-        "
-        (onForwardClick)="onForwardClick()"
-        (onBackClick)="onBackClick($event)"
-      ></app-quest-list>
-    </div>
-  </it-steppers-item>
-</it-steppers-container>
+    <it-steppers-item
+      *ngFor="let section of questionnaire?.sections; index as i"
+      [label]="'0' + (i + 1) + '. ' + section.name"
+    >
+      <div class="container">
+        <h2 class="h3">{{ section.name }}</h2>
+        <div class="required-tag">{{ 'quest.required-tag' | translate }}</div>
+        <app-quest-list
+          [title]="questionnaire?.name!"
+          [id]="questionnaire?.id!"
+          [questions]="section.questions"
+          [sectionTitle]="section.name"
+          [sectionId]="section.id"
+          [activeStep]="activeStep"
+          [showConfirmButton]="
+            activeStep === (questionnaire?.sections)!.length - 1
+          "
+          (onForwardClick)="onForwardClick()"
+          (onBackClick)="onBackClick($event)"
+        ></app-quest-list>
+      </div>
+    </it-steppers-item>
+  </it-steppers-container>
+</ng-container>

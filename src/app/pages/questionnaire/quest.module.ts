@@ -6,6 +6,7 @@ import { DesignAngularKitModule } from 'design-angular-kit'
 import { QuestComponent } from './quest.component'
 import { QuestRoutingModule } from './quest-routing.module'
 import { QuestListComponent } from 'src/app/components/quest-list/quest-list.component'
+import { ErrorCardComponent } from 'src/app/components/error-card/error-card.component'
 
 @NgModule({
   declarations: [QuestComponent],
@@ -16,6 +17,7 @@ import { QuestListComponent } from 'src/app/components/quest-list/quest-list.com
     TranslateModule,
     DesignAngularKitModule,
     QuestListComponent,
+    ErrorCardComponent,
   ],
   exports: [],
 })

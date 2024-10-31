@@ -7,7 +7,7 @@ export const featureKey = 'authState'
 export interface State {
   questionnaire: IQuestionnaire | null
   questionnaireLoading: boolean
-  questionnaireError: boolean
+  questionnaireError: { flag: boolean; type: string } //  expired / compiled /notFound
   healthcareUnit: HealthcareUnit | null
   loading: boolean
   error: boolean
@@ -16,7 +16,7 @@ export interface State {
 export const initialState: State = {
   questionnaire: null,
   questionnaireLoading: false,
-  questionnaireError: false,
+  questionnaireError: { flag: false, type: '' },
   healthcareUnit: null,
   loading: false,
   error: false,
@@ -59,16 +59,16 @@ export const reducer = createReducer(
   on(QuestionnaireActions.fetchQuestionnaire, (state) => ({
     ...state,
     questionnaireLoading: true,
-    questionnaireError: false,
+    questionnaireError: { flag: false, type: '' },
   })),
   on(QuestionnaireActions.fetchQuestionnaireSuccess, (state, action) => ({
     ...state,
     questionnaireLoading: false,
     questionnaire: action.data,
   })),
-  on(QuestionnaireActions.fetchQuestionnaireFailure, (state) => ({
+  on(QuestionnaireActions.fetchQuestionnaireFailure, (state, action) => ({
     ...state,
     questionnaireLoading: false,
-    questionnaireError: true,
+    questionnaireError: { flag: true, type: action.error.type },
   })),
 )

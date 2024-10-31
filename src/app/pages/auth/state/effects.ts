@@ -3,11 +3,10 @@ import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { catchError, map, concatMap } from 'rxjs/operators'
 import { of } from 'rxjs'
 import * as QuestionnaireActions from './actions'
-import { QuestionnaireService } from './service'
+import { AuthService } from './service'
 import { Router } from '@angular/router'
 import { SmartHospitalState } from 'src/app/store/reducers'
 import { Store } from '@ngrx/store'
-import { fetchQuestionnaire } from './actions'
 import { ItNotificationService, NotificationPosition } from 'design-angular-kit'
 import { TranslateService } from '@ngx-translate/core'
 
@@ -17,7 +16,7 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(QuestionnaireActions.sendOtp),
       concatMap((action) =>
-        this.questionnaireService.sendOtp(action.otp, action.payload).pipe(
+        this.authService.sendOtp(action.otp, action.payload).pipe(
           map(() => {
             this.router.navigate([`/questionnaire/${action.payload.surveyId}`])
 
@@ -42,19 +41,42 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(QuestionnaireActions.fetchQuestionnaire),
       concatMap((action) =>
-        this.questionnaireService.fetchQuestionnaire(action.surveyId).pipe(
+        this.authService.fetchQuestionnaire(action.surveyId).pipe(
           map((data) => {
             return QuestionnaireActions.fetchQuestionnaireSuccess({ data })
           }),
           catchError((error) => {
-            this.notificationService.error(
-              this.translate.instant('attention'),
-              this.translate.instant('quest.send-quest-error'),
-              true,
-              8000,
-              NotificationPosition.Top,
+            let errorType
+            if (error && error.status === 404) {
+              errorType = 'notFound'
+            } else if (
+              error &&
+              error.status === 500 &&
+              error.message.includes('expired')
+            ) {
+              errorType = 'expired'
+            } else if (
+              error &&
+              error.status === 500 &&
+              error.message.includes('completed')
+            ) {
+              errorType = 'compiled'
+            } else {
+              errorType = 'notFound'
+              this.notificationService.error(
+                this.translate.instant('attention'),
+                this.translate.instant('quest.send-quest-error'),
+                true,
+                8000,
+                NotificationPosition.Top,
+              )
+            }
+
+            return of(
+              QuestionnaireActions.fetchQuestionnaireFailure({
+                error: { ...error, type: errorType },
+              }),
             )
-            return of(QuestionnaireActions.fetchQuestionnaireFailure({ error }))
           }),
         ),
       ),
@@ -65,25 +87,28 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(QuestionnaireActions.getHealthcareUnit),
       concatMap((action) =>
-        this.questionnaireService
-          .getHealthcareUnit(action.healthcareUnitId)
-          .pipe(
-            map((data) => {
-              return QuestionnaireActions.getHealthcareUnitSuccess({ data })
-            }),
-            catchError((error) => {
-              return of(
-                QuestionnaireActions.getHealthcareUnitFailure({ error }),
-              )
-            }),
-          ),
+        this.authService.getHealthcareUnit(action.healthcareUnitId).pipe(
+          map((data) => {
+            return QuestionnaireActions.getHealthcareUnitSuccess({ data })
+          }),
+          catchError((error) => {
+            this.notificationService.error(
+              this.translate.instant('attention'),
+              this.translate.instant('quest.send-quest-error'),
+              true,
+              8000,
+              NotificationPosition.Top,
+            )
+            return of(QuestionnaireActions.getHealthcareUnitFailure({ error }))
+          }),
+        ),
       ),
     )
   })
 
   constructor(
     private actions$: Actions,
-    private questionnaireService: QuestionnaireService,
+    private authService: AuthService,
     private router: Router,
     private store: Store<SmartHospitalState>,
     private readonly notificationService: ItNotificationService,

@@ -13,7 +13,7 @@ const baseUrl = '/survey/api/v1/survey'
 @Injectable({
   providedIn: 'root',
 })
-export class QuestionnaireService {
+export class AuthService {
   constructor(private http: HttpClient) {}
   private readonly IS_DEV = false
 
@@ -21,7 +21,7 @@ export class QuestionnaireService {
     otp: string,
     payload: { surveyId: string; healthcareUnitId: string; structure: string },
   ) {
-    if (this.IS_DEV) {
+    if (!this.IS_DEV) {
       return of(true).pipe(delay(500))
     }
     return this.http.post<any>(`${baseUrl}/check-otp?otp=${otp}`, payload)

@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { Store } from '@ngrx/store'
 import { SmartHospitalState } from 'src/app/store/reducers'
-import { selectQuestionnaireData } from '../auth/state/selectors'
+import {
+  selectQuestionnaireData,
+  selectQuestionnaireError,
+  selectQuestionnaireLoading,
+} from '../auth/state/selectors'
 import { fetchQuestionnaire } from '../auth/state/actions'
 import { map } from 'rxjs'
 
@@ -27,6 +31,8 @@ export class QuestComponent implements OnInit {
     })
   }
   questionnaire$ = this.store.select(selectQuestionnaireData)
+  questionnaireLoading$ = this.store.select(selectQuestionnaireLoading)
+  questionnaireError$ = this.store.select(selectQuestionnaireError)
   activeStep = 0
 
   onForwardClick(): void {
