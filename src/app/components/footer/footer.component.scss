@@ -1,0 +1,32 @@
+.it-footer-main {
+  background-color: #ffffff;
+
+  .h4 a {
+    text-transform: none;
+    color: #000000;
+  }
+
+  .accessibility {
+    border-left-color: #ad5e65 !important;
+    @media screen and (max-width: 768px) {
+      justify-content: start !important;
+      border-left-width: 0px !important;
+    }
+    .h4 a {
+      text-transform: none;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+  }
+}
+
+.it-footer-small-prints {
+  background-color: #ffffff;
+  .list-inline-item-link {
+    color: #000000;
+  }
+}
+
+.fit-content {
+  width: fit-content;
+}

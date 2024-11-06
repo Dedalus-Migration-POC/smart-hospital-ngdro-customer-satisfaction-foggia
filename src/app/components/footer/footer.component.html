@@ -1,0 +1,86 @@
+<footer class="it-footer">
+  <div class="it-footer-main">
+    <div class="container">
+      <section class="py-4">
+        <div class="row">
+          <div class="col-lg-4 col-md-4 pb-2">
+            <div class="h4 fw-normal">
+              <a
+                [href]="tenant.link"
+                [title]="'footer.go-page-project' | translate"
+                class="d-flex flex-column fit-content"
+                target="_blank"
+              >
+                {{ 'footer.project-of' | translate }}
+                <img
+                  alt=""
+                  [alt]="
+                    (tenant.name | translate) +
+                    '. ' +
+                    ('footer.go-page' | translate)
+                  "
+                  [src]="tenant.logoFooter.path"
+                  [attr.width]="
+                    tenant.logoFooter.width ? tenant.logoFooter.width : null
+                  "
+                  [attr.height]="
+                    tenant.logoFooter.height ? tenant.logoFooter.height : null
+                  "
+                  class="pt-2"
+                />
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 pb-2">
+            <div class="h4 fw-normal">
+              <a
+                href="https://www.dedalus.com/italy/it/"
+                target="_blank"
+                [title]="'footer.go-page-collaboration' | translate"
+                class="d-flex flex-column fit-content"
+              >
+                {{ 'footer.collaboration' | translate }}
+                <img
+                  src="assets/images/dedalus-logo.png"
+                  width="156"
+                  [alt]="'Dedalus' + '. ' + ('footer.go-page' | translate)"
+                  class="pt-2"
+                />
+              </a>
+            </div>
+          </div>
+
+          <div
+            class="col-lg-3 col-md-3 pb-2 accessibility d-flex align-items-center border-start justify-content-end"
+          >
+            <div class="h4">
+              <a
+                href="https://www.agid.gov.it/it/design-servizi/accessibilita/dichiarazione-accessibilita"
+                [title]="'footer.go-page-accessibility' | translate"
+              >
+                {{ 'footer.accessibility-statement' | translate }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="it-footer-small-prints clearfix" *ngIf="smallPrints">
+    <div class="container">
+      <ul
+        [attr.aria-label]="'footer.small-prints.aria-label' | translate"
+        class="it-footer-small-prints-list list-inline mb-0 d-flex flex-column flex-md-row"
+      >
+        <li class="list-inline-item" *ngFor="let prints of smallPrints">
+          <a
+            class="list-inline-item-link"
+            [href]="prints.link"
+            [title]="prints.name | translate"
+            >{{ prints.name | translate }}</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>

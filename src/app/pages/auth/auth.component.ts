@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store'
 import { SmartHospitalState } from 'src/app/store/reducers'
 import { fetchQuestionnaire, getHealthcareUnit, sendOtp } from './state/actions'
 import {
+  selectError,
   selectHealthcareUnit,
   selectLoading,
   selectQuestionnaireData,
@@ -43,6 +44,7 @@ export class AuthComponent implements OnInit {
     })
   }
   healthcareUnit$ = this.store.select(selectHealthcareUnit)
+  healthcareUnitError$ = this.store.select(selectError)
   survey$ = this.store.select(selectQuestionnaireData)
   loading$ =
     this.store.select(selectLoading) ||

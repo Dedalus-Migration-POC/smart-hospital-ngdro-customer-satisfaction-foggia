@@ -5,6 +5,11 @@
   [type]="(error$ | async)?.type"
 ></app-error-card>
 
+<app-error-card
+  *ngIf="(healthcareUnitError$ | async) && !(healthcareUnit$ | async)"
+  [type]="'notFound'"
+></app-error-card>
+
 <app-otp-card
   *ngIf="(healthcareUnit$ | async) && (survey$ | async)"
   [structureType]="

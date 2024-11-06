@@ -17,6 +17,19 @@
   "header": {
     "name": "Policlinico Foggia"
   },
+  "footer": {
+    "project-of": "progetto di",
+    "collaboration": "in collaborazione con",
+    "go-page": "Vai al sito",
+    "accessibility-statement": "Dichiarazione di Accessibilità",
+    "small-prints": {
+      "aria-label": "Informazioni legali",
+      "media-policy": "Media Policy",
+      "legal-notes": "Note legali",
+      "privacy-policy": "Privacy Policy",
+      "site-map": "Mappa del sito"
+    }
+  },
   "otp": {
     "title": "Questionario di gradimento sul {{questType}}",
     "info": "Ogni tua considerazione, suggerimento o critica è per noi un'opportunità per migliorare e per costruire insieme un servizio che risponda davvero alle tue aspettative. <br><br> Il questionario è totalmente <b>anonimo</b>, non raccoglieremo i tuoi dati personali.",
