@@ -3,7 +3,7 @@ import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} fr
 import {Store} from "@ngrx/store";
 import {BehaviorSubject, EMPTY, finalize, map, Observable, of, switchMap, take, tap} from "rxjs";
 import {SurveyAdminState} from "../../../store/store";
-import {selectSurveyState} from "../../../store/survey/reducer";
+import {selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/reducer";
 import {DialogService} from "../../../support/dialog-service";
 import {SurveyActions} from "../../../store/survey/actions";
 import {WithSubscriptionsComponent} from "../../../support/with-subscriptions-component";
@@ -77,6 +77,7 @@ export class PrintSurveyDialogComponent extends WithSubscriptionsComponent imple
 
   state$ = this.store.select(selectSurveyState)
   disabled$: Observable<boolean> = this.state$.pipe(map(({surveys}) => !surveys?.content?.length));
+  printing$ = this.state$.pipe(map(({operatingStatus}) => operatingStatus?.status === SurveyOperatingStatus.PRINTING));
 
   constructor(
     private actions: Actions,

@@ -20,6 +20,7 @@ export enum SurveyOperatingStatus {
   CREATING = 'CREATING',
   CREATING_PUBLISHING = 'CREATING_PUBLISHING',
   CLONING = 'CLONING',
+  PRINTING = 'PRINTING',
 }
 
 export type State = {
@@ -234,6 +235,21 @@ export const reducer = createReducer(
   on(SurveyActions.toggleShowDeleted, (state) => ({
     ...state,
     showDeleted: !state.showDeleted
+  })),
+  on(SurveyActions.printSurvey, (state) => ({
+    ...state,
+    operatingStatus: {
+      surveyId: -1,
+      status: SurveyOperatingStatus.PRINTING,
+    },
+  })),
+  on(SurveyActions.printSurveySucceeded, (state) => ({
+    ...state,
+    operatingStatus: null,
+  })),
+  on(SurveyActions.printSurveyFailed, (state) => ({
+    ...state,
+    operatingStatus: null,
   })),
 )
 
