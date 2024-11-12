@@ -1,8 +1,12 @@
 <div class="head">
-  <h6>{{ 'admin.section-list.title' | translate }}</h6>
-  <button mat-flat-button routerLink="/section-form"
-          class="create-section-btn"
-          [style]="{width: createSurveyBtn ? createSurveyBtn.clientWidth + 'px' : undefined}"
+  <h4>{{ 'admin.section-list.title' | translate }}</h4>
+  <button
+    mat-flat-button
+    routerLink="/section-form"
+    class="create-section-btn"
+    [style]="{
+      width: createSurveyBtn ? createSurveyBtn.clientWidth + 'px' : undefined,
+    }"
   >
     <mat-icon>add</mat-icon>
     <span>{{ 'admin.section-list.create-section-btn' | translate }}</span>
