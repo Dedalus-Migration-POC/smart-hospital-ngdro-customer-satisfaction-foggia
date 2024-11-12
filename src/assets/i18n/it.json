@@ -142,7 +142,7 @@
       "survey-end-date-field": "Data fine validità",
       "section-field-label": "Sezione {{index}}",
       "add-section-item": "Aggiungi sezione",
-      "remove-section-btn": "Rimuovi sezione",
+      "remove-section-btn": "Cancella sezione",
       "section-question-label": "Domanda {{index}}",
       "survey-created-dialog": "Il questionario è stato creato correttamente",
       "survey-edited-dialog": "Il questionario è stato aggiornato correttamente",

@@ -1,12 +1,11 @@
 <ng-template #restoreBtn>
-  <button
-    type="button"
-    mat-flat-button
-    (click)="restore()"
-  >
-    <mat-spinner [diameter]="20" *ngIf="editingSectionId$ | async; else idle"></mat-spinner>
+  <button type="button" mat-flat-button (click)="restore()">
+    <mat-spinner
+      [diameter]="20"
+      *ngIf="editingSectionId$ | async; else idle"
+    ></mat-spinner>
     <ng-template #idle>
-      <span>{{ ('admin.section-form.restore-section-btn') | translate }}</span>
+      <span>{{ 'admin.section-form.restore-section-btn' | translate }}</span>
     </ng-template>
   </button>
 </ng-template>
@@ -20,69 +19,123 @@
       [disabled]="(creating$ | async) || !form.dirty"
       *ngIf="!isSectionDeleted; else restoreBtn"
     >
-      <mat-spinner [diameter]="20" *ngIf="creating$ | async; else idle"></mat-spinner>
+      <mat-spinner
+        [diameter]="20"
+        *ngIf="creating$ | async; else idle"
+      ></mat-spinner>
       <ng-template #idle>
-        <span>{{ ('admin.section-form.' + (editMode ? 'edit' : 'save') + '-section-btn') | translate }}</span>
+        <span>{{
+          'admin.section-form.' + (editMode ? 'edit' : 'save') + '-section-btn'
+            | translate
+        }}</span>
       </ng-template>
     </button>
   </div>
 
   <div class="section-fields">
-
-    <mat-form-field appearance="outline" floatLabel="always" *ngIf="form.controls.name; let field"
-                    style="width: calc(100% - 156px)">
-      <mat-label>{{ 'admin.section-form.section-name-field' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="form.controls.name" [readonly]="isSectionDeleted"/>
-      <mat-error *ngIf="hasError(field, 'required', 'required-field') as msg">{{ msg }}
+    <mat-form-field
+      appearance="outline"
+      floatLabel="always"
+      *ngIf="form.controls.name; let field"
+      style="width: calc(100% - 156px)"
+    >
+      <mat-label>{{
+        'admin.section-form.section-name-field' | translate
+      }}</mat-label>
+      <input
+        matInput
+        type="text"
+        [formControl]="form.controls.name"
+        [readonly]="isSectionDeleted"
+      />
+      <mat-error *ngIf="hasError(field, 'required', 'required-field') as msg"
+        >{{ msg }}
       </mat-error>
-      <mat-error *ngIf="hasError(field, 'minlength', 'name-min-length') as msg">{{ msg }}</mat-error>
       <mat-error
-        *ngIf="hasError(field, 'alreadyExists', 'name-already-exists') as msg">{{ msg }}
+        *ngIf="hasError(field, 'minlength', 'name-min-length') as msg"
+        >{{ msg }}</mat-error
+      >
+      <mat-error
+        *ngIf="hasError(field, 'alreadyExists', 'name-already-exists') as msg"
+        >{{ msg }}
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field style="max-width: 140px; margin-right: 0;" appearance="outline" floatLabel="always"
-                    *ngIf="form.controls.version; let field">
-      <mat-label>{{ 'admin.section-form.section-version-field' | translate }}</mat-label>
-      <mat-select
-        [formControl]="field"
-        [value]="field.value"
-      >
+    <mat-form-field
+      style="max-width: 140px; margin-right: 0"
+      appearance="outline"
+      floatLabel="always"
+      *ngIf="form.controls.version; let field"
+    >
+      <mat-label>{{
+        'admin.section-form.section-version-field' | translate
+      }}</mat-label>
+      <mat-select [formControl]="field" [value]="field.value">
         <mat-option *ngFor="let version of versions" [value]="version">
           {{ version }}
         </mat-option>
       </mat-select>
-      <mat-error
-        *ngIf="field.hasError('required')">{{ 'admin.section-form.validators.required-field' | translate }}
+      <mat-error *ngIf="field.hasError('required')"
+        >{{ 'admin.section-form.validators.required-field' | translate }}
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" floatLabel="always" style="width: 100%">
-      <mat-label>{{ 'admin.section-form.section-description-field' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="form.controls.description" [readonly]="isSectionDeleted">
+    <mat-form-field
+      appearance="outline"
+      floatLabel="always"
+      style="width: 100%; margin-top: 10px"
+    >
+      <mat-label>{{
+        'admin.section-form.section-description-field' | translate
+      }}</mat-label>
+      <input
+        matInput
+        type="text"
+        [formControl]="form.controls.description"
+        [readonly]="isSectionDeleted"
+      />
     </mat-form-field>
-
   </div>
 
   <mat-card>
-    <mat-form-field appearance="outline" floatLabel="always"
-                    *ngFor="let control of form.controls.questions.controls; let i = index"
-                    [formGroupName]="'questions'">
-      <mat-label>{{ 'admin.section-form.question-item' | translate : {index: i + 1} }}</mat-label>
-      <input matInput type="text" [formControl]="control" [readonly]="isSectionDeleted">
-      <mat-icon *ngIf="i > 0" class="remove-qst" matSuffix (click)="removeQuestion(i)">remove</mat-icon>
-      <mat-error
-        *ngIf="control.hasError('required')">{{ 'admin.section-form.validators.required-field' | translate }}
+    <mat-form-field
+      style="margin-top: 10px"
+      appearance="outline"
+      floatLabel="always"
+      *ngFor="let control of form.controls.questions.controls; let i = index"
+      [formGroupName]="'questions'"
+    >
+      <mat-label>{{
+        'admin.section-form.question-item' | translate: { index: i + 1 }
+      }}</mat-label>
+      <input
+        matInput
+        type="text"
+        [formControl]="control"
+        [readonly]="isSectionDeleted"
+      />
+      <mat-icon
+        *ngIf="i > 0"
+        class="remove-qst"
+        matSuffix
+        (click)="removeQuestion(i)"
+        >remove</mat-icon
+      >
+      <mat-error *ngIf="control.hasError('required')"
+        >{{ 'admin.section-form.validators.required-field' | translate }}
       </mat-error>
     </mat-form-field>
 
     <span>
-        <button type="button" mat-stroked-button (click)="addQuestion()" [disabled]="isSectionDeleted">
-          <mat-icon>add</mat-icon>
-          <span>{{ 'admin.section-form.add-question-item' | translate }}</span>
-        </button>
-      </span>
-
+      <button
+        type="button"
+        mat-stroked-button
+        (click)="addQuestion()"
+        [disabled]="isSectionDeleted"
+      >
+        <mat-icon>add</mat-icon>
+        <span>{{ 'admin.section-form.add-question-item' | translate }}</span>
+      </button>
+    </span>
   </mat-card>
-
 </form>
