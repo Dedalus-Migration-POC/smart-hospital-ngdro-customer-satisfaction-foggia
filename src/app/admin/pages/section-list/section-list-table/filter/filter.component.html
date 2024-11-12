@@ -1,29 +1,38 @@
 <form [formGroup]="form" class="section-filter">
   <div>
     <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{ 'admin.section-list.search-filter.name' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="form.controls.name"/>
+      <mat-label>{{
+        'admin.section-list.search-filter.name' | translate
+      }}</mat-label>
+      <input matInput type="text" [formControl]="form.controls.name" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{ 'admin.section-list.search-filter.version' | translate }}</mat-label>
+      <mat-label>{{
+        'admin.section-list.search-filter.version' | translate
+      }}</mat-label>
       <mat-select
         [formControl]="form.controls.version"
         [value]="form.controls.version.value"
       >
-        <mat-option *ngFor="let version of (versions$ | async)" [value]="version">
+        <mat-option *ngFor="let version of versions$ | async" [value]="version">
           {{ version }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{ 'admin.section-list.search-filter.present-in' | translate }}</mat-label>
+      <mat-label>{{
+        'admin.section-list.search-filter.present-in' | translate
+      }}</mat-label>
       <mat-select
         [formControl]="form.controls.presentIn"
         [value]="form.controls.presentIn.value"
       >
-        <mat-option *ngFor="let option of (presentInOptions$ | async)" [value]="option.id">
+        <mat-option
+          *ngFor="let option of presentInOptions$ | async"
+          [value]="option.id"
+        >
           {{ option.value }}
         </mat-option>
       </mat-select>
@@ -31,11 +40,19 @@
   </div>
 
   <div>
-    <button type="button" mat-icon-button (click)="form.reset()">
-      <mat-icon [matTooltip]="'admin.section-list.search-filter.clear-filter-btn' | translate">close</mat-icon>
+    <button type="button" mat-stroked-button (click)="form.reset()">
+      {{ 'admin.section-list.search-filter.clear-filter-btn' | translate }}
+      <mat-icon
+        class="clear-filter-btn"
+        [matTooltip]="
+          'admin.section-list.search-filter.clear-filter-btn' | translate
+        "
+        >close</mat-icon
+      >
     </button>
 
-    <app-toggle-button
+    <!-- commentato sulla richiesta di Silvia -->
+    <!-- <app-toggle-button
       *ngIf="canShowDeleted$ | async"
       (onClick)="toggleDeleted()"
       [activeTooltip]="'admin.section-list.search-filter.show-deleted-btn' | translate"
@@ -43,6 +60,6 @@
       [isActive]="(showDeleted$ | async) ?? false"
       activeIcon="delete"
       inactiveIcon="restore"
-    ></app-toggle-button>
+    ></app-toggle-button> -->
   </div>
 </form>

@@ -1,16 +1,17 @@
 @use '@angular/material' as mat;
+@use './stylem3-theme.scss';
 @import '../../../../node_modules/@angular/material/prebuilt-themes/azure-blue.css';
 @import 'fonts/roboto.css';
 @import 'fonts/material-icons.css';
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined');
 
-$theme: mat.define-theme(
-  (
-    color: (
-      theme-type: light,
-      primary: mat.$magenta-palette,
-    ),
-  )
-);
+@include mat.core();
+
+html {
+  // Apply the light theme by default
+  @include mat.core-theme(stylem3-theme.$light-theme);
+  @include mat.button-theme(stylem3-theme.$light-theme);
+}
 
 html,
 body {
@@ -18,13 +19,9 @@ body {
 }
 
 body {
-  background-color: mat.get-theme-color($theme, primary, 50) !important;
-  @include mat.all-component-themes($theme);
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
-@include mat.core();
-@include mat.color-variants-backwards-compatibility($theme);
 
 mat-table {
   border-top: 1px solid #cac4d0 !important;
