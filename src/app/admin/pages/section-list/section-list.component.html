@@ -13,10 +13,14 @@
   </button>
 </div>
 
-<app-section-filter></app-section-filter>
+<div class="wrapper" style="width: 100%; overflow: auto; display: flex">
+  <div style="width: 100%; min-width: 1000px">
+    <app-section-filter></app-section-filter>
 
-<app-section-list-table
-  (onEdit)="onEdit($event)"
-  (onDelete)="onDelete($event)"
-  (onRestore)="onRestore($event)"
-></app-section-list-table>
+    <app-section-list-table
+      (onEdit)="onEdit($event)"
+      (onDelete)="onDelete($event)"
+      (onRestore)="onRestore($event)"
+    ></app-section-list-table>
+  </div>
+</div>

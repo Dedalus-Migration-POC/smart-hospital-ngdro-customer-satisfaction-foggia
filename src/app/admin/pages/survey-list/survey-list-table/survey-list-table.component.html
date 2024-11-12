@@ -122,7 +122,14 @@
         [class]="survey.status"
         [class.deleted]="survey.deleted"
       >
-        {{ handleColumn(survey, surveyProperty) }}
+        <div
+          *ngIf="surveyProperty !== 'status'"
+          class="element-description"
+          [innerHtml]="handleColumn(survey, surveyProperty)"
+        ></div>
+        <mat-chip [class]="survey.status" *ngIf="surveyProperty === 'status'">{{
+          handleColumn(survey, surveyProperty)
+        }}</mat-chip>
       </mat-cell>
     </ng-container>
   }

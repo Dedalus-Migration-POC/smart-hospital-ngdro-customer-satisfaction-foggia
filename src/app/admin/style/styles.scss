@@ -28,15 +28,23 @@ mat-table {
   border-bottom: 1px solid #cac4d0 !important;
   border-collapse: collapse !important;
   border-radius: 0.5em !important;
-  background-color: transparent !important;
+  background-color: transparent;
+  mat-row {
+    background-color: #ffff !important;
+  }
+  mat-row:hover {
+    background-color: rgb(244, 244, 244) !important;
+  }
 }
 
 mat-header-cell {
   background-color: #fff !important;
   border-bottom-color: #cac4d0 !important;
+  justify-content: center;
 }
 
 mat-header-cell:first-child {
+  justify-content: left;
   // border-top-left-radius: 0.5em !important;
 }
 
@@ -44,9 +52,13 @@ mat-header-cell:last-child {
   // border-top-right-radius: 0.5em !important;
 }
 
+mat-cell:first-child {
+  justify-content: left;
+}
 mat-cell {
-  background-color: #fff !important;
+  // background-color: #fff !important;
   border-bottom-color: #cac4d0 !important;
+  justify-content: center;
 }
 
 //.mdc-data-table__row:last-child .mat-mdc-cell:first-child {
