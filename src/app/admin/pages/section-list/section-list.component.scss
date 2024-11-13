@@ -3,12 +3,18 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
-
+  @media screen and (max-width: 470px) {
+    flex-direction: column;
+    align-items: baseline;
+  }
   button {
     margin-left: 32px;
+    @media screen and (max-width: 470px) {
+      margin-left: 0;
+    }
   }
 
-  h6 {
+  h4 {
     margin: 0 !important;
   }
 }
@@ -16,4 +22,5 @@
 .create-section-btn {
   display: flex;
   justify-content: space-evenly;
+  background-color: #625b71;
 }

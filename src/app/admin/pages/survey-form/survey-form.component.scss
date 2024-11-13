@@ -1,14 +1,15 @@
 .head {
   display: flex;
   margin-bottom: 24px;
+  flex-wrap: wrap;
 
-  > h6 {
+  > h4 {
     max-width: 80%;
     margin-right: 32px;
   }
 
   > div {
-    max-width: 20%;
+    // max-width: 20%;
 
     > button:not(:last-child) {
       margin-right: 16px;
@@ -23,6 +24,7 @@ form {
 
 .survey-fields {
   max-width: 768px;
+  margin-bottom: 10px;
 
   *:not(:last-child) {
     margin-right: 16px;
@@ -34,6 +36,7 @@ mat-card {
   max-width: 768px;
   padding: 16px;
   margin-bottom: 24px;
+  background-color: #fef7ff;
 }
 
 .mat-section-select {

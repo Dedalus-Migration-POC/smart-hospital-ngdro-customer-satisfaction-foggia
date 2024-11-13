@@ -3,12 +3,19 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  @media screen and (max-width: 840px) {
+    flex-direction: column-reverse;
+    align-items: baseline;
+  }
 }
 
-h6 {
+h4 {
   margin: 0 !important;
 }
 
 button:not(:last-child) {
   margin-right: 16px;
+  @media screen and (max-width: 840px) {
+    margin-bottom: 16px;
+  }
 }

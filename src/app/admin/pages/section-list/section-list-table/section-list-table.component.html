@@ -1,12 +1,15 @@
-<mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-<mat-table
-  matSort
-  [dataSource]="dataSource"
-  class="mat-elevation-z8"
->
+<mat-progress-bar
+  mode="indeterminate"
+  *ngIf="loading$ | async"
+></mat-progress-bar>
+<mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
   @for (column of columns; track column) {
     <ng-container *ngIf="column !== 'actions'" [matColumnDef]="column">
-      <mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="column === 'present-in'">
+      <mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        [disabled]="column === 'present-in'"
+      >
         {{ 'admin.section-list.table-headers.' + column | translate }}
       </mat-header-cell>
       <mat-cell *matCellDef="let element" [class.deleted]="element.deleted">
@@ -22,7 +25,7 @@
     <mat-cell *matCellDef="let element">
       <app-toggle-button
         [isActive]="!!element.associatedSurveys?.length"
-        activeIcon="file_copy"
+        activeIcon="post_add"
         inactiveIcon="edit"
         [activeTooltip]="'admin.section-list.actions-hints.clone' | translate"
         [inactiveTooltip]="'admin.section-list.actions-hints.edit' | translate"
@@ -33,13 +36,22 @@
           [isActive]="!element.deleted"
           activeIcon="delete"
           inactiveIcon="restore"
-          [activeTooltip]="'admin.section-list.actions-hints.delete' | translate"
-          [inactiveTooltip]="'admin.section-list.actions-hints.restore' | translate"
+          [activeTooltip]="
+            'admin.section-list.actions-hints.delete' | translate
+          "
+          [inactiveTooltip]="
+            'admin.section-list.actions-hints.restore' | translate
+          "
           (onClick)="changeDeletedStatus(element)"
         ></app-toggle-button>
       </ng-template>
-      <mat-spinner *ngIf="(deletingId$ | async) === element.id?.toString(); else notDeleting"
-                   diameter="20"></mat-spinner>
+      <mat-spinner
+        *ngIf="
+          (deletingId$ | async) === element.id?.toString();
+          else notDeleting
+        "
+        diameter="20"
+      ></mat-spinner>
     </mat-cell>
   </ng-container>
 
@@ -47,23 +59,24 @@
   <mat-row *matRowDef="let row; columns: columns"></mat-row>
 </mat-table>
 
-
 <mat-paginator
   [pageSize]="pageSize"
   [pageIndex]="pageIndex"
   [length]="length"
-  [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+  [pageSizeOptions]="[5, 10, 20]"
+></mat-paginator>
 
-<ng-container *ngIf="error$ | async else noErr">
+<ng-container *ngIf="error$ | async; else noErr">
   <span class="datasource-empty">
     <button type="button" mat-icon-button (click)="initialize()">
       <mat-icon [matTooltip]="'retry' | translate">restore</mat-icon>
     </button>
-      <span>{{ 'error' | translate }}</span>
+    <span>{{ 'error' | translate }}</span>
   </span>
 </ng-container>
 
 <ng-template #noErr>
-<span *ngIf="!dataSource.data.length"
-      class="datasource-empty">{{ 'admin.section-list.datasource-empty' | translate }}</span>
+  <span *ngIf="!dataSource.data.length" class="datasource-empty">{{
+    'admin.section-list.datasource-empty' | translate
+  }}</span>
 </ng-template>

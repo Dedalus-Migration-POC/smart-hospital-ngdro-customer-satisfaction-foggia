@@ -2,6 +2,16 @@ main {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: url(/assets/images/bg.png) no-repeat;
+}
+.grey-color-bg {
+  background-color: #f2f2f2;
+}
+.img-bg {
+  background: url('../../assets/images/bg.png') no-repeat;
   background-size: cover;
+}
+
+.background-grey {
+  min-height: 84vh;
+  background-color: #f2f2f2;
 }

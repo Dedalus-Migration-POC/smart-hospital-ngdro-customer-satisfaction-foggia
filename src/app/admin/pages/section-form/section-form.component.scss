@@ -1,14 +1,15 @@
 .head {
   display: flex;
   margin-bottom: 24px;
+  flex-wrap: wrap;
 
-  > h6 {
+  > h4 {
     max-width: 80%;
     margin-right: 32px;
   }
 
   > div {
-    max-width: 20%;
+    // max-width: 20%;
 
     > button:not(:last-child) {
       margin-right: 16px;
@@ -33,8 +34,10 @@ form {
 mat-card {
   max-width: 768px;
   padding: 16px;
+  background-color: #fef7ff;
 }
 
 .remove-qst {
   cursor: pointer;
+  color: #b3261e;
 }

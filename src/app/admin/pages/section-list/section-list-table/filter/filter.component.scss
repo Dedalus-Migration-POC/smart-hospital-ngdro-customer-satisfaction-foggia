@@ -10,7 +10,6 @@ form {
   border-top-right-radius: 0.5em !important;
   background-color: #fff !important;
   z-index: 3;
-  box-shadow: var(--mat-app-elevation-shadow-level-8, none);
 
   > div:first-child {
     width: 80%;
@@ -31,4 +30,8 @@ form {
     justify-content: flex-end;
     align-items: center;
   }
+}
+
+.clear-filter-btn {
+  color: #b3261e;
 }
