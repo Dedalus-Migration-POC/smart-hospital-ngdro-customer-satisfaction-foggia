@@ -8,9 +8,11 @@
 @include mat.core();
 
 html {
-  // Apply the light theme by default
+  // Apply the custom theme
   @include mat.core-theme(stylem3-theme.$light-theme);
   @include mat.button-theme(stylem3-theme.$light-theme);
+  @include mat.all-component-themes(stylem3-theme.$light-theme);
+  @include mat.strong-focus-indicators-theme(stylem3-theme.$light-theme);
 }
 
 html,
@@ -22,7 +24,9 @@ body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
-
+mat-toolbar {
+  background-color: #fff !important;
+}
 mat-table {
   border-top: 1px solid #cac4d0 !important;
   border-bottom: 1px solid #cac4d0 !important;
@@ -45,41 +49,23 @@ mat-header-cell {
 
 mat-header-cell:first-child {
   justify-content: left;
-  // border-top-left-radius: 0.5em !important;
-}
-
-mat-header-cell:last-child {
-  // border-top-right-radius: 0.5em !important;
 }
 
 mat-cell:first-child {
   justify-content: left;
 }
 mat-cell {
-  // background-color: #fff !important;
   border-bottom-color: #cac4d0 !important;
   justify-content: center;
 }
 
-//.mdc-data-table__row:last-child .mat-mdc-cell:first-child {
-//  border-bottom-left-radius: 0.5em !important;
-//}
-//
-//.mdc-data-table__row:last-child .mat-mdc-cell:last-child {
-//  border-bottom-right-radius: 0.5em !important;
-//}
-
 mat-paginator {
-  //margin-top: 2.5px;
   width: 100%;
   background-color: #fff !important;
   border-bottom: none !important;
   border-bottom: 1px solid #cac4d0 !important;
-  // border-left: 1px solid #cac4d0 !important;
-  // border-right: 1px solid #cac4d0 !important;
   border-bottom-left-radius: 0.5em !important;
   border-bottom-right-radius: 0.5em !important;
-  box-shadow: var(--mat-app-elevation-shadow-level-8, none);
 }
 
 .mat-mdc-card-header {

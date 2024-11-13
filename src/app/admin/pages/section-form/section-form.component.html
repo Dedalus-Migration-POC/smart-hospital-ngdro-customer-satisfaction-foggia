@@ -12,7 +12,7 @@
 
 <form [formGroup]="form" (ngSubmit)="submit()">
   <div class="head">
-    <h6>{{ getTitlePlaceholder() | translate }}</h6>
+    <h4>{{ getTitlePlaceholder() | translate }}</h4>
     <button
       type="submit"
       mat-flat-button
@@ -126,7 +126,7 @@
       </mat-error>
     </mat-form-field>
 
-    <span>
+    <span style="margin-top: 0.5rem">
       <button
         type="button"
         mat-stroked-button
