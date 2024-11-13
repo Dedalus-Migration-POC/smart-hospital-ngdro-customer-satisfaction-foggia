@@ -17,21 +17,30 @@ const routes: Routes = [
   },
   {
     path: 'survey-form',
-    loadComponent: () => import('./pages/survey-form/survey-form.component').then(module => module.SurveyFormComponent),
+    loadComponent: () =>
+      import('./pages/survey-form/survey-form.component').then(({SurveyFormComponent}) => SurveyFormComponent),
   },
   {
     path: 'survey-form/:surveyId',
     pathMatch: 'full',
-    loadComponent: () => import('./pages/survey-form/survey-form.component').then(module => module.SurveyFormComponent),
+    loadComponent: () =>
+      import('./pages/survey-form/survey-form.component').then(({SurveyFormComponent}) => SurveyFormComponent),
   },
   {
     path: 'section-form',
-    loadComponent: () => import('./pages/section-form/section-form.component').then(module => module.SectionFormComponent)
+    loadComponent: () =>
+      import('./pages/section-form/section-form.component').then(({SectionFormComponent}) => SectionFormComponent)
   },
   {
     path: 'section-form/:sectionId',
     pathMatch: 'full',
-    loadComponent: () => import('./pages/section-form/section-form.component').then(module => module.SectionFormComponent)
+    loadComponent: () =>
+      import('./pages/section-form/section-form.component').then(({SectionFormComponent}) => SectionFormComponent)
+  },
+  {
+    path: 'template-form',
+    loadComponent: () =>
+      import('./pages/template-form/template-form.component').then(({TemplateFormComponent}) => TemplateFormComponent)
   },
   {
     path: '**',

@@ -75,13 +75,19 @@
 
 
       <mat-dialog-actions style="align-self: end">
-        <button mat-button mat-dialog-close>
-          {{ 'cancel' | translate }}
-        </button>
-        <button mat-button
-                [disabled]="!form.valid || form.controls.copies.value! < 1">
-          {{ 'admin.print-survey-dialog.button' | translate }}
-        </button>
+        <ng-container *ngIf="printing$ | async else notPrinting">
+          <span>{{ 'admin.print-survey-dialog.printing' | translate }}</span>
+        </ng-container>
+
+        <ng-template #notPrinting>
+          <button mat-button mat-dialog-close>
+            {{ 'cancel' | translate }}
+          </button>
+          <button mat-button
+                  [disabled]="!form.valid || form.controls.copies.value! < 1">
+            {{ 'admin.print-survey-dialog.button' | translate }}
+          </button>
+        </ng-template>
       </mat-dialog-actions>
 
     </mat-dialog-content>

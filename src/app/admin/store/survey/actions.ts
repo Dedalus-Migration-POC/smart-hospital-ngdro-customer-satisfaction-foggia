@@ -129,7 +129,7 @@ const printSurvey = createAction(
 
 const printSurveySucceeded = createAction(
   '[Survey] Print Survey Succeeded',
-  props<{ document: string }>()
+  props<{ document: Blob }>()
 )
 
 const printSurveyFailed = createAction(

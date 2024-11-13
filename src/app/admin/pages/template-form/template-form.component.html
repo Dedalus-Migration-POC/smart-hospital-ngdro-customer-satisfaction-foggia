@@ -1,0 +1,19 @@
+<form [formGroup]="reportForm" (ngSubmit)="submitForm()">
+  <div>
+    <label for="tenant">Tenant</label>
+    <input id="tenant" formControlName="tenant" type="text" required/>
+  </div>
+  <div>
+    <label for="name">Name</label>
+    <input id="name" formControlName="name" type="text" required/>
+  </div>
+  <div>
+    <label for="type">Type</label>
+    <input id="type" formControlName="type" type="text" required/>
+  </div>
+  <div>
+    <label for="file">File</label>
+    <input id="file" type="file" (change)="onFileChange($event)" required/>
+  </div>
+  <button type="submit" [disabled]="reportForm.invalid">Upload</button>
+</form>

@@ -38,6 +38,7 @@ export class TopRightButtonsComponent {
 
   protected print() {
     this.dialog.open<PrintSurveyDialogComponent>(PrintSurveyDialogComponent, {
+      id: "print_survey_dialog_id",
       width: '480px',
       maxWidth: '480px',
       minHeight: '560px',

@@ -52,6 +52,6 @@ export class SurveyService {
   }
 
   public print(request: PrintSurveyRequest) {
-    return this.http.post<string>(`${baseUrl}/print`, request, {responseType: 'text' as 'json'})
+    return this.http.post<Blob>(`${baseUrl}/print`, request, {responseType: 'blob' as 'json'})
   }
 }

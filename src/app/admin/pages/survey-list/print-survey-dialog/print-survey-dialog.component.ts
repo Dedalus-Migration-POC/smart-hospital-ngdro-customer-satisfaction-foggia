@@ -3,12 +3,12 @@ import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} fr
 import {Store} from "@ngrx/store";
 import {BehaviorSubject, EMPTY, finalize, map, Observable, of, switchMap, take, tap} from "rxjs";
 import {SurveyAdminState} from "../../../store/store";
-import {selectSurveyState} from "../../../store/survey/reducer";
+import {selectSurveyState, SurveyOperatingStatus} from "../../../store/survey/reducer";
 import {DialogService} from "../../../support/dialog-service";
 import {SurveyActions} from "../../../store/survey/actions";
 import {WithSubscriptionsComponent} from "../../../support/with-subscriptions-component";
 import {Actions, ofType} from "@ngrx/effects";
-import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
@@ -22,6 +22,7 @@ import {HealthcareUnitService} from "../../../repository/healthcare-unit-service
 import {HealthcareUnit, HealthcareUnitStructure} from "../../../repository/dto/healthcare-unit";
 import {catchError} from "rxjs/operators";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import printJS from "print-js";
 
 
 export type PrintSurveyForm = FormGroup<{
@@ -76,12 +77,14 @@ export class PrintSurveyDialogComponent extends WithSubscriptionsComponent imple
 
   state$ = this.store.select(selectSurveyState)
   disabled$: Observable<boolean> = this.state$.pipe(map(({surveys}) => !surveys?.content?.length));
+  printing$ = this.state$.pipe(map(({operatingStatus}) => operatingStatus?.status === SurveyOperatingStatus.PRINTING));
 
   constructor(
     private actions: Actions,
     private store: Store<SurveyAdminState>,
     private fb: FormBuilder,
     private dialog: DialogService,
+    private matDialog: MatDialog,
     private healthcareUnitService: HealthcareUnitService
   ) {
     super();
@@ -113,7 +116,14 @@ export class PrintSurveyDialogComponent extends WithSubscriptionsComponent imple
     this.addSubscriptions(
       this.actions.pipe(
         ofType(SurveyActions.printSurveySucceeded),
-        tap(({document}) => this.dialog.info({text: document, buttonsType: 'ok'}))
+        tap(({document}) => {
+          this.matDialog.getDialogById('print_survey_dialog_id')?.close()
+          printJS({
+            printable: URL.createObjectURL(document),
+            type: 'pdf',
+            base64: false,
+          })
+        })
       ).subscribe(),
 
       this.actions.pipe(

@@ -192,6 +192,7 @@
       },
       "copies-to-print": "Copie da stampare",
       "button": "Stampa",
+      "printing": "Stampa in corso...",
       "form-validations": {
         "required-field": "Campo obbligatorio"
       }
