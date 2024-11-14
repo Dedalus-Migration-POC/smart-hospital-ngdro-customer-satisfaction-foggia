@@ -1,10 +1,17 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { delay, of } from 'rxjs'
+import { HealthcareUnit } from '../../auth/state/service'
 
+export interface IQuestionnaireResponse {
+  survey: IQuestionnaire
+  structure: string
+  healthcareUnit: HealthcareUnit
+}
 export interface IQuestionnaire {
   id?: string
   surveyId?: string
+  surveySessionId?: string
   name?: string
   sections: IQuestionnaireSection[]
 }
@@ -25,7 +32,7 @@ export interface IQuestionnaireAnswers {
   id: string | number
   value: string
 }
-const baseUrl = '/survey/api/v1/survey'
+const baseUrl = '/survey/api/v1/survey-session'
 
 @Injectable({
   providedIn: 'root',

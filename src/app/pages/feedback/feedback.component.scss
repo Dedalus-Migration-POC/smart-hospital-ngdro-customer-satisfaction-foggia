@@ -5,3 +5,13 @@
     margin-top: 1rem;
   }
 }
+@media (min-width: 768px) {
+  .card-wrapper.card-teaser-wrapper .card-teaser {
+    flex: 0 0 80%;
+  }
+}
+@media (min-width: 991px) {
+  .card-wrapper.card-teaser-wrapper .card-teaser {
+    flex: 0 0 49%;
+  }
+}

@@ -52,13 +52,13 @@ export class AuthEffects {
             } else if (
               error &&
               error.status === 500 &&
-              error.message.includes('expired')
+              error.error.errorMessage.includes('expired')
             ) {
               errorType = 'expired'
             } else if (
               error &&
-              error.status === 500 &&
-              error.message.includes('completed')
+              error.status === 400 &&
+              error.error.errorMessage.includes('completed')
             ) {
               errorType = 'compiled'
             } else {
@@ -77,29 +77,6 @@ export class AuthEffects {
                 error: { ...error, type: errorType },
               }),
             )
-          }),
-        ),
-      ),
-    )
-  })
-
-  getHealthcareUnit$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(QuestionnaireActions.getHealthcareUnit),
-      concatMap((action) =>
-        this.authService.getHealthcareUnit(action.healthcareUnitId).pipe(
-          map((data) => {
-            return QuestionnaireActions.getHealthcareUnitSuccess({ data })
-          }),
-          catchError((error) => {
-            this.notificationService.error(
-              this.translate.instant('attention'),
-              this.translate.instant('quest.send-quest-error'),
-              true,
-              8000,
-              NotificationPosition.Top,
-            )
-            return of(QuestionnaireActions.getHealthcareUnitFailure({ error }))
           }),
         ),
       ),

@@ -1,27 +1,11 @@
 import { createAction, props } from '@ngrx/store'
-import { IQuestionnaire } from '../../questionnaire/state/service'
-import { HealthcareUnit } from './service'
-
-export const getHealthcareUnit = createAction(
-  '[Quest] getHealthcareUnit',
-  props<{ healthcareUnitId: string }>(),
-)
-
-export const getHealthcareUnitSuccess = createAction(
-  '[Quest] getHealthcareUnit Success',
-  props<{ data: HealthcareUnit }>(),
-)
-
-export const getHealthcareUnitFailure = createAction(
-  '[Quest] getHealthcareUnit Failure',
-  props<{ error: any }>(),
-)
+import { IQuestionnaireResponse } from '../../questionnaire/state/service'
 
 export const sendOtp = createAction(
   '[Auth] Send Otp',
   props<{
     otp: string
-    payload: { surveyId: string; healthcareUnitId: string; structure: string }
+    payload: { surveyId: string }
   }>(),
 )
 
@@ -39,7 +23,7 @@ export const fetchQuestionnaire = createAction(
 
 export const fetchQuestionnaireSuccess = createAction(
   '[Auth] Fetch Questionnaire Success',
-  props<{ data: IQuestionnaire }>(),
+  props<{ data: IQuestionnaireResponse }>(),
 )
 
 export const fetchQuestionnaireFailure = createAction(

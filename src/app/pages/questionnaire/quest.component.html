@@ -3,7 +3,7 @@
   [type]="(questionnaireError$ | async)?.type"
 ></app-error-card>
 
-<ng-container *ngIf="questionnaire$ | async as questionnaire">
+<ng-container *ngIf="(questionnaire$ | async)?.survey as questionnaire">
   <h1 class="h2 mt-5 mb-3">
     {{ questionnaire.name }}
   </h1>
@@ -15,7 +15,12 @@
     showBackButton="false"
   >
     <it-steppers-item
-      *ngFor="let section of questionnaire?.sections; index as i"
+      *ngFor="
+        let section of questionnaire?.sections;
+        index as i;
+        let last = last;
+        let first = first
+      "
       [label]="'0' + (i + 1) + '. ' + section.name"
     >
       <div class="container">
@@ -24,8 +29,13 @@
         <app-quest-list
           [title]="questionnaire?.name!"
           [id]="questionnaire?.id!"
+          [surveySessionId]="surveySessionId"
           [questions]="section.questions"
           [sectionTitle]="section.name"
+          [nextSectionTitle]="!last ? questionnaire.sections[i + 1].name : null"
+          [previousSectionTitle]="
+            !first ? questionnaire.sections[i - 1].name : null
+          "
           [sectionId]="section.id"
           [activeStep]="activeStep"
           [showConfirmButton]="

@@ -14,7 +14,7 @@
             >
               <img
                 src="assets/images/logo.png"
-                [alt]="'header.name' | translate"
+                [alt]="'header.alt-logo' | translate"
               />
             </a>
             <!-- se lingua solo una non facciamo vedere lingua selezionata e select -->
@@ -45,7 +45,9 @@
                       <div class="link-list-wrapper">
                         <ul
                           class="link-list"
-                          [attr.aria-label]="'commons.languages' | translate"
+                          [attr.aria-label]="
+                            'header.available-languages' | translate
+                          "
                         >
                           <li *ngFor="let lang of languages">
                             <a

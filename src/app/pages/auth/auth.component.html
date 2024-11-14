@@ -1,21 +1,16 @@
 <app-loading-full-screen *ngIf="loading$ | async"></app-loading-full-screen>
 
 <app-error-card
-  *ngIf="(error$ | async)?.flag && !(survey$ | async)"
+  *ngIf="(error$ | async)?.flag && !surveyName"
   [type]="(error$ | async)?.type"
 ></app-error-card>
 
-<app-error-card
-  *ngIf="(healthcareUnitError$ | async) && !(healthcareUnit$ | async)"
-  [type]="'notFound'"
-></app-error-card>
-
 <app-otp-card
-  *ngIf="(healthcareUnit$ | async) && (survey$ | async)"
+  *ngIf="unit && surveyName"
   [structureType]="
     structureType.toUpperCase() === 'AMBULATORY' ? 'ambulatorio' : 'reparto'
   "
-  [unit]="(healthcareUnit$ | async)?.name || ''"
-  [questType]="(survey$ | async)?.name || ''"
+  [unit]="unit"
+  [questType]="surveyName"
   (sendOtp)="sendOtp($event)"
 ></app-otp-card>

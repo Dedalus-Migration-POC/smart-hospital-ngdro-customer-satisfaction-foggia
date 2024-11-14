@@ -15,7 +15,11 @@
   "cancel": "Annulla",
   "date-hint": "GG/MM/AAAA",
   "header": {
-    "name": "Policlinico Foggia"
+    "name": "Policlinico Foggia",
+    "alt-logo": "Vai al sito del Policlinico di Foggia",
+    "language-selection": "Selezione lingua: lingua selezionata",
+    "available-languages": "Lingue disponibili",
+    "selected-language": "Lingua selezionata"
   },
   "footer": {
     "project-of": "progetto di",
@@ -78,6 +82,8 @@
       }
     },
     "forward-button-disabled-description": "Per procedere compila il questionario",
+    "forward-button-description": "Vai alla sezione successiva, {{questName}}",
+    "back-button-description": "Torna alla sezione precedente, {{questName}}",
     "send-button-description": "Invia il questionario",
     "send-quest-error": "Ci dispiace, è avvenuto un'errore. Chiediamo di riprovare",
     "quest-error-required": "Domanda obbligatoria, inserisci una risposta.",

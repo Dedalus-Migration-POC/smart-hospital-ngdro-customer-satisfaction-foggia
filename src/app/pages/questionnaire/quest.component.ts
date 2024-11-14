@@ -8,7 +8,6 @@ import {
   selectQuestionnaireLoading,
 } from '../auth/state/selectors'
 import { fetchQuestionnaire } from '../auth/state/actions'
-import { map } from 'rxjs'
 
 @Component({
   selector: 'app-quest',
@@ -20,10 +19,11 @@ export class QuestComponent implements OnInit {
     private store: Store<SmartHospitalState>,
     private activatedRoute: ActivatedRoute,
   ) {}
-
+  surveySessionId = ''
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
       if (params['surveyId']) {
+        this.surveySessionId = params['surveyId']
         this.store.dispatch(
           fetchQuestionnaire({ surveyId: params['surveyId'] }),
         )

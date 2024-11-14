@@ -3,12 +3,17 @@
   justify-content: space-between;
   align-items: center;
   .question-title {
+    font-size: 1rem;
+    line-height: 1.5rem;
     font-weight: 600;
     max-width: 455px;
+    text-wrap: auto;
   }
   .quest-error {
     color: #cc334d;
-    font-size: 13px;
+    font-size: 14px;
+    line-height: 1rem;
+    font-weight: 600;
     ::ng-deep it-icon {
       svg {
         width: 18px;
@@ -21,11 +26,13 @@
 .buttons-container {
   display: flex;
   justify-content: space-between;
-  padding-bottom: 3rem;
+  padding-bottom: 1rem;
   padding-top: 1rem;
   margin: 2rem -3.7rem 0 -3.7rem;
   border-top: 1px solid #0066cc;
   .btn {
+    margin-left: 2.5rem;
+    margin-right: 2.5rem;
     ::ng-deep .back-button-arrow {
       svg {
         margin-right: 0.5rem;
@@ -35,6 +42,9 @@
       svg {
         margin-left: 0.5rem;
       }
+    }
+    @media screen and (max-width: 540px) {
+      margin: 0;
     }
   }
   @media screen and (max-width: 540px) {
@@ -48,7 +58,9 @@
     align-items: baseline;
   }
 }
-
+.fieldset-quest-options {
+  display: contents;
+}
 @media screen and (max-width: 768px) {
   .quest-row {
     margin-top: 1rem;

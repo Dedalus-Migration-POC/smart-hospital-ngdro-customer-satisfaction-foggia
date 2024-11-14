@@ -1,45 +1,22 @@
 import { createReducer, on } from '@ngrx/store'
 import * as QuestionnaireActions from './actions'
-import { IQuestionnaire } from '../../questionnaire/state/service'
-import { HealthcareUnit } from './service'
+import { IQuestionnaireResponse } from '../../questionnaire/state/service'
 
 export const featureKey = 'authState'
 export interface State {
-  questionnaire: IQuestionnaire | null
+  questionnaire: IQuestionnaireResponse | null
   questionnaireLoading: boolean
   questionnaireError: { flag: boolean; type: string } //  expired / compiled /notFound
-  healthcareUnit: HealthcareUnit | null
-  loading: boolean
-  error: boolean
 }
 
 export const initialState: State = {
   questionnaire: null,
   questionnaireLoading: false,
   questionnaireError: { flag: false, type: '' },
-  healthcareUnit: null,
-  loading: false,
-  error: false,
 }
 
 export const reducer = createReducer(
   initialState,
-
-  on(QuestionnaireActions.getHealthcareUnit, (state) => ({
-    ...state,
-    loading: true,
-    error: false,
-  })),
-  on(QuestionnaireActions.getHealthcareUnitSuccess, (state, actin) => ({
-    ...state,
-    healthcareUnit: actin.data,
-    loading: false,
-  })),
-  on(QuestionnaireActions.getHealthcareUnitFailure, (state) => ({
-    ...state,
-    loading: false,
-    error: true,
-  })),
 
   on(QuestionnaireActions.sendOtp, (state) => ({
     ...state,

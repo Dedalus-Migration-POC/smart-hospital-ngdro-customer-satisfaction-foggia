@@ -65,16 +65,11 @@
         </div>
 
         <button
-          class="mt-3"
+          class="mt-3 submit-button"
           type="button"
           itButton="primary"
           [disabled]="(questionnaireLoading$ | async)!"
           (click)="submit()"
-          [attr.aria-label]="
-            otpInputForm.invalid || otpInputForm.value.consent === false
-              ? ('otp.access-button-disabled-description' | translate)
-              : ('otp.access-button-description' | translate)
-          "
         >
           {{ 'otp.access-button' | translate }}
         </button>

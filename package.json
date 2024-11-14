@@ -1,7 +1,7 @@
 {
   "name": "customer-satisfaction-foggia",
   "version": "1.0.0-alpha.7",
-  "description": "Policlinico Foggia - Customer satisfaction",
+  "description": "Policlinico Foggia - Questionario di gradimento",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.js",

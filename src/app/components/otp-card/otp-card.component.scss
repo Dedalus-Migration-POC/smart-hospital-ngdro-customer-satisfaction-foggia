@@ -50,3 +50,10 @@
     flex: 0 0 49%;
   }
 }
+
+.submit-button {
+  min-width: 200px;
+  @media (max-width: 540px) {
+    width: 100%;
+  }
+}

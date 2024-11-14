@@ -50,8 +50,11 @@ import { IQuestionnaireQuestionsList } from 'src/app/pages/questionnaire/state/s
 export class QuestListComponent implements OnInit {
   @Input() title!: string
   @Input() id!: string
+  @Input() surveySessionId!: string
   @Input() questions!: IQuestionnaireQuestionsList[]
   @Input() sectionTitle!: string
+  @Input() nextSectionTitle?: string | null
+  @Input() previousSectionTitle?: string | null
   @Input() sectionId!: string
   @Input() activeStep!: number
   @Input() showConfirmButton!: boolean
@@ -103,19 +106,25 @@ export class QuestListComponent implements OnInit {
     this.onBackClick.emit(this.activeStep)
     this.scrollToFirstElement()
   }
+
+  showModalError = false
   goForward() {
     if (this.formGroup.invalid) {
       this.error = true
       setTimeout(() => {
         this.scrollToFirstError()
       }, 500)
-      this.notificationService.error(
-        this.translate.instant('quest.quest-error-required-title'),
-        this.translate.instant('quest.quest-error-required-info'),
-        true,
-        8000,
-        NotificationPosition.Top,
-      )
+      if (!this.showModalError) {
+        this.showModalError = true
+        this.notificationService.error(
+          this.translate.instant('quest.quest-error-required-title'),
+          this.translate.instant('quest.quest-error-required-info'),
+          true,
+          800000,
+          NotificationPosition.Top,
+        )
+      }
+
       return
     }
     this.store.dispatch(
@@ -139,14 +148,16 @@ export class QuestListComponent implements OnInit {
       setTimeout(() => {
         this.scrollToFirstError()
       }, 500)
-
-      this.notificationService.error(
-        this.translate.instant('quest.quest-error-required-title'),
-        this.translate.instant('quest.quest-error-required-info'),
-        true,
-        8000,
-        NotificationPosition.Top,
-      )
+      if (!this.showModalError) {
+        this.showModalError = true
+        this.notificationService.error(
+          this.translate.instant('quest.quest-error-required-title'),
+          this.translate.instant('quest.quest-error-required-info'),
+          true,
+          8000,
+          NotificationPosition.Top,
+        )
+      }
       return
     }
     this.store.dispatch(
@@ -169,6 +180,7 @@ export class QuestListComponent implements OnInit {
             sendQuestionnaire({
               payload: {
                 surveyId: this.id,
+                surveySessionId: this.surveySessionId,
                 sections: questionnaire,
               },
             }),
