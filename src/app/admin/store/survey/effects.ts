@@ -71,13 +71,15 @@ export class SurveyEffects {
       filter(({submitOption}) => submitOption === 'save'),
       switchMap(({surveyForm}) => {
           const request = surveyFormToPersistRequest(surveyForm)
-          return !request.id
+          const api = !request.id
             ? this.surveyService.create(request)
             : this.surveyService.update(request)
+          return api.pipe(
+            map((survey) => SurveyActions.submitSurveySucceeded({survey})),
+            catchError(() => of(SurveyActions.submitSurveyFailed())),
+          )
         },
       ),
-      map((survey) => SurveyActions.submitSurveySucceeded({survey})),
-      catchError(() => of(SurveyActions.submitSurveyFailed())),
     )
   })
 
@@ -87,14 +89,12 @@ export class SurveyEffects {
       filter(({submitOption}) => submitOption === 'publish'),
       switchMap(({surveyForm}) => {
         const request = surveyFormToPersistRequest(surveyForm)
-        return !request.id
-          ? this.surveyService.create(request)
-          : this.surveyService.update(request)
+        const api = !request.id ? this.surveyService.create(request) : this.surveyService.update(request)
+        return api.pipe(
+          map((survey) => SurveyActions.submitSurveySucceeded({survey: {...survey, status: SurveyStatus.ACTIVE}})),
+          catchError(() => of(SurveyActions.submitSurveyFailed())),
+        )
       }),
-      switchMap((survey) => this.surveyService.publish(survey.id!.toString()).pipe(
-        map(() => SurveyActions.submitSurveySucceeded({survey: {...survey, status: SurveyStatus.ACTIVE}}))
-      )),
-      catchError(() => of(SurveyActions.submitSurveyFailed())),
     )
   })
 
@@ -169,10 +169,7 @@ export class SurveyEffects {
           copies: printSurveyForm.copies!,
         }).pipe(
           map((document) => SurveyActions.printSurveySucceeded({document})),
-          catchError((err) => {
-            console.log(err)
-            return of(SurveyActions.printSurveyFailed())
-          }),
+          catchError(() => of(SurveyActions.printSurveyFailed())),
         )
       ),
     )
