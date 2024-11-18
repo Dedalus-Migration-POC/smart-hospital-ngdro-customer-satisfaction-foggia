@@ -87,6 +87,13 @@
       "previousPageLabel": "Precedente",
       "rangeLabel": "di"
     },
+    "login": {
+      "form": {
+        "username": "Mail",
+        "password": "Password",
+        "submit-btn": "Accedi"
+      }
+    },
     "survey-list": {
       "title": "Questionari",
       "create-survey-btn": "Nuovo questionario",
@@ -168,7 +175,8 @@
       "printing": "Stampa in corso...",
       "form-validations": {
         "required-field": "Campo obbligatorio"
-      }
+      },
+      "no-surveys-error": "Non ci sono questionari attivi"
     },
     "section-list": {
       "title": "Sezioni",

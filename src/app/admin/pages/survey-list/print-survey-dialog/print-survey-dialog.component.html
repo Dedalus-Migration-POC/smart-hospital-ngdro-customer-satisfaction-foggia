@@ -1,58 +1,53 @@
-<ng-container *ngIf="(loading$ | async) else ready">
-  <mat-spinner></mat-spinner>
-</ng-container>
+<form [formGroup]="form" (ngSubmit)="print()">
+  <h2 mat-dialog-title>{{ 'admin.print-survey-dialog.title' | translate }}</h2>
+  <mat-dialog-content>
 
-<ng-template #ready>
-  <form [formGroup]="form" (ngSubmit)="print()">
-    <h2 mat-dialog-title>{{ 'admin.print-survey-dialog.title' | translate }}</h2>
-    <mat-dialog-content>
+    <mat-form-field style="width: 100%" appearance="outline" floatLabel="always"
+                    *ngIf="form.controls.healthcareUnit; let unit">
+      <mat-label>{{ 'admin.print-survey-dialog.select-unit-label' | translate }}</mat-label>
+      <mat-select [formControl]="unit" [value]="unit"
+                  [disabled]="(disabled$ | async) ?? false">
+        <mat-option *ngFor="let unit of data.healthcareUnits" [value]="unit">{{ unit.name }}</mat-option>
+      </mat-select>
+      <mat-error
+        *ngIf="unit.hasError('required')">{{ 'admin.print-survey-dialog.form-validations.required-field' | translate }}
+      </mat-error>
+    </mat-form-field>
 
+    <div style="height: 10px"></div>
+
+    <ng-container *ngIf="canChooseType(form.controls.healthcareUnit.value)">
+      <div class="structure-type-label">{{ 'admin.print-survey-dialog.structure-type-label' | translate }}</div>
+      <mat-radio-group [formControl]="form.controls.structure" [disabled]="(disabled$ | async) ?? false">
+        <mat-radio-button
+          value="DEPARTMENT">{{ 'admin.print-survey-dialog.structure-type-radio.department' | translate }}
+        </mat-radio-button>
+        <mat-radio-button
+          value="AMBULATORY">{{ 'admin.print-survey-dialog.structure-type-radio.ambulatory' | translate }}
+        </mat-radio-button>
+      </mat-radio-group>
+
+      <div style="height: 20px"></div>
+
+    </ng-container>
+
+    <ng-container *ngIf="data.surveys as surveys">
       <mat-form-field style="width: 100%" appearance="outline" floatLabel="always"
-                      *ngIf="form.controls.healthcareUnit; let unit">
-        <mat-label>{{ 'admin.print-survey-dialog.select-unit-label' | translate }}</mat-label>
-        <mat-select [formControl]="unit" [value]="unit"
-                    [disabled]="(disabled$ | async) ?? false">
-          <mat-option *ngFor="let unit of healthcareUnits" [value]="unit">{{ unit.name }}</mat-option>
+                      *ngIf="form.controls.survey; let surveyControl">
+        <mat-label>{{ 'admin.print-survey-dialog.select-survey-label' | translate }}</mat-label>
+        <mat-select [formControl]="surveyControl" [disabled]="(disabled$ | async) ?? false">
+          <mat-option *ngFor="let survey of surveys"
+                      [value]="survey">{{ SurveyUtils.getNameAndVersion(surveys, survey) }}
+          </mat-option>
         </mat-select>
         <mat-error
-          *ngIf="unit.hasError('required')">{{ 'admin.print-survey-dialog.form-validations.required-field' | translate }}
+          *ngIf="surveyControl.hasError('required')">{{ 'admin.print-survey-dialog.form-validations.required-field' | translate }}
         </mat-error>
       </mat-form-field>
+    </ng-container>
 
-      <div style="height: 10px"></div>
-
-      <ng-container *ngIf="canChooseType(form.controls.healthcareUnit.value)">
-        <div class="structure-type-label">{{ 'admin.print-survey-dialog.structure-type-label' | translate }}</div>
-        <mat-radio-group [formControl]="form.controls.structure" [disabled]="(disabled$ | async) ?? false">
-          <mat-radio-button
-            value="DEPARTMENT">{{ 'admin.print-survey-dialog.structure-type-radio.department' | translate }}
-          </mat-radio-button>
-          <mat-radio-button
-            value="AMBULATORY">{{ 'admin.print-survey-dialog.structure-type-radio.ambulatory' | translate }}
-          </mat-radio-button>
-        </mat-radio-group>
-
-        <div style="height: 20px"></div>
-
-      </ng-container>
-
-      <ng-container *ngIf="surveys$ | async as surveys">
-        <mat-form-field style="width: 100%" appearance="outline" floatLabel="always"
-                        *ngIf="form.controls.survey; let surveyControl">
-          <mat-label>{{ 'admin.print-survey-dialog.select-survey-label' | translate }}</mat-label>
-          <mat-select [formControl]="surveyControl" [disabled]="(disabled$ | async) ?? false">
-            <mat-option *ngFor="let survey of surveys"
-                        [value]="survey">{{ SurveyUtils.getNameAndVersion(surveys, survey) }}
-            </mat-option>
-          </mat-select>
-          <mat-error
-            *ngIf="surveyControl.hasError('required')">{{ 'admin.print-survey-dialog.form-validations.required-field' | translate }}
-          </mat-error>
-        </mat-form-field>
-      </ng-container>
-
-      <div class="structure-type-label">{{ 'admin.print-survey-dialog.copies-to-print' | translate }}</div>
-      <span>
+    <div class="structure-type-label">{{ 'admin.print-survey-dialog.copies-to-print' | translate }}</div>
+    <span>
           <mat-button-toggle-group
             *ngIf="form.controls.copies; let field"
             [hideMultipleSelectionIndicator]="true"
@@ -74,22 +69,21 @@
     </span>
 
 
-      <mat-dialog-actions style="align-self: end">
-        <ng-container *ngIf="printing$ | async else notPrinting">
-          <span>{{ 'admin.print-survey-dialog.printing' | translate }}</span>
-        </ng-container>
+    <mat-dialog-actions style="align-self: end">
+      <ng-container *ngIf="printing$ | async else notPrinting">
+        <span>{{ 'admin.print-survey-dialog.printing' | translate }}</span>
+      </ng-container>
 
-        <ng-template #notPrinting>
-          <button mat-button mat-dialog-close>
-            {{ 'cancel' | translate }}
-          </button>
-          <button mat-button
-                  [disabled]="!form.valid || form.controls.copies.value! < 1">
-            {{ 'admin.print-survey-dialog.button' | translate }}
-          </button>
-        </ng-template>
-      </mat-dialog-actions>
+      <ng-template #notPrinting>
+        <button mat-button mat-dialog-close>
+          {{ 'cancel' | translate }}
+        </button>
+        <button mat-button
+                [disabled]="!form.valid || form.controls.copies.value! < 1">
+          {{ 'admin.print-survey-dialog.button' | translate }}
+        </button>
+      </ng-template>
+    </mat-dialog-actions>
 
-    </mat-dialog-content>
-  </form>
-</ng-template>
+  </mat-dialog-content>
+</form>

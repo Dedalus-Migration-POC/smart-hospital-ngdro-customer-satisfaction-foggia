@@ -68,14 +68,19 @@ export class SurveyEffects {
   private readonly saveSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.submitSurvey),
-      filter(({submitOption}) => submitOption === 'save'),
+      filter(({submitOption}) => submitOption === 'publish'),
       switchMap(({surveyForm}) => {
           const request = surveyFormToPersistRequest(surveyForm)
           const api = !request.id
             ? this.surveyService.create(request)
             : this.surveyService.update(request)
           return api.pipe(
-            map((survey) => SurveyActions.submitSurveySucceeded({survey})),
+            concatMap((survey) =>
+              this.surveyService.publish(survey.id!.toString()).pipe(
+                map(() => SurveyActions.submitSurveySucceeded({survey: {...survey, status: SurveyStatus.ACTIVE}})),
+                catchError(() => of(SurveyActions.submitSurveySucceeded({survey}))),
+              )
+            ),
             catchError(() => of(SurveyActions.submitSurveyFailed())),
           )
         },
@@ -86,7 +91,7 @@ export class SurveyEffects {
   private readonly saveAndPublishSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.submitSurvey),
-      filter(({submitOption}) => submitOption === 'publish'),
+      filter(({submitOption}) => submitOption === 'save'),
       switchMap(({surveyForm}) => {
         const request = surveyFormToPersistRequest(surveyForm)
         const api = !request.id ? this.surveyService.create(request) : this.surveyService.update(request)

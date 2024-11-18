@@ -6,6 +6,7 @@ import {FilterSurveyRequest} from "./dto/filter-survey-request";
 import {PagedList} from "./dto/paged_list";
 import {TablePagination} from "../support/domain/table-pagination";
 import {PrintSurveyRequest} from "./dto/print-survey-request";
+import {PrintDataResponse} from "./dto/print-data-response";
 
 const baseUrl = '/survey/api/v1/survey'
 
@@ -49,6 +50,10 @@ export class SurveyService {
 
   public unpublish(surveyId: string) {
     return this.http.patch<void>(`${baseUrl}/unpublish/${surveyId}`, null)
+  }
+
+  public requestPrintData() {
+    return this.http.get<PrintDataResponse>(`${baseUrl}/print`)
   }
 
   public print(request: PrintSurveyRequest) {
