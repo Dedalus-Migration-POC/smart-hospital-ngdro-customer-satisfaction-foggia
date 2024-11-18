@@ -94,6 +94,9 @@
         "submit-btn": "Accedi"
       }
     },
+    "operator-dashboard": {
+      "title": "Dashboard {{department}}"
+    },
     "survey-list": {
       "title": "Questionari",
       "create-survey-btn": "Nuovo questionario",

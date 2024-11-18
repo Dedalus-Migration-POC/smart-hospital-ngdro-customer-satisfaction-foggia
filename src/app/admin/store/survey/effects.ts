@@ -164,6 +164,21 @@ export class SurveyEffects {
     )
   })
 
+  private readonly fetchPrintSurveyData$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SurveyActions.fetchPrintSurveyData),
+      switchMap(() => this.surveyService.fetchPrintData().pipe(
+        map(data => {
+          if (!data.surveys.length) {
+            return SurveyActions.fetchPrintSurveyDataFailed({error: 'admin.print-survey-dialog.no-surveys-error'})
+          }
+          return SurveyActions.fetchPrintSurveyDataSucceeded({data})
+        }),
+        catchError(() => of(SurveyActions.fetchPrintSurveyDataFailed({error: undefined}))),
+      ))
+    )
+  })
+
   private readonly printSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.printSurvey),

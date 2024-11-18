@@ -1,0 +1,27 @@
+.content {
+  display: flex;
+  justify-content: center;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  button {
+    margin-left: 10px;
+  }
+}
+
+mat-card {
+  padding: 40px;
+  width: 648px;
+}
+
+button.print-btn {
+  max-width: 201px;
+  border-radius: 100px;
+  background-color: #C26E74;
+  margin-top: 30px;
+}

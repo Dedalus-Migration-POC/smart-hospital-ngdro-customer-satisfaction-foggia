@@ -1,22 +1,23 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AsyncPipe} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
-import {BehaviorSubject, EMPTY, finalize, map, Observable} from "rxjs";
+import {map, Observable, tap} from "rxjs";
 import {Section} from "../../../repository/dto/section";
 import {selectSectionState} from "../../../store/section/reducer";
 import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../../store/store";
 import {MatDialog} from "@angular/material/dialog";
 import {PrintSurveyDialogComponent} from "../print-survey-dialog/print-survey-dialog.component";
-import {selectSurveyList} from "../../../store/survey/reducer";
-import {SurveyService} from "../../../repository/survey-service";
-import {catchError} from "rxjs/operators";
+import {selectSurveyList, selectSurveyState} from "../../../store/survey/reducer";
 import {DialogService} from "../../../support/dialog-service";
 import {PrintDataResponse} from "../../../repository/dto/print-data-response";
 import {Survey} from "../../../repository/dto/survey";
+import {WithSubscriptionsComponent} from "../../../support/with-subscriptions-component";
+import {SurveyActions} from "../../../store/survey/actions";
+import {Actions, ofType} from "@ngrx/effects";
 
 @Component({
   selector: 'app-top-right-buttons',
@@ -31,14 +32,40 @@ import {Survey} from "../../../repository/dto/survey";
   templateUrl: './top-right-buttons.component.html',
   styleUrl: './top-right-buttons.component.scss'
 })
-export class TopRightButtonsComponent {
+export class TopRightButtonsComponent extends WithSubscriptionsComponent implements OnInit {
   constructor(
     private store: Store<SurveyAdminState>,
+    private actions: Actions,
     private dialog: MatDialog,
     private dialogService: DialogService,
     private translate: TranslateService,
-    private surveyService: SurveyService,
   ) {
+    super();
+  }
+
+  ngOnInit() {
+    this.addSubscriptions(
+      this.actions.pipe(
+        ofType(SurveyActions.fetchPrintSurveyDataSucceeded),
+        tap(({data}) => this.dialog.open<PrintSurveyDialogComponent, PrintDataResponse>(PrintSurveyDialogComponent, {
+          id: "print_survey_dialog_id",
+          width: '480px',
+          maxWidth: '480px',
+          minHeight: '560px',
+          hasBackdrop: true,
+          disableClose: true,
+          data
+        }))
+      ).subscribe(),
+
+      this.actions.pipe(
+        ofType(SurveyActions.fetchPrintSurveyDataFailed),
+        tap(({error}) => this.dialogService.error({
+          buttonsType: 'ok',
+          text: this.translate.instant(error ? 'admin.print-survey-dialog.no-surveys-error' : 'error'),
+        }))
+      ).subscribe()
+    )
   }
 
   surveys$: Observable<Array<Survey> | undefined> = this.store.select(selectSurveyList)
@@ -47,35 +74,10 @@ export class TopRightButtonsComponent {
   sections$: Observable<Array<Section> | undefined> = this.store.select(selectSectionState)
     .pipe(map(({sections}) => sections?.content));
 
-  protected loading$ = new BehaviorSubject(false);
+  protected loading$ = this.store.select(selectSurveyState).pipe(map(({fetchingPrintData}) => fetchingPrintData));
 
   protected print() {
-    this.loading$.next(true)
-    this.surveyService.requestPrintData().pipe(
-      map(data => {
-        if (!data.surveys.length) {
-          this.dialogService.error({
-            buttonsType: 'ok',
-            text: this.translate.instant('admin.print-survey-dialog.no-surveys-error'),
-          })
-        } else {
-          this.dialog.open<PrintSurveyDialogComponent, PrintDataResponse>(PrintSurveyDialogComponent, {
-            id: "print_survey_dialog_id",
-            width: '480px',
-            maxWidth: '480px',
-            minHeight: '560px',
-            hasBackdrop: true,
-            disableClose: true,
-            data
-          })
-        }
-      }),
-      catchError(() => {
-        this.dialogService.error({buttonsType: 'ok'})
-        return EMPTY
-      }),
-      finalize(() => (this.loading$.next(false)))
-    ).subscribe();
+    this.store.dispatch(SurveyActions.fetchPrintSurveyData())
   }
 
   protected viewAnalytics() {

@@ -1,10 +1,11 @@
 import {createAction, props} from '@ngrx/store'
 import {Survey} from "../../repository/dto/survey";
 import {SurveyForm} from "../../pages/survey-form/survey-form.component";
-import {PrintSurveyForm} from "../../pages/survey-list/print-survey-dialog/print-survey-dialog.component";
 import {PagedList} from "../../repository/dto/paged_list";
 import {TablePagination} from "../../support/domain/table-pagination";
 import {SurveyFilterForm} from "./reducer";
+import {PrintDataResponse} from "../../repository/dto/print-data-response";
+import {PrintSurveyForm} from "../../components/print-survey/print-survey.component";
 
 export type SubmitSurveyOption = 'save' | 'publish'
 
@@ -122,6 +123,20 @@ const unpublishSurveyFailed = createAction(
   '[Survey] Unpublish Survey Failed',
 )
 
+const fetchPrintSurveyData = createAction(
+  '[Survey] Fetch Print Survey data',
+)
+
+const fetchPrintSurveyDataSucceeded = createAction(
+  '[Survey] Fetch Print Survey Succeeded data',
+  props<{ data: PrintDataResponse }>()
+)
+
+const fetchPrintSurveyDataFailed = createAction(
+  '[Survey] Fetch Print Survey Failed data',
+  props<{ error?: string }>()
+)
+
 const printSurvey = createAction(
   '[Survey] Print Survey',
   props<{ printSurveyForm: PrintSurveyForm['value'] }>()
@@ -165,6 +180,9 @@ export const SurveyActions = {
   unpublishSurvey,
   unpublishSurveySucceeded,
   unpublishSurveyFailed,
+  fetchPrintSurveyData,
+  fetchPrintSurveyDataSucceeded,
+  fetchPrintSurveyDataFailed,
   printSurvey,
   printSurveySucceeded,
   printSurveyFailed,
@@ -196,6 +214,9 @@ export type SurveyActionTypes =
   | typeof unpublishSurvey
   | typeof unpublishSurveySucceeded
   | typeof unpublishSurveyFailed
+  | typeof fetchPrintSurveyData
+  | typeof fetchPrintSurveyDataSucceeded
+  | typeof fetchPrintSurveyDataFailed
   | typeof printSurvey
   | typeof printSurveySucceeded
   | typeof printSurveyFailed

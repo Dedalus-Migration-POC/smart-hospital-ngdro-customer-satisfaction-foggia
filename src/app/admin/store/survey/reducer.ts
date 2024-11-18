@@ -36,7 +36,8 @@ export type State = {
   searchCriteria: {
     filter: SurveyFilterForm['value'];
     tablePagination: TablePagination | undefined;
-  }
+  },
+  fetchingPrintData: boolean;
 }
 
 const initialState: State = {
@@ -52,7 +53,8 @@ const initialState: State = {
       size: 5,
       sort: 'name,asc'
     }
-  }
+  },
+  fetchingPrintData: false,
 }
 
 export const reducer = createReducer(
@@ -235,6 +237,18 @@ export const reducer = createReducer(
   on(SurveyActions.toggleShowDeleted, (state) => ({
     ...state,
     showDeleted: !state.showDeleted
+  })),
+  on(SurveyActions.fetchPrintSurveyData, (state) => ({
+    ...state,
+    fetchingPrintData: true
+  })),
+  on(SurveyActions.fetchPrintSurveyDataSucceeded, (state) => ({
+    ...state,
+    fetchingPrintData: false
+  })),
+  on(SurveyActions.fetchPrintSurveyDataFailed, (state) => ({
+    ...state,
+    fetchingPrintData: false
   })),
   on(SurveyActions.printSurvey, (state) => ({
     ...state,

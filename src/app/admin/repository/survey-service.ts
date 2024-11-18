@@ -52,7 +52,7 @@ export class SurveyService {
     return this.http.patch<void>(`${baseUrl}/unpublish/${surveyId}`, null)
   }
 
-  public requestPrintData() {
+  public fetchPrintData() {
     return this.http.get<PrintDataResponse>(`${baseUrl}/print`)
   }
 
