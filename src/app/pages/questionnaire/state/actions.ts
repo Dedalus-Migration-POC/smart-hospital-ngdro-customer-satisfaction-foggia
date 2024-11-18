@@ -20,3 +20,8 @@ export const sendQuestionnaireFailure = createAction(
   '[Quest] Send Questionnaire Failure',
   props<{ error: any }>(),
 )
+
+export const setIsSurveyConfirmed = createAction(
+  '[Quest] Set IsSurveyConfirmed',
+  props<{ isSurveyConfirmed: boolean }>(),
+)

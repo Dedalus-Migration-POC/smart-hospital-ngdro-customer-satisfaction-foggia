@@ -9,6 +9,7 @@ import {
   selectQuestionnaireLoading,
 } from './state/selectors'
 import { map, take } from 'rxjs'
+import { setIsSurveyConfirmed } from '../questionnaire/state/actions'
 
 @Component({
   selector: 'app-auth',
@@ -26,6 +27,7 @@ export class AuthComponent implements OnInit {
   surveyName: string = ''
   surveyId: string = ''
   ngOnInit(): void {
+    this.store.dispatch(setIsSurveyConfirmed({ isSurveyConfirmed: false }))
     this.activatedRoute.params.subscribe((params) => {
       this.surveyId = params['id']
       if (params['id']) {

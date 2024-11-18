@@ -3,7 +3,13 @@
   [type]="(questionnaireError$ | async)?.type"
 ></app-error-card>
 
-<ng-container *ngIf="(questionnaire$ | async)?.survey as questionnaire">
+<app-feedback *ngIf="isSurveyConfirmed$ | async"></app-feedback>
+<ng-container
+  *ngIf="
+    !(isSurveyConfirmed$ | async) &&
+    (questionnaire$ | async)?.survey as questionnaire
+  "
+>
   <h1 class="h2 mt-5 mb-3">
     {{ questionnaire.name }}
   </h1>

@@ -7,6 +7,9 @@ import { QuestionnaireService } from './service'
 import { Router } from '@angular/router'
 import { ItNotificationService, NotificationPosition } from 'design-angular-kit'
 import { TranslateService } from '@ngx-translate/core'
+import { Store } from '@ngrx/store'
+import { SmartHospitalState } from 'src/app/store/reducers'
+import { setIsSurveyConfirmed } from './actions'
 
 @Injectable()
 export class QuestionnaireEffects {
@@ -16,7 +19,9 @@ export class QuestionnaireEffects {
       concatMap((action) =>
         this.questionnaireService.sendQuestionnaire(action.payload).pipe(
           map((data) => {
-            this.router.navigate(['/feedback'])
+            this.store.dispatch(
+              setIsSurveyConfirmed({ isSurveyConfirmed: true }),
+            )
 
             return QuestionnaireActions.sendQuestionnaireSuccess({ data })
           }),
@@ -38,7 +43,7 @@ export class QuestionnaireEffects {
   constructor(
     private actions$: Actions,
     private questionnaireService: QuestionnaireService,
-    private router: Router,
+    private store: Store<SmartHospitalState>,
     private readonly notificationService: ItNotificationService,
     private translate: TranslateService,
   ) {}

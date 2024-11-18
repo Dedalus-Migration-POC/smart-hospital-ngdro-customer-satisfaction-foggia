@@ -18,3 +18,8 @@ export const selectSendQuestionnaireError = createSelector(
   selectquestState,
   (state) => state.sendQuestionnaireError,
 )
+
+export const selectIsSurveyConfirmed = createSelector(
+  selectquestState,
+  (state) => state.isSurveyConfirmed,
+)

@@ -7,12 +7,14 @@ export interface State {
   questionnaire: any[]
   sendQuestionnaireLoading: boolean
   sendQuestionnaireError: boolean
+  isSurveyConfirmed: boolean
 }
 
 export const initialState: State = {
   questionnaire: [],
   sendQuestionnaireLoading: false,
   sendQuestionnaireError: false,
+  isSurveyConfirmed: false,
 }
 
 export const reducer = createReducer(
@@ -37,5 +39,10 @@ export const reducer = createReducer(
     ...state,
     sendQuestionnaireLoading: false,
     sendQuestionnaireError: true,
+  })),
+
+  on(QuestionnaireActions.setIsSurveyConfirmed, (state, action) => ({
+    ...state,
+    isSurveyConfirmed: action.isSurveyConfirmed,
   })),
 )

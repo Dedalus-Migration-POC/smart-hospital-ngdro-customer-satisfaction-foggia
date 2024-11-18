@@ -8,6 +8,7 @@ import {
   selectQuestionnaireLoading,
 } from '../auth/state/selectors'
 import { fetchQuestionnaire } from '../auth/state/actions'
+import { selectIsSurveyConfirmed } from './state/selectors'
 
 @Component({
   selector: 'app-quest',
@@ -34,6 +35,7 @@ export class QuestComponent implements OnInit {
   questionnaireLoading$ = this.store.select(selectQuestionnaireLoading)
   questionnaireError$ = this.store.select(selectQuestionnaireError)
   activeStep = 0
+  isSurveyConfirmed$ = this.store.select(selectIsSurveyConfirmed)
 
   onForwardClick(): void {
     this.activeStep++

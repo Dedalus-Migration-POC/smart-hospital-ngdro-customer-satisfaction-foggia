@@ -14,13 +14,6 @@ const routes: Routes = [
         (m) => m.QuestModule,
       ),
   },
-  {
-    path: 'feedback',
-    loadChildren: () =>
-      import('src/app/pages/feedback/feedback.module').then(
-        (m) => m.FeedbackModule,
-      ),
-  },
 ]
 
 @NgModule({
