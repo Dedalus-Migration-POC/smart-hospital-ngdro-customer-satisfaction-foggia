@@ -170,7 +170,7 @@
   >
     <div class="mat-section-select">
       <mat-form-field
-        style="max-width: 768px; width: 70%"
+        style="max-width: 768px; width: 65%"
         appearance="outline"
         floatLabel="always"
         *ngIf="(selectableSections$ | async)! as sections"
@@ -193,6 +193,28 @@
         </mat-error>
       </mat-form-field>
 
+      <div class="move-buttons">
+        <button
+          type="button"
+          mat-icon-button
+          (click)="moveSection(i, i - 1)"
+          [disabled]="i === 0"
+        >
+          <mat-icon [matTooltip]="'admin.survey-form.move-up-btn' | translate"
+            >arrow_drop_up</mat-icon
+          >
+        </button>
+        <button
+          type="button"
+          mat-icon-button
+          (click)="moveSection(i, i + 1)"
+          [disabled]="i === form.controls.sections.controls.length - 1"
+        >
+          <mat-icon [matTooltip]="'admin.survey-form.move-down-btn' | translate"
+            >arrow_drop_down</mat-icon
+          >
+        </button>
+      </div>
       <button
         type="button"
         *ngIf="form.controls.sections.value.length > 1"
@@ -218,29 +240,6 @@
           }}</span>
           <span>{{ q.name }}</span>
         </div>
-      </div>
-
-      <div class="move-buttons">
-        <button
-          type="button"
-          mat-icon-button
-          (click)="moveSection(i, i - 1)"
-          *ngIf="i > 0"
-        >
-          <mat-icon [matTooltip]="'admin.survey-form.move-up-btn' | translate"
-            >keyboard_arrow_up</mat-icon
-          >
-        </button>
-        <button
-          type="button"
-          mat-icon-button
-          (click)="moveSection(i, i + 1)"
-          *ngIf="i < form.controls.sections.controls.length - 1"
-        >
-          <mat-icon [matTooltip]="'admin.survey-form.move-down-btn' | translate"
-            >keyboard_arrow_down</mat-icon
-          >
-        </button>
       </div>
     </div>
   </mat-card>

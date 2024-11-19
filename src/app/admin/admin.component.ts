@@ -31,9 +31,13 @@ export class AdminComponent implements OnInit {
           case '/':
             this.bgClass = 'img-bg'
             break
+          case '/print':
+            this.bgClass = 'img-bg'
+            break
           case '/login':
             this.bgClass = 'img-bg-white'
             break
+
           default:
             this.bgClass = 'grey-color-bg'
         }
