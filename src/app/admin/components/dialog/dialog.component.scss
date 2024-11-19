@@ -5,22 +5,25 @@
   justify-content: space-between;
   height: 100%;
   padding: 32px;
+  background-color: #ece6f0;
 }
 
 .head {
   display: flex;
   flex-direction: column;
-  align-items: center;
-
+  align-items: baseline;
+  width: 100%;
   > span {
-    margin: 12px 0;
-    font-size: 20px;
-    font-weight: bold;
+    margin: 22px 0;
+    font-size: 24px;
+    font-weight: 400;
   }
 }
 
 .content {
-  text-align: center;
+  text-align: left;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
 .actions {

@@ -1,31 +1,39 @@
 <div class="cover">
   <img
     id="login_illustration"
-    ngSrc="assets/images/illustration_login.svg"
+    src="assets/images/illustration_login.svg"
     [alt]="'header.name' | translate"
-    height="652" width="652"/>
+  />
 
   <div style="display: flex; flex-direction: column">
     <img
       ngSrc="assets/images/logo.png"
       [alt]="'header.name' | translate"
-      height="48" width="168"/>
+      height="48"
+      width="168"
+    />
     <span class="title">Accedi alla dashboard</span>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="login('ROLE_ADMIN')">
     <mat-form-field appearance="outline">
       <mat-label>{{ 'admin.login.form.username' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="form.controls.username"/>
-      <mat-error
-        *ngIf="form.controls.username.hasError('required')">{{ 'admin.print-survey-dialog.form-validations.required-field' | translate }}
+      <input matInput type="text" [formControl]="form.controls.username" />
+      <mat-error *ngIf="form.controls.username.hasError('required')"
+        >{{
+          'admin.print-survey-dialog.form-validations.required-field'
+            | translate
+        }}
       </mat-error>
     </mat-form-field>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" style="margin-top: 10px">
       <mat-label>{{ 'admin.login.form.password' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="form.controls.password"/>
-      <mat-error
-        *ngIf="form.controls.username.hasError('required')">{{ 'admin.print-survey-dialog.form-validations.required-field' | translate }}
+      <input matInput type="text" [formControl]="form.controls.password" />
+      <mat-error *ngIf="form.controls.username.hasError('required')"
+        >{{
+          'admin.print-survey-dialog.form-validations.required-field'
+            | translate
+        }}
       </mat-error>
     </mat-form-field>
     <button mat-flat-button>

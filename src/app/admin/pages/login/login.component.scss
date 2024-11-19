@@ -1,17 +1,25 @@
 .cover {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: url('../../../../assets/images/bg.png') no-repeat;
-  background-size: cover;
-  padding: 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+  //   position: absolute;
+  //   top: 0;
+  //   bottom: 0;
+  //   left: 0;
+  //   right: 0;
+  //   background: url('../../../../assets/images/bg-white.svg') no-repeat;
+  //   background-size: cover;
+  //   padding: 50px;
 }
 
 #login_illustration {
   position: absolute;
-  right: 10vw;
+  transform: translate(100%, 5%);
+  height: auto;
+  width: 45%;
+  max-width: 500px;
+  @media screen and (max-width: 767px) {
+    display: none;
+  }
 }
 
 .title {
@@ -30,7 +38,7 @@ form {
   button {
     width: 208px;
     border-radius: 100px;
-    background-color: #C26E74;
+    background-color: #c26e74;
     margin-top: 10px;
   }
 }

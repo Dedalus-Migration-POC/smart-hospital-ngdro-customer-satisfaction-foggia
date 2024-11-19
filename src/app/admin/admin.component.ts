@@ -20,7 +20,7 @@ export class AdminComponent implements OnInit {
     this.store.dispatch(AppActions.initialize())
     this.changeBg()
   }
-
+  showHeader = true
   bgClass = ''
   changeBg() {
     this.router.events
@@ -32,11 +32,15 @@ export class AdminComponent implements OnInit {
             this.bgClass = 'img-bg'
             break
           case '/login':
-            this.bgClass = 'img-bg'
+            this.bgClass = 'img-bg-white'
             break
-
           default:
             this.bgClass = 'grey-color-bg'
+        }
+        if (url === '/login') {
+          this.showHeader = false
+        } else {
+          this.showHeader = true
         }
       })
   }

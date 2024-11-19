@@ -95,7 +95,8 @@
       }
     },
     "operator-dashboard": {
-      "title": "Dashboard {{department}}"
+      "title": "Dashboard {{department}}",
+      "subtitle": "Visualizza le analitiche relative alle risposte dei questionari ricevuti per la tua unità operativa, oppure stampa i fogli sondaggio da consegnare ai pazienti."
     },
     "survey-list": {
       "title": "Questionari",
@@ -132,11 +133,14 @@
         "unpublish": "Nascondi"
       },
       "dialog-cannot-delete": "Non è possibile eliminare il questionario perchè risulta pubblicato.",
-      "dialog-confirm-delete": "Vuoi davvero eliminare il questionario?",
+      "dialog-confirm-delete-title": "Vuoi cancellare il questionario?",
+      "dialog-confirm-delete": "Il questionario verrà rimosso dalla tabella.",
       "dialog-confirm-restore": "Vuoi davvero ripristinare il questionario?",
       "dialog-confirm-clone": "Vuoi creare una nuova versione del questionario {{name}}?",
       "dialog-confirm-publish": "Vuoi davvero pubblicare il questionario?",
-      "dialog-confirm-unpublish": "Vuoi davvero nascondere al pubblico il questionario?"
+      "dialog-confirm-unpublish": "Il questionario {{name}} verrà chiuso e le risposte ai sondaggi verranno bloccate.",
+      "dialog-confirm-unpublish-title": "Vuoi chiudere il questionario?",
+      "dialog-confirm-unpublish-confirm": "Chiudi questionario"
     },
     "survey-form": {
       "title-new": "Nuovo questionario",
@@ -154,10 +158,13 @@
       "add-section-item": "Aggiungi sezione",
       "remove-section-btn": "Cancella sezione",
       "section-question-label": "Domanda {{index}}",
-      "survey-created-dialog": "Il questionario è stato creato correttamente",
+      "survey-created-dialog": "Il questionaro è stato salvato ed è in stato “Bozza”",
+      "survey-created-dialog-title": "Nuovo questionario salvato",
+      "survey-pubblish-dialog": "Il questionaro è stato pubblicato e verrà aggiunto alla lista dei questionari presenti nella dashboard.",
+      "survey-pubblish-dialog-title": "Nuovo questionario pubblicato",
       "survey-edited-dialog": "Il questionario è stato aggiornato correttamente",
       "move-up-btn": "Sposta su",
-      "move-down-btn": "Sposta su",
+      "move-down-btn": "Sposta giù",
       "validators": {
         "required-field": "Campo obbligatorio",
         "name-already-exists": "Nome già utilizzato",
