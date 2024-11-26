@@ -217,7 +217,7 @@
       "dialog-cannot-delete": "Non è possibile eliminare la Sezione perchè è associata ad uno o più questionari.",
       "dialog-confirm-delete": "Vuoi davvero eliminare la sezione?",
       "dialog-confirm-restore": "Vuoi davvero ripristinare la sezione?",
-      "dialog-confirm-clone": "Vuoi creare una nuova versione dela sezione {{name}}?"
+      "dialog-confirm-clone": "Vuoi creare una nuova versione della sezione {{name}}?"
     },
     "section-form": {
       "title-new": "Nuova sezione",
