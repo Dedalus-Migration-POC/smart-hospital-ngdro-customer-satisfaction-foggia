@@ -17,21 +17,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import {
   MatError,
   MatFormField,
-  MatHint,
   MatLabel,
   MatSuffix,
 } from '@angular/material/form-field'
 import { MatInput } from '@angular/material/input'
 import { MatCard } from '@angular/material/card'
-import {
-  AsyncPipe,
-  DatePipe,
-  JsonPipe,
-  NgForOf,
-  NgIf,
-  NgSwitch,
-  NgSwitchCase,
-} from '@angular/common'
+import { AsyncPipe, DatePipe, NgForOf, NgIf } from '@angular/common'
 import { MatIcon } from '@angular/material/icon'
 import { DialogService } from '../../support/dialog-service'
 import { Section } from '../../repository/dto/section'
@@ -44,8 +35,6 @@ import {
   MatDatepicker,
   MatDatepickerInput,
   MatDatepickerToggle,
-  MatDateRangeInput,
-  MatDateRangePicker,
 } from '@angular/material/datepicker'
 import { SurveyAdminState } from '../../store/store'
 import {
@@ -91,24 +80,18 @@ type DateRange = {
     MatIcon,
     NgIf,
     MatLabel,
-    MatHint,
     MatError,
     AsyncPipe,
     MatOption,
     MatSelect,
     MatSuffix,
     MatProgressSpinner,
-    MatDateRangeInput,
-    MatDateRangePicker,
     MatDatepickerToggle,
     MatDatepicker,
     MatDatepickerInput,
     MatTooltip,
     MatIconButton,
     RouterLink,
-    NgSwitch,
-    NgSwitchCase,
-    JsonPipe,
   ],
   templateUrl: './survey-form.component.html',
   styleUrl: './survey-form.component.scss',
@@ -128,7 +111,7 @@ export class SurveyFormComponent
     }),
     version: new FormControl<number | null>({ value: 1, disabled: true }),
     description: new FormControl<string | null>(null),
-    startDate: new FormControl<Date | null>(null, Validators.required),
+    startDate: new FormControl<Date | null>(null),
     endDate: new FormControl<Date | null>(null),
     sections: this.fb.array<Section | null>([]),
   })
@@ -237,6 +220,7 @@ export class SurveyFormComponent
     const surveyId = this.activatedRoute.snapshot.paramMap.get('surveyId')
     if (surveyId) {
       this.editMode = true
+      this.form.get('name')?.clearAsyncValidators()
       this.surveys$
         .pipe(
           take(1),

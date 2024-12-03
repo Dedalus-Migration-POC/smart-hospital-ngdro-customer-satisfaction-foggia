@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import {
-  MatError,
-  MatFormField,
-  MatLabel,
-  MatSuffix,
-} from '@angular/material/form-field'
+import { MatFormField, MatLabel } from '@angular/material/form-field'
 import { MatInput } from '@angular/material/input'
 import {
   FormBuilder,
@@ -12,21 +7,15 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms'
-import { MatButton, MatIconButton } from '@angular/material/button'
+import { MatButton } from '@angular/material/button'
 import { MatIcon } from '@angular/material/icon'
-import { MatProgressSpinner } from '@angular/material/progress-spinner'
-import { AsyncPipe, NgForOf, NgIf } from '@angular/common'
+import { AsyncPipe, NgForOf } from '@angular/common'
 import { TranslateModule } from '@ngx-translate/core'
 import { combineLatest, debounceTime, distinctUntilChanged, map } from 'rxjs'
 import { Store } from '@ngrx/store'
 import { SurveyAdminState } from '../../../../store/store'
 import { WithSubscriptionsComponent } from '../../../../support/with-subscriptions-component'
 import { MatOption, MatSelect } from '@angular/material/select'
-import {
-  MatDatepicker,
-  MatDatepickerInput,
-  MatDatepickerToggle,
-} from '@angular/material/datepicker'
 import {
   SectionFilterForm,
   selectSectionList,
@@ -35,7 +24,6 @@ import {
 import { SectionActions } from '../../../../store/section/actions'
 import { selectSurveyState } from '../../../../store/survey/reducer'
 import { selectUser } from '../../../../store/application/reducer'
-import { ToggleButtonComponent } from '../../../../components/toggle-button/toggle-button.component'
 import { MatTooltip } from '@angular/material/tooltip'
 import { SurveyUtils } from '../../../../support/survey-utils'
 import { Survey } from '../../../../repository/dto/survey'
@@ -47,12 +35,8 @@ import { Survey } from '../../../../repository/dto/survey'
     MatFormField,
     MatInput,
     FormsModule,
-    MatIconButton,
-    MatSuffix,
     MatLabel,
     MatIcon,
-    MatProgressSpinner,
-    NgIf,
     TranslateModule,
     AsyncPipe,
     MatButton,
@@ -60,11 +44,6 @@ import { Survey } from '../../../../repository/dto/survey'
     MatOption,
     NgForOf,
     ReactiveFormsModule,
-    MatDatepicker,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatError,
-    ToggleButtonComponent,
     MatTooltip,
   ],
   templateUrl: './filter.component.html',
@@ -93,8 +72,7 @@ export class FilterComponent
     this.addSubscriptions(
       this.form.valueChanges
         .pipe(debounceTime(500), distinctUntilChanged())
-        .subscribe((formChange) => {
-          console.log({ formChange })
+        .subscribe(() => {
           this.store.dispatch(
             SectionActions.fetchSections({ form: this.form.value }),
           )
@@ -107,6 +85,10 @@ export class FilterComponent
           this.form.controls.presentIn.disable()
         }
       }),
+    )
+
+    this.store.dispatch(
+      SectionActions.fetchAllSections({ form: this.form.value }),
     )
   }
 
@@ -135,6 +117,9 @@ export class FilterComponent
         .flat()
         .sort((a, b) => (a.value < b.value ? -1 : 1)),
     ),
+    map((data) => [
+      ...new Map(data.map((item) => [item['id'], item])).values(),
+    ]),
   )
 
   protected toggleDeleted() {

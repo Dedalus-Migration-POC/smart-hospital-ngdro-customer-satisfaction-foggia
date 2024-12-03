@@ -42,7 +42,10 @@
         (click)="submit('publish')"
         [disabled]="
           (operatingStatus$ | async) ===
-            SurveyOperatingStatus.CREATING_PUBLISHING || !form.dirty
+            SurveyOperatingStatus.CREATING_PUBLISHING ||
+          !form.value.startDate ||
+          !form.value.endDate ||
+          !form.value.name
         "
       >
         <mat-spinner

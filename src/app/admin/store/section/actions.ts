@@ -1,13 +1,31 @@
-import {createAction, props} from '@ngrx/store'
-import {Section} from "../../repository/dto/section";
-import {SectionForm} from "../../pages/section-form/section-form.component";
-import {TablePagination} from "../../support/domain/table-pagination";
-import {SectionFilterForm} from "./reducer";
-import {PagedList} from "../../repository/dto/paged_list";
+import { createAction, props } from '@ngrx/store'
+import { Section } from '../../repository/dto/section'
+import { SectionForm } from '../../pages/section-form/section-form.component'
+import { TablePagination } from '../../support/domain/table-pagination'
+import { SectionFilterForm } from './reducer'
+import { PagedList } from '../../repository/dto/paged_list'
+
+const fetchAllSections = createAction(
+  '[Section] Fetch All Sections',
+  props<{
+    form?: SectionFilterForm['value']
+    tablePagination?: Partial<TablePagination>
+  }>(),
+)
+const fetchAllSectionsSucceeded = createAction(
+  '[Section] Fetch ALl Sections Succeeded',
+  props<{ response: PagedList<Section> }>(),
+)
+const fetchAllSectionsFailed = createAction(
+  '[Section] Fetch All Sections Failed',
+)
 
 const fetchSections = createAction(
   '[Section] Fetch Sections',
-  props<{ form?: SectionFilterForm['value']; tablePagination?: Partial<TablePagination> }>()
+  props<{
+    form?: SectionFilterForm['value']
+    tablePagination?: Partial<TablePagination>
+  }>(),
 )
 
 const fetchSectionsSucceeded = createAction(
@@ -15,18 +33,16 @@ const fetchSectionsSucceeded = createAction(
   props<{ response: PagedList<Section> }>(),
 )
 
-const fetchSectionsFailed = createAction(
-  '[Section] Fetch Sections Failed',
-)
+const fetchSectionsFailed = createAction('[Section] Fetch Sections Failed')
 
 const fetchSectionById = createAction(
   '[Section] Fetch Section by ID',
-  props<{ section: Section }>()
+  props<{ section: Section }>(),
 )
 
 const fetchSectionByIdSucceeded = createAction(
   '[Section] Fetch Section by ID Succeeded',
-  props<{ section: Section }>()
+  props<{ section: Section }>(),
 )
 
 const fetchSectionByIdFailed = createAction(
@@ -35,65 +51,58 @@ const fetchSectionByIdFailed = createAction(
 
 const submitSection = createAction(
   '[Section] Submit Section',
-  props<{ sectionForm: SectionForm['value'] }>()
+  props<{ sectionForm: SectionForm['value'] }>(),
 )
 
 const submitSectionSucceeded = createAction(
   '[Section] Submit Section Succeeded',
-  props<{ section: Section }>()
+  props<{ section: Section }>(),
 )
 
-const submitSectionFailed = createAction(
-  '[Section] Submit Section Failed',
-)
+const submitSectionFailed = createAction('[Section] Submit Section Failed')
 
 const cloneSection = createAction(
   '[Section] Clone Section',
-  props<{ section: Section }>()
+  props<{ section: Section }>(),
 )
 
 const cloneSectionSucceeded = createAction(
   '[Section] Clone Section Succeeded',
-  props<{ section: Section }>()
+  props<{ section: Section }>(),
 )
 
-const cloneSectionFailed = createAction(
-  '[Section] Clone Section Failed',
-)
+const cloneSectionFailed = createAction('[Section] Clone Section Failed')
 
 const deleteSection = createAction(
   '[Section] Delete Section',
-  props<{ section: Section }>()
+  props<{ section: Section }>(),
 )
 
 const deleteSectionSucceeded = createAction(
   '[Section] Delete Section Succeeded',
-  props<{ section: Section }>()
+  props<{ section: Section }>(),
 )
 
-const deleteSectionFailed = createAction(
-  '[Section] Delete Section Failed',
-)
+const deleteSectionFailed = createAction('[Section] Delete Section Failed')
 
 const restoreSection = createAction(
   '[Section] Restore Section',
-  props<{ section: Section }>()
+  props<{ section: Section }>(),
 )
 
 const restoreSectionSucceeded = createAction(
   '[Section] Restore Section Succeeded',
-  props<{ section: Section }>()
+  props<{ section: Section }>(),
 )
 
-const restoreSectionFailed = createAction(
-  '[Section] Restore Section Failed',
-)
+const restoreSectionFailed = createAction('[Section] Restore Section Failed')
 
-const toggleShowDeleted = createAction(
-  '[Section] Toggle Show Deleted',
-)
+const toggleShowDeleted = createAction('[Section] Toggle Show Deleted')
 
 export const SectionActions = {
+  fetchAllSections,
+  fetchAllSectionsSucceeded,
+  fetchAllSectionsFailed,
   fetchSections,
   fetchSectionsSucceeded,
   fetchSectionsFailed,
@@ -112,10 +121,13 @@ export const SectionActions = {
   restoreSection,
   restoreSectionSucceeded,
   restoreSectionFailed,
-  toggleShowDeleted
+  toggleShowDeleted,
 }
 
 export type SectionActionTypes =
+  | typeof fetchAllSections
+  | typeof fetchAllSectionsSucceeded
+  | typeof fetchAllSectionsFailed
   | typeof fetchSections
   | typeof fetchSectionsSucceeded
   | typeof fetchSectionsFailed

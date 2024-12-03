@@ -1,15 +1,20 @@
-import {createFeatureSelector, createReducer, createSelector, on} from "@ngrx/store";
-import {Survey, SurveyStatus} from "../../repository/dto/survey";
-import {SubmitSurveyOption, SurveyActions} from "./actions";
-import {SurveyAdminState} from "../store";
-import {FormControl, FormGroup} from "@angular/forms";
-import {TablePagination} from "../../support/domain/table-pagination";
-import {PagedList} from "../../repository/dto/paged_list";
+import {
+  createFeatureSelector,
+  createReducer,
+  createSelector,
+  on,
+} from '@ngrx/store'
+import { Survey, SurveyStatus } from '../../repository/dto/survey'
+import { SubmitSurveyOption, SurveyActions } from './actions'
+import { SurveyAdminState } from '../store'
+import { FormControl, FormGroup } from '@angular/forms'
+import { TablePagination } from '../../support/domain/table-pagination'
+import { PagedList } from '../../repository/dto/paged_list'
 
 export type SurveyFilterForm = FormGroup<{
-  name: FormControl<string | null>;
-  status: FormControl<SurveyStatus | null>;
-  version: FormControl<number | null>;
+  name: FormControl<string | null>
+  status: FormControl<SurveyStatus | null>
+  version: FormControl<number | null>
   startDate: FormControl<Date | null>
   endDate: FormControl<Date | null>
 }>
@@ -24,20 +29,21 @@ export enum SurveyOperatingStatus {
 }
 
 export type State = {
-  fetchingSurveys: boolean;
-  fetchSurveysError: boolean;
+  fetchingSurveys: boolean
+  fetchSurveysError: boolean
   operatingStatus: {
-    surveyId: number;
-    status: SurveyOperatingStatus;
-  } | null;
-  surveys: PagedList<Survey> | null;
-  versions: Set<number>;
-  showDeleted: boolean;
+    surveyId: number
+    status: SurveyOperatingStatus
+  } | null
+  surveys: PagedList<Survey> | null
+  allSurveys: PagedList<Survey> | null
+  versions: Set<number>
+  showDeleted: boolean
   searchCriteria: {
-    filter: SurveyFilterForm['value'];
-    tablePagination: TablePagination | undefined;
-  },
-  fetchingPrintData: boolean;
+    filter: SurveyFilterForm['value']
+    tablePagination: TablePagination | undefined
+  }
+  fetchingPrintData: boolean
 }
 
 const initialState: State = {
@@ -45,35 +51,73 @@ const initialState: State = {
   fetchSurveysError: false,
   operatingStatus: null,
   surveys: null,
+  allSurveys: null,
   versions: new Set([1]),
   showDeleted: false,
   searchCriteria: {
     filter: {},
     tablePagination: {
       size: 5,
-      sort: 'name,asc'
-    }
+      sort: 'name,asc',
+    },
   },
   fetchingPrintData: false,
 }
 
 export const reducer = createReducer(
   initialState,
-  on(SurveyActions.fetchSurveys, (state, {form, tablePagination}) => ({
+  on(SurveyActions.fetchAllSurveys, (state, { form, tablePagination }) => ({
     ...state,
     fetchingSurveys: true,
     fetchSurveysError: false,
     searchCriteria: {
-      filter: {...state.searchCriteria.filter, ...form},
-      tablePagination: {...state.searchCriteria.tablePagination, ...tablePagination},
-    }
+      filter: { ...state.searchCriteria.filter, ...form },
+      tablePagination: {
+        ...state.searchCriteria.tablePagination,
+        ...tablePagination,
+      },
+    },
+  })),
+  on(SurveyActions.fetchAllSurveysSucceeded, (state, action) => ({
+    ...state,
+    fetchingSurveys: false,
+    fetchSurveysError: false,
+    allSurveys: action.allSurveys,
+    versions: new Set<number>(
+      action.allSurveys.content
+        .map(({ version }) => version)
+        .filter(Boolean)
+        .sort((a, b) => (a > b ? 1 : -1)),
+    ),
+  })),
+  on(SurveyActions.fetchAllSurveysFailed, (state) => ({
+    ...state,
+    fetchingSurveys: false,
+    fetchSurveysError: true,
+  })),
+  on(SurveyActions.fetchSurveys, (state, { form, tablePagination }) => ({
+    ...state,
+    fetchingSurveys: true,
+    fetchSurveysError: false,
+    searchCriteria: {
+      filter: { ...state.searchCriteria.filter, ...form },
+      tablePagination: {
+        ...state.searchCriteria.tablePagination,
+        ...tablePagination,
+      },
+    },
   })),
   on(SurveyActions.fetchSurveysSucceeded, (state, action) => ({
     ...state,
     fetchingSurveys: false,
     fetchSurveysError: false,
     surveys: action.surveys,
-    versions: new Set<number>(action.surveys.content.map(({version}) => version).filter(Boolean).sort((a, b) => a > b ? 1 : -1))
+    // versions: new Set<number>(
+    //   action.surveys.content
+    //     .map(({ version }) => version)
+    //     .filter(Boolean)
+    //     .sort((a, b) => (a > b ? 1 : -1)),
+    // ),
   })),
   on(SurveyActions.fetchSurveysFailed, (state) => ({
     ...state,
@@ -89,17 +133,19 @@ export const reducer = createReducer(
     fetchingSurveys: false,
     surveys: {
       ...state.surveys!,
-      content: state.surveys!.content.map(s => s.id === action.survey.id ? action.survey : s)
-    }
+      content: state.surveys!.content.map((s) =>
+        s.id === action.survey.id ? action.survey : s,
+      ),
+    },
   })),
   on(SurveyActions.fetchSurveyByIdFailed, (state) => ({
     ...state,
     fetchingSurveys: false,
   })),
-  on(SurveyActions.submitSurvey, (state, {submitOption}) => {
+  on(SurveyActions.submitSurvey, (state, { submitOption }) => {
     const statuses: Record<SubmitSurveyOption, SurveyOperatingStatus> = {
       save: SurveyOperatingStatus.CREATING,
-      publish: SurveyOperatingStatus.CREATING_PUBLISHING
+      publish: SurveyOperatingStatus.CREATING_PUBLISHING,
     }
     return {
       ...state,
@@ -115,8 +161,8 @@ export const reducer = createReducer(
     operatingStatus: null,
     surveys: {
       ...state.surveys!,
-      content: [action.survey, ...state.surveys!.content]
-    }
+      content: [action.survey, ...state.surveys!.content],
+    },
   })),
   on(SurveyActions.submitSurveyFailed, (state) => ({
     ...state,
@@ -133,13 +179,13 @@ export const reducer = createReducer(
     ...state,
     surveys: {
       ...state.surveys!,
-      content: [action.survey, ...state.surveys!.content]
+      content: [action.survey, ...state.surveys!.content],
     },
-    operatingStatus: null
+    operatingStatus: null,
   })),
   on(SurveyActions.cloneSurveyFailed, (state) => ({
     ...state,
-    operatingStatus: null
+    operatingStatus: null,
   })),
   on(SurveyActions.deleteSurvey, (state, action) => ({
     ...state,
@@ -153,102 +199,98 @@ export const reducer = createReducer(
     ...state,
     surveys: {
       ...state.surveys!,
-      content: state.surveys!.content.map(survey =>
-        survey.id === action.survey.id
-          ? {...survey, deleted: true}
-          : survey
-      )
+      content: state.surveys!.content.map((survey) =>
+        survey.id === action.survey.id ? { ...survey, deleted: true } : survey,
+      ),
     },
-    operatingStatus: null
+    operatingStatus: null,
   })),
   on(SurveyActions.deleteSurveyFailed, (state) => ({
     ...state,
-    operatingStatus: null
+    operatingStatus: null,
   })),
   on(SurveyActions.restoreSurvey, (state, action) => ({
     ...state,
     operatingStatus: {
       surveyId: action.survey.id!,
-      status: SurveyOperatingStatus.DELETING_RESTORING
+      status: SurveyOperatingStatus.DELETING_RESTORING,
     },
   })),
   on(SurveyActions.restoreSurveySucceeded, (state, action) => ({
     ...state,
     surveys: {
       ...state.surveys!,
-      content: state.surveys!.content.map(survey =>
-        survey.id === action.survey.id
-          ? {...survey, deleted: false}
-          : survey
-      )
+      content: state.surveys!.content.map((survey) =>
+        survey.id === action.survey.id ? { ...survey, deleted: false } : survey,
+      ),
     },
-    operatingStatus: null
+    operatingStatus: null,
   })),
   on(SurveyActions.restoreSurveyFailed, (state) => ({
     ...state,
-    operatingStatus: null
+    operatingStatus: null,
   })),
   on(SurveyActions.publishSurvey, (state, action) => ({
     ...state,
     operatingStatus: {
       surveyId: action.survey.id!,
-      status: SurveyOperatingStatus.PUBLISHING_UNPUBLISHING
+      status: SurveyOperatingStatus.PUBLISHING_UNPUBLISHING,
     },
   })),
   on(SurveyActions.publishSurveySucceeded, (state, action) => ({
     ...state,
     surveys: {
       ...state.surveys!,
-      content: state.surveys!.content.map(survey =>
+      content: state.surveys!.content.map((survey) =>
         survey.id === action.survey.id
-          ? {...survey, status: SurveyStatus.ACTIVE}
-          : survey
-      )
+          ? { ...survey, status: SurveyStatus.ACTIVE }
+          : survey,
+      ),
     },
-    operatingStatus: null
+    operatingStatus: null,
   })),
   on(SurveyActions.publishSurveyFailed, (state) => ({
     ...state,
-    operatingStatus: null
+    operatingStatus: null,
   })),
   on(SurveyActions.unpublishSurvey, (state, action) => ({
     ...state,
     operatingStatus: {
       surveyId: action.survey!.id!,
-      status: SurveyOperatingStatus.PUBLISHING_UNPUBLISHING
+      status: SurveyOperatingStatus.PUBLISHING_UNPUBLISHING,
     },
   })),
   on(SurveyActions.unpublishSurveySucceeded, (state, action) => ({
     ...state,
     surveys: {
       ...state.surveys!,
-      content: state.surveys!.content.map(survey =>
+      content: state.surveys!.content.map((survey) =>
         survey.id === action.survey.id
-          ? {...survey, status: SurveyStatus.INACTIVE}
-          : survey
-      )
+          ? { ...survey, status: SurveyStatus.INACTIVE }
+          : survey,
+      ),
     },
-    operatingStatus: null
+    operatingStatus: null,
   })),
   on(SurveyActions.unpublishSurveyFailed, (state) => ({
     ...state,
-    operatingStatus: null
+    operatingStatus: null,
   })),
   on(SurveyActions.toggleShowDeleted, (state) => ({
     ...state,
-    showDeleted: !state.showDeleted
+    showDeleted: !state.showDeleted,
   })),
   on(SurveyActions.fetchPrintSurveyData, (state) => ({
     ...state,
-    fetchingPrintData: true
+    fetchingPrintData: true,
   })),
   on(SurveyActions.fetchPrintSurveyDataSucceeded, (state) => ({
     ...state,
-    fetchingPrintData: false
+    fetchingPrintData: false,
   })),
   on(SurveyActions.fetchPrintSurveyDataFailed, (state) => ({
     ...state,
-    fetchingPrintData: false
+    fetchingPrintData: false,
   })),
   on(SurveyActions.printSurvey, (state) => ({
     ...state,
@@ -267,18 +309,21 @@ export const reducer = createReducer(
   })),
 )
 
-export const selectSurveyState = createFeatureSelector<State>('survey');
-export const selectSectionSearchCriteria = createSelector((state: SurveyAdminState) => state.survey, (({
-                                                                                                         searchCriteria
-                                                                                                       }) => searchCriteria))
-export const selectSurveyList = createSelector((state: SurveyAdminState) => state.survey, ({
-                                                                                             fetchingSurveys,
-                                                                                             fetchSurveysError,
-                                                                                             surveys,
-                                                                                           }) => ({
-  fetchingSurveys,
-  fetchSurveysError,
-  surveys,
-}))
+export const selectSurveyState = createFeatureSelector<State>('survey')
+export const selectSectionSearchCriteria = createSelector(
+  (state: SurveyAdminState) => state.survey,
+  ({ searchCriteria }) => searchCriteria,
+)
+export const selectSurveyList = createSelector(
+  (state: SurveyAdminState) => state.survey,
+  ({ fetchingSurveys, fetchSurveysError, surveys }) => ({
+    fetchingSurveys,
+    fetchSurveysError,
+    surveys,
+  }),
+)
 
-export const selectSurveyVersions = createSelector((state: SurveyAdminState) => state.survey, ({versions}) => versions)
+export const selectSurveyVersions = createSelector(
+  (state: SurveyAdminState) => state.allSurvey,
+  ({ versions }) => versions,
+)
