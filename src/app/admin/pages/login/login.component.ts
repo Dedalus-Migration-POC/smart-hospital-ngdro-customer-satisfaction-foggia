@@ -8,12 +8,30 @@ import {WithSubscriptionsComponent} from "../../support/with-subscriptions-compo
 import {Actions, ofType} from "@ngrx/effects";
 import {tap} from "rxjs";
 import {Router} from "@angular/router";
+import {TranslateModule} from "@ngx-translate/core";
+import {NgIf, NgOptimizedImage} from "@angular/common";
+import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+
+export type LoginForm = FormGroup<{
+  username: FormControl<string | null>;
+  password: FormControl<string | null>;
+}>
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
-    MatButton
+    MatButton,
+    TranslateModule,
+    NgOptimizedImage,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    ReactiveFormsModule,
+    MatError,
+    NgIf
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -22,10 +40,16 @@ export class LoginComponent extends WithSubscriptionsComponent implements OnInit
   constructor(
     private store: Store<SurveyAdminState>,
     private actions: Actions,
+    private fb: FormBuilder,
     private router: Router
   ) {
     super()
   }
+
+  form: LoginForm = this.fb.group({
+    username: new FormControl<string | null>(null, [Validators.required]),
+    password: new FormControl<string | null>(null, [Validators.required]),
+  })
 
   ngOnInit() {
     this.addSubscription(
@@ -45,6 +69,8 @@ export class LoginComponent extends WithSubscriptionsComponent implements OnInit
   }
 
   protected login(userRole: UserRole) {
+    //this.form.markAllAsTouched()
+    //if (this.form.valid)
     this.store.dispatch(AppActions.login({userRole}));
   }
 

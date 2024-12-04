@@ -19,14 +19,10 @@ import {
   MatDatepicker,
   MatDatepickerInput,
   MatDatepickerToggle,
-  MatDateRangeInput,
-  MatDateRangePicker,
-  MatStartDate,
 } from '@angular/material/datepicker'
-import { MatButton, MatIconButton } from '@angular/material/button'
+import { MatButton } from '@angular/material/button'
 import { MatTooltip } from '@angular/material/tooltip'
 import { MatIcon } from '@angular/material/icon'
-import { ToggleButtonComponent } from '../../../../components/toggle-button/toggle-button.component'
 import { selectUser } from '../../../../store/application/reducer'
 
 @Component({
@@ -45,17 +41,11 @@ import { selectUser } from '../../../../store/application/reducer'
     MatDatepickerInput,
     MatDatepickerToggle,
     MatDatepicker,
-    MatIconButton,
     MatButton,
     MatTooltip,
     MatLabel,
     MatIcon,
-    ToggleButtonComponent,
-    MatDateRangeInput,
-    MatDateRangePicker,
-    MatStartDate,
     MatSuffix,
-    NgIf,
   ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss',
@@ -92,6 +82,9 @@ export class FilterComponent
           console.log('survey filter form changed')
           this.search()
         }),
+    )
+    this.store.dispatch(
+      SurveyActions.fetchAllSurveys({ form: this.form.value }),
     )
   }
 

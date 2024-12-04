@@ -1,0 +1,43 @@
+<app-scaffold [loading]="loading$" [error]="of(false)">
+  <div class="content">
+    <mat-card *ngIf="!(loading$ | async)">
+      <div class="card-head">
+        <div class="card-head-title">
+          {{
+            'admin.operator-dashboard.title'
+              | translate: { department: 'departmentHere' }
+          }}
+        </div>
+        <button mat-stroked-button (click)="viewAnalytics()">
+          <img
+            ngSrc="assets/images/area_chart.png"
+            alt=""
+            style="margin-right: 8px"
+            height="13"
+            width="14"
+          />
+          <span>{{ 'admin.survey-list.view-analytics-btn' | translate }}</span>
+        </button>
+      </div>
+      <span style="margin-bottom: 25px">
+        {{ 'admin.operator-dashboard.subtitle' | translate }}
+      </span>
+      <ng-container *ngIf="data$ | async as data">
+        <app-print-survey [data]="data"></app-print-survey>
+      </ng-container>
+      <button
+        class="print-btn"
+        mat-flat-button
+        (click)="print()"
+        *ngIf="printSurveyComponent"
+      >
+        {{
+          ((printSurveyComponent.printing$ | async)
+            ? 'admin.print-survey-dialog.printing'
+            : 'admin.print-survey-dialog.button'
+          ) | translate
+        }}
+      </button>
+    </mat-card>
+  </div>
+</app-scaffold>

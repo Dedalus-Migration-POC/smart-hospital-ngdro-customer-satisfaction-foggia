@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -26,7 +27,7 @@ import {
   SurveyOperatingStatus,
 } from '../../../store/survey/reducer'
 import { MatProgressSpinner } from '@angular/material/progress-spinner'
-import { MatButton, MatIconButton } from '@angular/material/button'
+import { MatIconButton } from '@angular/material/button'
 import { MatTooltip } from '@angular/material/tooltip'
 import { MatIcon } from '@angular/material/icon'
 import { FilterComponent } from './filter/filter.component'
@@ -84,11 +85,11 @@ import { SurveyActions } from '../../../store/survey/actions'
     MatPaginator,
     MatProgressBar,
     ToggleButtonComponent,
-    MatButton,
     MatChipsModule,
   ],
   templateUrl: './survey-list-table.component.html',
   styleUrl: './survey-list-table.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SurveyListTableComponent
   extends WithSubscriptionsComponent

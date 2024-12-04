@@ -1,4 +1,5 @@
-<svg id="Raggruppa_27391" data-name="Raggruppa 27391" xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
-  <ellipse id="Ellisse_2" data-name="Ellisse 2" cx="30" cy="30" rx="30" ry="30" fill="#65b446"/>
-  <path id="Tracciato_2" data-name="Tracciato 2" d="M1520.609,1226.084l14.268,13.412,24.778-23.231" transform="translate(-1510.133 -1197.881)" fill="none" stroke="#fff" stroke-width="3"/>
+<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icon">
+<path id="icon" d="M13.5 24.255L7.24499 18L5.11499 20.115L13.5 28.5L31.5 10.5L29.385 8.385L13.5 24.255Z" fill="#381E72"/>
+</g>
 </svg>

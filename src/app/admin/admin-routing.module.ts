@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {NotFoundComponent} from "./pages/not-found/not-found.component";
-import {DashboardComponent} from "./pages/dashboard/dashboard.component";
+import {DashboardComponent} from "./pages/dashboard/admin/dashboard.component";
 import {UserRouteGuard} from "./config/user.route-guard";
 
 const routes: Routes = [
@@ -36,6 +36,12 @@ const routes: Routes = [
     pathMatch: 'full',
     loadComponent: () =>
       import('./pages/section-form/section-form.component').then(({SectionFormComponent}) => SectionFormComponent)
+  },
+  {
+    path: 'print',
+    pathMatch: 'full',
+    loadComponent: () =>
+      import('./pages/dashboard/operator/dashboard-operator.component').then(({DashboardOperatorComponent}) => DashboardOperatorComponent)
   },
   {
     path: 'template-form',

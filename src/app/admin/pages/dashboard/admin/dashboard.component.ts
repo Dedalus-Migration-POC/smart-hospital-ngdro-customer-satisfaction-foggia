@@ -1,13 +1,13 @@
-import { Component } from '@angular/core'
-import { SurveyListComponent } from '../survey-list/survey-list.component'
-import { SectionListComponent } from '../section-list/section-list.component'
-import { TopRightButtonsComponent } from '../survey-list/top-right-buttons/top-right-buttons.component'
-import { map } from 'rxjs'
-import { AsyncPipe, NgIf } from '@angular/common'
-import { ScaffoldComponent } from '../../components/scaffold/scaffold.component'
-import { selectApplicationState } from '../../store/application/reducer'
-import { Store } from '@ngrx/store'
-import { SurveyAdminState } from '../../store/store'
+import {Component} from '@angular/core'
+import {SurveyListComponent} from '../../survey-list/survey-list.component'
+import {SectionListComponent} from '../../section-list/section-list.component'
+import {TopRightButtonsComponent} from '../../survey-list/top-right-buttons/top-right-buttons.component'
+import {map} from 'rxjs'
+import {AsyncPipe, NgIf} from '@angular/common'
+import {ScaffoldComponent} from '../../../components/scaffold/scaffold.component'
+import {selectApplicationState} from '../../../store/application/reducer'
+import {Store} from '@ngrx/store'
+import {SurveyAdminState} from '../../../store/store'
 
 @Component({
   selector: 'app-dashboard',
@@ -42,11 +42,12 @@ import { SurveyAdminState } from '../../store/store'
   `,
 })
 export class DashboardComponent {
-  constructor(private store: Store<SurveyAdminState>) {}
+  constructor(private store: Store<SurveyAdminState>) {
+  }
 
   state$ = this.store.select(selectApplicationState)
-  initializing$ = this.state$.pipe(map(({ initializing }) => initializing))
+  initializing$ = this.state$.pipe(map(({initializing}) => initializing))
   initializeError$ = this.state$.pipe(
-    map(({ initializeError }) => initializeError),
+    map(({initializeError}) => initializeError),
   )
 }

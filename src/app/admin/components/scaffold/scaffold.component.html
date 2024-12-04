@@ -7,7 +7,7 @@
     </h4>
   </div>
   <div class="scaffold-content">
-    <div class="back-btn" *ngIf="canGoBack$ | async" routerLink="..">
+    <div class="back-btn" *ngIf="(canShowBackLink$ | async) && (canGoBack$ | async)" routerLink="..">
       <img alt="Back" ngSrc="assets/images/arrow-left.svg" width="20" height="20">
       <span>{{ 'go-back' | translate }}</span>
     </div>

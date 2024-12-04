@@ -2,8 +2,8 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from "@angular/common";
 import {TranslateModule} from "@ngx-translate/core";
 import {DesignAngularKitModule} from "design-angular-kit";
-import {map, Observable} from "rxjs";
-import {ActivatedRoute, RouterLink} from "@angular/router";
+import {BehaviorSubject, map, Observable} from "rxjs";
+import {ActivatedRoute, NavigationEnd, Router, RouterLink} from "@angular/router";
 import {MatDialogActions, MatDialogClose, MatDialogContent} from "@angular/material/dialog";
 import {MatButton} from "@angular/material/button";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
@@ -44,16 +44,40 @@ export class ScaffoldComponent implements OnInit {
 
   constructor(
     private store: Store<SurveyAdminState>,
+    private router: Router,
     private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
+    this.router.events.subscribe(
+      event => {
+        if (event instanceof NavigationEnd) {
+          // Get the current route stack
+          const routeStack = this.getRouteStack(event);
+          this.canShowBackLink$.next(!!routeStack.length)
+        }
+      }
+    )
     if (this.onErrorCancelCallback) {
       this.onErrorCancelCallback = new EventEmitter()
     }
   }
 
+  getRouteStack(event: NavigationEnd): ActivatedRoute[] {
+    const routeStack: ActivatedRoute[] = [];
+    let currentRoute = event.urlAfterRedirects;
+    console.log(event.urlAfterRedirects, routeStack)
+    while (currentRoute) {
+      //@ts-ignore
+      routeStack.unshift(currentRoute);
+      //@ts-ignore
+      currentRoute = currentRoute.parent;
+    }
+    return routeStack;
+  }
+
   initializing$ = this.store.select(s => s.application.initializing)
+  canShowBackLink$ = new BehaviorSubject(false)
   canGoBack$ = this.activatedRoute.url.pipe(
     withLatestFrom(this.initializing$),
     map(([url, initializing]) => !initializing && url.length)

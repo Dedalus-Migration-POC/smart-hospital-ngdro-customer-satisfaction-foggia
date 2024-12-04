@@ -70,7 +70,17 @@ mat-card {
 }
 
 .move-buttons {
-  position: absolute;
-  right: 10px;
-  top: 80px;
+  > button {
+    border: 1px solid;
+    padding: 0;
+    padding-top: 4px;
+    margin-left: 1rem;
+
+    &:not([disabled]) {
+      border-color: #7d5260;
+      > mat-icon {
+        color: #7d5260;
+      }
+    }
+  }
 }

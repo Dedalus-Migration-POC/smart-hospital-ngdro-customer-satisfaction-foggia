@@ -120,6 +120,17 @@
       "previousPageLabel": "Precedente",
       "rangeLabel": "di"
     },
+    "login": {
+      "form": {
+        "username": "Mail",
+        "password": "Password",
+        "submit-btn": "Accedi"
+      }
+    },
+    "operator-dashboard": {
+      "title": "Dashboard {{department}}",
+      "subtitle": "Visualizza le analitiche relative alle risposte dei questionari ricevuti per la tua unità operativa, oppure stampa i fogli sondaggio da consegnare ai pazienti."
+    },
     "survey-list": {
       "title": "Questionari",
       "create-survey-btn": "Nuovo questionario",
@@ -155,11 +166,14 @@
         "unpublish": "Nascondi"
       },
       "dialog-cannot-delete": "Non è possibile eliminare il questionario perchè risulta pubblicato.",
-      "dialog-confirm-delete": "Vuoi davvero eliminare il questionario?",
+      "dialog-confirm-delete-title": "Vuoi cancellare il questionario?",
+      "dialog-confirm-delete": "Il questionario verrà rimosso dalla tabella.",
       "dialog-confirm-restore": "Vuoi davvero ripristinare il questionario?",
       "dialog-confirm-clone": "Vuoi creare una nuova versione del questionario {{name}}?",
       "dialog-confirm-publish": "Vuoi davvero pubblicare il questionario?",
-      "dialog-confirm-unpublish": "Vuoi davvero nascondere al pubblico il questionario?"
+      "dialog-confirm-unpublish": "Il questionario {{name}} verrà chiuso e le risposte ai sondaggi verranno bloccate.",
+      "dialog-confirm-unpublish-title": "Vuoi chiudere il questionario?",
+      "dialog-confirm-unpublish-confirm": "Chiudi questionario"
     },
     "survey-form": {
       "title-new": "Nuovo questionario",
@@ -175,12 +189,15 @@
       "survey-end-date-field": "Data fine validità",
       "section-field-label": "Sezione {{index}}",
       "add-section-item": "Aggiungi sezione",
-      "remove-section-btn": "Cancella sezione",
+      "remove-section-btn": "Cancella",
       "section-question-label": "Domanda {{index}}",
-      "survey-created-dialog": "Il questionario è stato creato correttamente",
+      "survey-created-dialog": "Il questionaro è stato salvato ed è in stato “Bozza”",
+      "survey-created-dialog-title": "Nuovo questionario salvato",
+      "survey-pubblish-dialog": "Il questionaro è stato pubblicato e verrà aggiunto alla lista dei questionari presenti nella dashboard.",
+      "survey-pubblish-dialog-title": "Nuovo questionario pubblicato",
       "survey-edited-dialog": "Il questionario è stato aggiornato correttamente",
       "move-up-btn": "Sposta su",
-      "move-down-btn": "Sposta su",
+      "move-down-btn": "Sposta giù",
       "validators": {
         "required-field": "Campo obbligatorio",
         "name-already-exists": "Nome già utilizzato",
@@ -201,7 +218,8 @@
       "printing": "Stampa in corso...",
       "form-validations": {
         "required-field": "Campo obbligatorio"
-      }
+      },
+      "no-surveys-error": "Non ci sono questionari attivi"
     },
     "section-list": {
       "title": "Sezioni",
@@ -232,7 +250,7 @@
       "dialog-cannot-delete": "Non è possibile eliminare la Sezione perchè è associata ad uno o più questionari.",
       "dialog-confirm-delete": "Vuoi davvero eliminare la sezione?",
       "dialog-confirm-restore": "Vuoi davvero ripristinare la sezione?",
-      "dialog-confirm-clone": "Vuoi creare una nuova versione dela sezione {{name}}?"
+      "dialog-confirm-clone": "Vuoi creare una nuova versione della sezione {{name}}?"
     },
     "section-form": {
       "title-new": "Nuova sezione",

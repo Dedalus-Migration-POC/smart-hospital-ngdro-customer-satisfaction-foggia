@@ -29,8 +29,6 @@ import { Section } from '../../../repository/dto/section'
 import { MatProgressSpinner } from '@angular/material/progress-spinner'
 import { Store } from '@ngrx/store'
 import { combineLatest, map, Observable } from 'rxjs'
-import { MatInput } from '@angular/material/input'
-import { MatCheckbox } from '@angular/material/checkbox'
 import { FormsModule } from '@angular/forms'
 import { MatTooltip } from '@angular/material/tooltip'
 import { SurveyAdminState } from '../../../store/store'
@@ -69,8 +67,6 @@ import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-
     MatHeaderCellDef,
     MatProgressSpinner,
     AsyncPipe,
-    MatInput,
-    MatCheckbox,
     FormsModule,
     MatTooltip,
     MatSort,
@@ -114,7 +110,6 @@ export class SectionListTableComponent
   }
 
   ngOnInit() {
-    this.initialize()
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort
     //FIXME non appaiono nel paginator

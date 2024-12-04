@@ -1,0 +1,105 @@
+<form [formGroup]="form" (ngSubmit)="print()">
+  <mat-form-field
+    style="width: 100%"
+    appearance="outline"
+    floatLabel="always"
+    *ngIf="form.controls.healthcareUnit; let unit"
+  >
+    <mat-label>{{
+      'admin.print-survey-dialog.select-unit-label' | translate
+    }}</mat-label>
+    <mat-select [formControl]="unit" [value]="unit">
+      <mat-option *ngFor="let unit of data.healthcareUnits" [value]="unit">{{
+        unit.name
+      }}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="unit.hasError('required')"
+      >{{
+        'admin.print-survey-dialog.form-validations.required-field' | translate
+      }}
+    </mat-error>
+  </mat-form-field>
+
+  <div style="height: 10px"></div>
+
+  <ng-container *ngIf="canChooseType(form.controls.healthcareUnit.value)">
+    <div class="structure-type-label">
+      {{ 'admin.print-survey-dialog.structure-type-label' | translate }}
+    </div>
+    <mat-radio-group [formControl]="form.controls.structure">
+      <mat-radio-button value="DEPARTMENT"
+        >{{
+          'admin.print-survey-dialog.structure-type-radio.department'
+            | translate
+        }}
+      </mat-radio-button>
+      <mat-radio-button value="AMBULATORY"
+        >{{
+          'admin.print-survey-dialog.structure-type-radio.ambulatory'
+            | translate
+        }}
+      </mat-radio-button>
+    </mat-radio-group>
+
+    <div style="height: 20px"></div>
+  </ng-container>
+
+  <ng-container *ngIf="data.surveys as surveys">
+    <mat-form-field
+      style="width: 100%"
+      appearance="outline"
+      floatLabel="always"
+      *ngIf="form.controls.survey; let surveyControl"
+    >
+      <mat-label>{{
+        'admin.print-survey-dialog.select-survey-label' | translate
+      }}</mat-label>
+      <mat-select [formControl]="surveyControl">
+        <mat-option *ngFor="let survey of surveys" [value]="survey"
+          >{{ SurveyUtils.getNameAndVersion(surveys, survey) }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="surveyControl.hasError('required')"
+        >{{
+          'admin.print-survey-dialog.form-validations.required-field'
+            | translate
+        }}
+      </mat-error>
+    </mat-form-field>
+  </ng-container>
+
+  <div class="structure-type-label" style="margin-bottom: 10px">
+    {{ 'admin.print-survey-dialog.copies-to-print' | translate }}
+  </div>
+  <span>
+    <mat-button-toggle-group
+      *ngIf="form.controls.copies; let field"
+      [hideMultipleSelectionIndicator]="true"
+      [hideSingleSelectionIndicator]="true"
+    >
+      <mat-button-toggle
+        [disabled]="field.value! < 1"
+        [value]="false"
+        (click)="handleCopies(field.value! - 1)"
+        >&nbsp;&#8212;&nbsp;</mat-button-toggle
+      >
+
+      <mat-button-toggle>
+        <input
+          class="copies-to-print-input"
+          (change)="onCopiesChange($event)"
+          [value]="field.value"
+          maxlength="3"
+          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength); if(this.value.includes('.') || this.value.includes(',') ) this.value= Math.trunc(this.value)"
+          type="number"
+        />
+      </mat-button-toggle>
+
+      <mat-button-toggle
+        [value]="false"
+        (click)="handleCopies(+field.value! + 1)"
+        >&nbsp;&#43;&nbsp;</mat-button-toggle
+      >
+    </mat-button-toggle-group>
+  </span>
+</form>

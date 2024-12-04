@@ -1,35 +1,42 @@
-import {createFeatureSelector, createReducer, createSelector, on} from "@ngrx/store";
-import {SectionActions} from "./actions";
-import {Section} from "../../repository/dto/section";
-import {AppActions} from "../application/actions";
-import {SurveyAdminState} from "../store";
-import {TablePagination} from "../../support/domain/table-pagination";
-import {FormControl, FormGroup} from "@angular/forms";
-import {PagedList} from "../../repository/dto/paged_list";
+import {
+  createFeatureSelector,
+  createReducer,
+  createSelector,
+  on,
+} from '@ngrx/store'
+import { SectionActions } from './actions'
+import { Section } from '../../repository/dto/section'
+import { AppActions } from '../application/actions'
+import { SurveyAdminState } from '../store'
+import { TablePagination } from '../../support/domain/table-pagination'
+import { FormControl, FormGroup } from '@angular/forms'
+import { PagedList } from '../../repository/dto/paged_list'
 
 export type SectionFilterForm = FormGroup<{
-  name: FormControl<string | null>;
-  version: FormControl<number | null>;
+  name: FormControl<string | null>
+  version: FormControl<number | null>
   presentIn: FormControl<number | null>
 }>
 
 export type State = {
-  fetchingSections: boolean;
-  fetchSectionsError: boolean;
-  sections: PagedList<Section> | null;
-  creatingSection: boolean;
-  editingSectionId: number | null;
-  versions: Set<number>;
-  showDeleted: boolean;
+  fetchingSections: boolean
+  fetchSectionsError: boolean
+  allSections: PagedList<Section> | null
+  sections: PagedList<Section> | null
+  creatingSection: boolean
+  editingSectionId: number | null
+  versions: Set<number>
+  showDeleted: boolean
   searchCriteria: {
-    filter: SectionFilterForm['value'];
-    tablePagination: TablePagination | undefined;
+    filter: SectionFilterForm['value']
+    tablePagination: TablePagination | undefined
   }
 }
 
 const initialState: State = {
   fetchingSections: false,
   fetchSectionsError: false,
+  allSections: null,
   sections: null,
   creatingSection: false,
   editingSectionId: null,
@@ -39,9 +46,9 @@ const initialState: State = {
     filter: {},
     tablePagination: {
       size: 5,
-      sort: 'name,asc'
-    }
-  }
+      sort: 'name,asc',
+    },
+  },
 }
 
 export const reducer = createReducer(
@@ -51,21 +58,58 @@ export const reducer = createReducer(
     ...state,
     //versions: new Set<number>(action.sections.map(({version}) => version).filter(Boolean).sort((a, b) => a > b ? 1 : -1))
   })),
-  on(SectionActions.fetchSections, (state, {form, tablePagination}) => ({
+  on(SectionActions.fetchAllSections, (state, { form, tablePagination }) => ({
     ...state,
     fetchingSections: true,
     fetchSectionsError: false,
     searchCriteria: {
-      filter: {...state.searchCriteria.filter, ...form},
-      tablePagination: {...state.searchCriteria.tablePagination, ...tablePagination},
-    }
+      filter: { ...state.searchCriteria.filter, ...form },
+      tablePagination: {
+        ...state.searchCriteria.tablePagination,
+        ...tablePagination,
+      },
+    },
+  })),
+  on(SectionActions.fetchAllSectionsSucceeded, (state, action) => ({
+    ...state,
+    fetchingSections: false,
+    fetchSectionsError: false,
+    allSections: action.response,
+    versions: new Set<number>(
+      action.response.content
+        .map(({ version }) => version)
+        .filter(Boolean)
+        .sort((a, b) => (a > b ? 1 : -1)),
+    ),
+  })),
+  on(SectionActions.fetchAllSectionsFailed, (state) => ({
+    ...state,
+    fetchingSections: false,
+    fetchSectionsError: true,
+  })),
+  on(SectionActions.fetchSections, (state, { form, tablePagination }) => ({
+    ...state,
+    fetchingSections: true,
+    fetchSectionsError: false,
+    searchCriteria: {
+      filter: { ...state.searchCriteria.filter, ...form },
+      tablePagination: {
+        ...state.searchCriteria.tablePagination,
+        ...tablePagination,
+      },
+    },
   })),
   on(SectionActions.fetchSectionsSucceeded, (state, action) => ({
     ...state,
     fetchingSections: false,
     fetchSectionsError: false,
     sections: action.response,
-    versions: new Set<number>(action.response.content.map(({version}) => version).filter(Boolean).sort((a, b) => a > b ? 1 : -1))
+    // versions: new Set<number>(
+    //   action.response.content
+    //     .map(({ version }) => version)
+    //     .filter(Boolean)
+    //     .sort((a, b) => (a > b ? 1 : -1)),
+    // ),
   })),
   on(SectionActions.fetchSectionsFailed, (state) => ({
     ...state,
@@ -81,8 +125,10 @@ export const reducer = createReducer(
     fetchingSections: false,
     sections: {
       ...state.sections!,
-      content: state.sections!.content.map(s => s.id === action.section.id ? action.section : s)
-    }
+      content: state.sections!.content.map((s) =>
+        s.id === action.section.id ? action.section : s,
+      ),
+    },
   })),
   on(SectionActions.fetchSectionByIdFailed, (state) => ({
     ...state,
@@ -97,8 +143,8 @@ export const reducer = createReducer(
     creatingSection: false,
     sections: {
       ...state.sections!,
-      content: [action.section, ...state.sections!.content]
-    }
+      content: [action.section, ...state.sections!.content],
+    },
   })),
   on(SectionActions.submitSectionFailed, (state) => ({
     ...state,
@@ -112,13 +158,13 @@ export const reducer = createReducer(
     ...state,
     sections: {
       ...state.sections!,
-      content: [action.section, ...state.sections!.content]
+      content: [action.section, ...state.sections!.content],
     },
-    editingSectionId: null
+    editingSectionId: null,
   })),
   on(SectionActions.cloneSectionFailed, (state) => ({
     ...state,
-    editingSectionId: null
+    editingSectionId: null,
   })),
   on(SectionActions.deleteSection, (state, action) => ({
     ...state,
@@ -128,17 +174,17 @@ export const reducer = createReducer(
     ...state,
     sections: {
       ...state.sections!,
-      content: state.sections!.content.map(section =>
+      content: state.sections!.content.map((section) =>
         section.id === action.section.id
-          ? {...section, deleted: true}
-          : section
-      )
+          ? { ...section, deleted: true }
+          : section,
+      ),
     },
-    editingSectionId: null
+    editingSectionId: null,
   })),
   on(SectionActions.deleteSectionFailed, (state) => ({
     ...state,
-    editingSectionId: null
+    editingSectionId: null,
   })),
   on(SectionActions.restoreSection, (state, action) => ({
     ...state,
@@ -148,34 +194,34 @@ export const reducer = createReducer(
     ...state,
     sections: {
       ...state.sections!,
-      content: state.sections!.content.map(section =>
+      content: state.sections!.content.map((section) =>
         section.id === action.section.id
-          ? {...section, deleted: false}
-          : section
-      )
+          ? { ...section, deleted: false }
+          : section,
+      ),
     },
-    editingSectionId: null
+    editingSectionId: null,
   })),
   on(SectionActions.restoreSectionFailed, (state) => ({
     ...state,
-    editingSectionId: null
+    editingSectionId: null,
   })),
   on(SectionActions.toggleShowDeleted, (state) => ({
     ...state,
-    showDeleted: !state.showDeleted
+    showDeleted: !state.showDeleted,
   })),
 )
 
-export const selectSectionState = createFeatureSelector<State>('section');
-export const selectSectionSearchCriteria = createSelector((state: SurveyAdminState) => state.section, (({
-                                                                                                          searchCriteria
-                                                                                                        }) => searchCriteria))
-export const selectSectionList = createSelector((state: SurveyAdminState) => state.section, ({
-                                                                                               fetchingSections,
-                                                                                               fetchSectionsError,
-                                                                                               sections
-                                                                                             }) => ({
-  fetchingSections,
-  fetchSectionsError,
-  sections
-}))
+export const selectSectionState = createFeatureSelector<State>('section')
+export const selectSectionSearchCriteria = createSelector(
+  (state: SurveyAdminState) => state.section,
+  ({ searchCriteria }) => searchCriteria,
+)
+export const selectSectionList = createSelector(
+  (state: SurveyAdminState) => state.section,
+  ({ fetchingSections, fetchSectionsError, sections }) => ({
+    fetchingSections,
+    fetchSectionsError,
+    sections,
+  }),
+)

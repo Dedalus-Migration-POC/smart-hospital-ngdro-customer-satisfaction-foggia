@@ -7,13 +7,14 @@
     mat-stroked-button
     (click)="print()"
     [disabled]="!(surveys$ | async)?.length"
+
   >
-    <mat-icon>print</mat-icon>
+    <mat-icon [class.hourglass]="loading$ | async">{{ (loading$ | async) ? 'hourglass_empty' : 'print' }}</mat-icon>
     <span>{{ 'admin.survey-list.print-surveys-btn' | translate }}</span>
   </button>
 
   <button mat-stroked-button (click)="viewAnalytics()">
-    <img src="assets/images/area_chart.png" alt="" style="margin-right: 8px" />
+    <img src="assets/images/area_chart.png" alt="" style="margin-right: 8px"/>
     <span>{{ 'admin.survey-list.view-analytics-btn' | translate }}</span>
   </button>
 

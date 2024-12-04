@@ -1,0 +1,38 @@
+.content {
+  display: flex;
+  justify-content: center;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  .card-head-title {
+    font-size: 2rem;
+    line-height: normal;
+  }
+  button {
+    margin-left: 10px;
+    white-space: nowrap;
+  }
+  @media screen and (max-width: 512px) {
+    flex-direction: column;
+  }
+}
+
+mat-card {
+  padding: 40px;
+  width: 648px;
+  @media screen and (max-width: 512px) {
+    width: 100%;
+    padding: 10px;
+  }
+}
+
+button.print-btn {
+  max-width: 201px;
+  border-radius: 100px;
+  background-color: #7d5260;
+  margin-top: 30px;
+}
