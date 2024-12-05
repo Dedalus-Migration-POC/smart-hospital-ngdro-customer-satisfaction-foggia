@@ -2,15 +2,17 @@
   <div>
     <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>{{
-        'admin.section-list.search-filter.name' | translate
-      }}</mat-label>
-      <input matInput type="text" [formControl]="form.controls.name" />
+          'admin.section-list.search-filter.name' | translate
+        }}
+      </mat-label>
+      <input matInput type="text" [formControl]="form.controls.name"/>
     </mat-form-field>
 
     <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>{{
-        'admin.section-list.search-filter.version' | translate
-      }}</mat-label>
+          'admin.section-list.search-filter.version' | translate
+        }}
+      </mat-label>
       <mat-select
         [formControl]="form.controls.version"
         [value]="form.controls.version.value"
@@ -23,8 +25,9 @@
 
     <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>{{
-        'admin.section-list.search-filter.present-in' | translate
-      }}</mat-label>
+          'admin.section-list.search-filter.present-in' | translate
+        }}
+      </mat-label>
       <mat-select
         [formControl]="form.controls.presentIn"
         [value]="form.controls.presentIn.value"
@@ -47,19 +50,9 @@
         [matTooltip]="
           'admin.section-list.search-filter.clear-filter-btn' | translate
         "
-        >close</mat-icon
+      >close
+      </mat-icon
       >
     </button>
-
-    <!-- commentato sulla richiesta di Silvia -->
-    <!-- <app-toggle-button
-      *ngIf="canShowDeleted$ | async"
-      (onClick)="toggleDeleted()"
-      [activeTooltip]="'admin.section-list.search-filter.show-deleted-btn' | translate"
-      [inactiveTooltip]="'admin.section-list.search-filter.hide-deleted-btn' | translate"
-      [isActive]="(showDeleted$ | async) ?? false"
-      activeIcon="delete"
-      inactiveIcon="restore"
-    ></app-toggle-button> -->
   </div>
 </form>

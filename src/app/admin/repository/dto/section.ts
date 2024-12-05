@@ -1,7 +1,7 @@
-import {BaseDTO, DeletableDTO, VersionableDTO} from "./base_dto";
+import {BaseDTO, VersionableDTO} from "./base_dto";
 import {Survey} from "./survey";
 
-export type Section = BaseDTO & DeletableDTO & VersionableDTO & {
+export type Section = BaseDTO & VersionableDTO & {
   questions?: Array<Question>;
   associatedSurveys?: Array<Pick<Survey, 'id' | 'name' | 'version'>>
 }

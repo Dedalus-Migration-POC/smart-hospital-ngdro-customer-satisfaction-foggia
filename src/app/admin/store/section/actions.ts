@@ -1,16 +1,12 @@
-import { createAction, props } from '@ngrx/store'
-import { Section } from '../../repository/dto/section'
-import { SectionForm } from '../../pages/section-form/section-form.component'
-import { TablePagination } from '../../support/domain/table-pagination'
-import { SectionFilterForm } from './reducer'
-import { PagedList } from '../../repository/dto/paged_list'
+import {createAction, props} from '@ngrx/store'
+import {Section} from '../../repository/dto/section'
+import {SectionForm} from '../../pages/section-form/section-form.component'
+import {TablePagination} from '../../support/domain/table-pagination'
+import {SectionFilterForm} from './reducer'
+import {PagedList} from '../../repository/dto/paged_list'
 
 const fetchAllSections = createAction(
   '[Section] Fetch All Sections',
-  props<{
-    form?: SectionFilterForm['value']
-    tablePagination?: Partial<TablePagination>
-  }>(),
 )
 const fetchAllSectionsSucceeded = createAction(
   '[Section] Fetch ALl Sections Succeeded',
@@ -97,8 +93,6 @@ const restoreSectionSucceeded = createAction(
 
 const restoreSectionFailed = createAction('[Section] Restore Section Failed')
 
-const toggleShowDeleted = createAction('[Section] Toggle Show Deleted')
-
 export const SectionActions = {
   fetchAllSections,
   fetchAllSectionsSucceeded,
@@ -121,7 +115,6 @@ export const SectionActions = {
   restoreSection,
   restoreSectionSucceeded,
   restoreSectionFailed,
-  toggleShowDeleted,
 }
 
 export type SectionActionTypes =
@@ -146,4 +139,3 @@ export type SectionActionTypes =
   | typeof restoreSection
   | typeof restoreSectionSucceeded
   | typeof restoreSectionFailed
-  | typeof toggleShowDeleted

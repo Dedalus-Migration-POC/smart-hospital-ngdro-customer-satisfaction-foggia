@@ -1,10 +1,39 @@
-mat-cell.deleted {
-  text-decoration: line-through;
-  color: #ff0000;
-}
-
 .datasource-empty {
   position: relative;
   bottom: 40px;
   left: 20px;
+}
+
+mat-chip.DRAFT {
+  background-color: #fef7e0;
+  font-weight: bold;
+
+  ::ng-deep {
+    .mdc-evolution-chip__text-label {
+      color: #3c4043;
+    }
+
+    .mdc-evolution-chip__action--primary {
+      &::before {
+        border-color: #fef7e0 !important;
+      }
+    }
+  }
+}
+
+mat-chip.PUBLISHED {
+  background-color: #e6f4ea;
+  font-weight: bold;
+
+  ::ng-deep {
+    .mdc-evolution-chip__text-label {
+      color: #188038;
+    }
+
+    .mdc-evolution-chip__action--primary {
+      &::before {
+        border-color: #e6f4ea !important;
+      }
+    }
+  }
 }

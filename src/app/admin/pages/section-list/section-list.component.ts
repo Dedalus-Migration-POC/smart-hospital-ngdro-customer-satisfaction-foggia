@@ -1,5 +1,5 @@
 import {AfterViewChecked, ChangeDetectorRef, Component} from '@angular/core';
-import {map, take, tap} from "rxjs";
+import {tap} from "rxjs";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {Store} from "@ngrx/store";
@@ -9,8 +9,6 @@ import {WithSubscriptionsComponent} from "../../support/with-subscriptions-compo
 import {Actions, ofType} from "@ngrx/effects";
 import {SectionActions} from "../../store/section/actions";
 import {SurveyAdminState} from "../../store/store";
-import {selectSectionList} from "../../store/section/reducer";
-import {selectSurveyList} from "../../store/survey/reducer";
 import {MatButton} from "@angular/material/button";
 import {FilterComponent} from "./section-list-table/filter/filter.component";
 import {SectionListTableComponent} from "./section-list-table/section-list-table.component";
@@ -52,9 +50,6 @@ export class SectionListComponent extends WithSubscriptionsComponent implements 
     this.changeDetectorRef.detectChanges();
   }
 
-  state$ = this.store.select(selectSectionList)
-  sections$ = this.state$.pipe(map(({sections}) => sections));
-
   protected async onEdit(section: Section) {
     if (section.associatedSurveys?.length) {
       this.dialog.info({
@@ -68,24 +63,18 @@ export class SectionListComponent extends WithSubscriptionsComponent implements 
   }
 
   protected onDelete(section: Section) {
-    this.addSubscription(this.store.select(selectSurveyList).pipe(
-      take(1),
-      map(({surveys}) => {
-        console.log(surveys)
-        if ((surveys?.content ?? []).some(({sections}) => !!sections.find(({id}) => id === section.id))) {
-          console.log('found')
-          this.dialog.error({
-            buttonsType: 'ok',
-            text: this.translate.instant('admin.section-list.dialog-cannot-delete')
-          })
-        } else {
-          this.dialog.attention({
-            buttonsType: 'yes_no',
-            text: this.translate.instant('admin.section-list.dialog-confirm-delete'),
-            onConfirm: () => this.store.dispatch(SectionActions.deleteSection({section}))
-          })
-        }
-      })).subscribe())
+    if (section.associatedSurveys?.length) {
+      this.dialog.error({
+        buttonsType: 'ok',
+        text: this.translate.instant('admin.section-list.dialog-cannot-delete')
+      })
+    } else {
+      this.dialog.attention({
+        buttonsType: 'yes_no',
+        text: this.translate.instant('admin.section-list.dialog-confirm-delete'),
+        onConfirm: () => this.store.dispatch(SectionActions.deleteSection({section}))
+      })
+    }
   }
 
   protected onRestore(section: Section) {

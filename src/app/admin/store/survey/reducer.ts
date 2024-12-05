@@ -1,15 +1,10 @@
-import {
-  createFeatureSelector,
-  createReducer,
-  createSelector,
-  on,
-} from '@ngrx/store'
-import { Survey, SurveyStatus } from '../../repository/dto/survey'
-import { SubmitSurveyOption, SurveyActions } from './actions'
-import { SurveyAdminState } from '../store'
-import { FormControl, FormGroup } from '@angular/forms'
-import { TablePagination } from '../../support/domain/table-pagination'
-import { PagedList } from '../../repository/dto/paged_list'
+import {createFeatureSelector, createReducer, createSelector, on,} from '@ngrx/store'
+import {Survey, SurveyStatus} from '../../repository/dto/survey'
+import {SubmitSurveyOption, SurveyActions} from './actions'
+import {SurveyAdminState} from '../store'
+import {FormControl, FormGroup} from '@angular/forms'
+import {TablePagination} from '../../support/domain/table-pagination'
+import {PagedList} from '../../repository/dto/paged_list'
 
 export type SurveyFilterForm = FormGroup<{
   name: FormControl<string | null>
@@ -38,7 +33,6 @@ export type State = {
   surveys: PagedList<Survey> | null
   allSurveys: PagedList<Survey> | null
   versions: Set<number>
-  showDeleted: boolean
   searchCriteria: {
     filter: SurveyFilterForm['value']
     tablePagination: TablePagination | undefined
@@ -53,7 +47,6 @@ const initialState: State = {
   surveys: null,
   allSurveys: null,
   versions: new Set([1]),
-  showDeleted: false,
   searchCriteria: {
     filter: {},
     tablePagination: {
@@ -66,17 +59,10 @@ const initialState: State = {
 
 export const reducer = createReducer(
   initialState,
-  on(SurveyActions.fetchAllSurveys, (state, { form, tablePagination }) => ({
+  on(SurveyActions.fetchAllSurveys, (state) => ({
     ...state,
     fetchingSurveys: true,
     fetchSurveysError: false,
-    searchCriteria: {
-      filter: { ...state.searchCriteria.filter, ...form },
-      tablePagination: {
-        ...state.searchCriteria.tablePagination,
-        ...tablePagination,
-      },
-    },
   })),
   on(SurveyActions.fetchAllSurveysSucceeded, (state, action) => ({
     ...state,
@@ -85,7 +71,7 @@ export const reducer = createReducer(
     allSurveys: action.allSurveys,
     versions: new Set<number>(
       action.allSurveys.content
-        .map(({ version }) => version)
+        .map(({version}) => version)
         .filter(Boolean)
         .sort((a, b) => (a > b ? 1 : -1)),
     ),
@@ -95,12 +81,12 @@ export const reducer = createReducer(
     fetchingSurveys: false,
     fetchSurveysError: true,
   })),
-  on(SurveyActions.fetchSurveys, (state, { form, tablePagination }) => ({
+  on(SurveyActions.fetchSurveys, (state, {form, tablePagination}) => ({
     ...state,
     fetchingSurveys: true,
     fetchSurveysError: false,
     searchCriteria: {
-      filter: { ...state.searchCriteria.filter, ...form },
+      filter: {...state.searchCriteria.filter, ...form},
       tablePagination: {
         ...state.searchCriteria.tablePagination,
         ...tablePagination,
@@ -142,7 +128,7 @@ export const reducer = createReducer(
     ...state,
     fetchingSurveys: false,
   })),
-  on(SurveyActions.submitSurvey, (state, { submitOption }) => {
+  on(SurveyActions.submitSurvey, (state, {submitOption}) => {
     const statuses: Record<SubmitSurveyOption, SurveyOperatingStatus> = {
       save: SurveyOperatingStatus.CREATING,
       publish: SurveyOperatingStatus.CREATING_PUBLISHING,
@@ -200,7 +186,7 @@ export const reducer = createReducer(
     surveys: {
       ...state.surveys!,
       content: state.surveys!.content.map((survey) =>
-        survey.id === action.survey.id ? { ...survey, deleted: true } : survey,
+        survey.id === action.survey.id ? {...survey, deleted: true} : survey,
       ),
     },
     operatingStatus: null,
@@ -221,7 +207,7 @@ export const reducer = createReducer(
     surveys: {
       ...state.surveys!,
       content: state.surveys!.content.map((survey) =>
-        survey.id === action.survey.id ? { ...survey, deleted: false } : survey,
+        survey.id === action.survey.id ? {...survey, deleted: false} : survey,
       ),
     },
     operatingStatus: null,
@@ -239,14 +225,6 @@ export const reducer = createReducer(
   })),
   on(SurveyActions.publishSurveySucceeded, (state, action) => ({
     ...state,
-    surveys: {
-      ...state.surveys!,
-      content: state.surveys!.content.map((survey) =>
-        survey.id === action.survey.id
-          ? { ...survey, status: SurveyStatus.ACTIVE }
-          : survey,
-      ),
-    },
     operatingStatus: null,
   })),
   on(SurveyActions.publishSurveyFailed, (state) => ({
@@ -262,23 +240,11 @@ export const reducer = createReducer(
   })),
   on(SurveyActions.unpublishSurveySucceeded, (state, action) => ({
     ...state,
-    surveys: {
-      ...state.surveys!,
-      content: state.surveys!.content.map((survey) =>
-        survey.id === action.survey.id
-          ? { ...survey, status: SurveyStatus.INACTIVE }
-          : survey,
-      ),
-    },
     operatingStatus: null,
   })),
   on(SurveyActions.unpublishSurveyFailed, (state) => ({
     ...state,
     operatingStatus: null,
-  })),
-  on(SurveyActions.toggleShowDeleted, (state) => ({
-    ...state,
-    showDeleted: !state.showDeleted,
   })),
   on(SurveyActions.fetchPrintSurveyData, (state) => ({
     ...state,
@@ -312,11 +278,11 @@ export const reducer = createReducer(
 export const selectSurveyState = createFeatureSelector<State>('survey')
 export const selectSectionSearchCriteria = createSelector(
   (state: SurveyAdminState) => state.survey,
-  ({ searchCriteria }) => searchCriteria,
+  ({searchCriteria}) => searchCriteria,
 )
 export const selectSurveyList = createSelector(
   (state: SurveyAdminState) => state.survey,
-  ({ fetchingSurveys, fetchSurveysError, surveys }) => ({
+  ({fetchingSurveys, fetchSurveysError, surveys}) => ({
     fetchingSurveys,
     fetchSurveysError,
     surveys,
@@ -325,5 +291,10 @@ export const selectSurveyList = createSelector(
 
 export const selectSurveyVersions = createSelector(
   (state: SurveyAdminState) => state.allSurvey,
-  ({ versions }) => versions,
+  ({versions}) => versions,
+)
+
+export const selectSurveyFullList = createSelector(
+  (state: SurveyAdminState) => state.allSurvey,
+  ({allSurveys}) => allSurveys
 )

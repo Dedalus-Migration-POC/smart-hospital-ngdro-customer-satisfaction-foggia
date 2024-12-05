@@ -1,20 +1,16 @@
-import { createAction, props } from '@ngrx/store'
-import { Survey } from '../../repository/dto/survey'
-import { SurveyForm } from '../../pages/survey-form/survey-form.component'
-import { PagedList } from '../../repository/dto/paged_list'
-import { TablePagination } from '../../support/domain/table-pagination'
-import { SurveyFilterForm } from './reducer'
-import { PrintDataResponse } from '../../repository/dto/print-data-response'
-import { PrintSurveyForm } from '../../components/print-survey/print-survey.component'
+import {createAction, props} from '@ngrx/store'
+import {Survey} from '../../repository/dto/survey'
+import {SurveyForm} from '../../pages/survey-form/survey-form.component'
+import {PagedList} from '../../repository/dto/paged_list'
+import {TablePagination} from '../../support/domain/table-pagination'
+import {SurveyFilterForm} from './reducer'
+import {PrintDataResponse} from '../../repository/dto/print-data-response'
+import {PrintSurveyForm} from '../../components/print-survey/print-survey.component'
 
 export type SubmitSurveyOption = 'save' | 'publish'
 
 const fetchAllSurveys = createAction(
   '[Survey] Fetch All Surveys',
-  props<{
-    form?: SurveyFilterForm['value']
-    tablePagination?: Partial<TablePagination>
-  }>(),
 )
 const fetchAllSurveysSucceeded = createAction(
   '[Survey] Fetch All Surveys Succeeded',
@@ -130,6 +126,18 @@ const unpublishSurveySucceeded = createAction(
 
 const unpublishSurveyFailed = createAction('[Survey] Unpublish Survey Failed')
 
+const restartSurvey = createAction(
+  '[Survey] Restart Survey',
+  props<{ survey: Survey, endDate: Date }>(),
+)
+
+const restartSurveySucceeded = createAction(
+  '[Survey] Restart Survey Succeeded',
+  props<{ survey: Survey }>(),
+)
+
+const restartSurveyFailed = createAction('[Survey] Restart Survey Failed')
+
 const fetchPrintSurveyData = createAction('[Survey] Fetch Print Survey data')
 
 const fetchPrintSurveyDataSucceeded = createAction(
@@ -153,8 +161,6 @@ const printSurveySucceeded = createAction(
 )
 
 const printSurveyFailed = createAction('[Survey] Print Survey Failed')
-
-const toggleShowDeleted = createAction('[Survey] Toggle Show Deleted')
 
 export const SurveyActions = {
   fetchAllSurveys,
@@ -184,13 +190,15 @@ export const SurveyActions = {
   unpublishSurvey,
   unpublishSurveySucceeded,
   unpublishSurveyFailed,
+  restartSurvey,
+  restartSurveySucceeded,
+  restartSurveyFailed,
   fetchPrintSurveyData,
   fetchPrintSurveyDataSucceeded,
   fetchPrintSurveyDataFailed,
   printSurvey,
   printSurveySucceeded,
   printSurveyFailed,
-  toggleShowDeleted,
 }
 
 export type SurveyActionTypes =
@@ -221,10 +229,12 @@ export type SurveyActionTypes =
   | typeof unpublishSurvey
   | typeof unpublishSurveySucceeded
   | typeof unpublishSurveyFailed
+  | typeof restartSurvey
+  | typeof restartSurveySucceeded
+  | typeof restartSurveyFailed
   | typeof fetchPrintSurveyData
   | typeof fetchPrintSurveyDataSucceeded
   | typeof fetchPrintSurveyDataFailed
   | typeof printSurvey
   | typeof printSurveySucceeded
   | typeof printSurveyFailed
-  | typeof toggleShowDeleted
