@@ -7,16 +7,14 @@ import {
   MatDialogContent,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, NgIf} from "@angular/common";
 import {TranslateModule} from "@ngx-translate/core";
-import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
-import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {MatButton} from "@angular/material/button";
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {PrintDataResponse} from "../../../repository/dto/print-data-response";
 import {PrintSurveyComponent} from "../../../components/print-survey/print-survey.component";
+import {selectUser} from "../../../store/application/reducer";
+import {Store} from "@ngrx/store";
+import {SurveyAdminState} from "../../../store/store";
 
 @Component({
   selector: 'app-print-survey-dialog',
@@ -25,23 +23,12 @@ import {PrintSurveyComponent} from "../../../components/print-survey/print-surve
     ReactiveFormsModule,
     MatDialogTitle,
     MatDialogContent,
-    MatFormField,
-    MatSelect,
-    MatLabel,
-    MatError,
     NgIf,
     TranslateModule,
-    MatOption,
-    MatRadioGroup,
-    MatRadioButton,
     AsyncPipe,
-    NgForOf,
-    MatButtonToggleGroup,
-    MatButtonToggle,
     MatDialogActions,
     MatButton,
     MatDialogClose,
-    MatProgressSpinner,
     PrintSurveyComponent
   ],
   templateUrl: './print-survey-dialog.component.html',
@@ -52,6 +39,9 @@ export class PrintSurveyDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: PrintDataResponse,
+    private store: Store<SurveyAdminState>
   ) {
   }
+
+  protected user$ = this.store.select(selectUser)
 }

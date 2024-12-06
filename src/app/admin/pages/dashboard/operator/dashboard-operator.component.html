@@ -5,7 +5,7 @@
         <div class="card-head-title">
           {{
             'admin.operator-dashboard.title'
-              | translate: { department: 'departmentHere' }
+              | translate: {department: 'departmentHere'}
           }}
         </div>
         <button mat-stroked-button (click)="viewAnalytics()">
@@ -23,7 +23,7 @@
         {{ 'admin.operator-dashboard.subtitle' | translate }}
       </span>
       <ng-container *ngIf="data$ | async as data">
-        <app-print-survey [data]="data"></app-print-survey>
+        <app-print-survey [user]="user$ | async" [data]="data"></app-print-survey>
       </ng-container>
       <button
         class="print-btn"
@@ -33,8 +33,8 @@
       >
         {{
           ((printSurveyComponent.printing$ | async)
-            ? 'admin.print-survey-dialog.printing'
-            : 'admin.print-survey-dialog.button'
+              ? 'admin.print-survey-dialog.printing'
+              : 'admin.print-survey-dialog.button'
           ) | translate
         }}
       </button>

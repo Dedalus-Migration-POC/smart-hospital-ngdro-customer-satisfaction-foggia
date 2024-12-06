@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ScaffoldComponent} from "../../../components/scaffold/scaffold.component";
 import {BehaviorSubject, map, of, tap} from "rxjs";
-import {PrintSurveyDialogComponent} from "../../survey-list/print-survey-dialog/print-survey-dialog.component";
 import {PrintSurveyComponent} from "../../../components/print-survey/print-survey.component";
 import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../../store/store";
@@ -13,24 +12,24 @@ import {DialogService} from "../../../support/dialog-service";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {AsyncPipe, NgIf, NgOptimizedImage} from "@angular/common";
 import {selectSurveyState} from "../../../store/survey/reducer";
-import {MatDialogTitle} from "@angular/material/dialog";
 import {MatCard} from "@angular/material/card";
 import {MatButton} from "@angular/material/button";
+import {selectUser} from "../../../store/application/reducer";
+import {ReactiveFormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-dashboard-operator',
   standalone: true,
   imports: [
     ScaffoldComponent,
-    PrintSurveyDialogComponent,
     PrintSurveyComponent,
     AsyncPipe,
     NgIf,
-    MatDialogTitle,
     TranslateModule,
     MatCard,
     MatButton,
-    NgOptimizedImage
+    NgOptimizedImage,
+    ReactiveFormsModule
   ],
   templateUrl: './dashboard-operator.component.html',
   styleUrl: './dashboard-operator.component.scss'
@@ -41,6 +40,7 @@ export class DashboardOperatorComponent extends WithSubscriptionsComponent imple
   protected data$ = new BehaviorSubject<PrintDataResponse | null>(null)
   protected error$ = new BehaviorSubject(false)
   protected loading$ = this.store.select(selectSurveyState).pipe(map(({fetchingPrintData}) => fetchingPrintData));
+  protected user$ = this.store.select(selectUser)
 
   constructor(
     private store: Store<SurveyAdminState>,
