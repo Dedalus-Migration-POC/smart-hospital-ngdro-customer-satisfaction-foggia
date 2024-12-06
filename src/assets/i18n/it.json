@@ -107,10 +107,11 @@
   },
   "admin": {
     "survey-status": {
-      "ACTIVE": "Pubblicato",
-      "INACTIVE": "Bozza",
-      "EXPIRED": "Scaduto",
-      "DELETED": "Eliminato"
+      "PUBLISHED": "Pubblicato",
+      "READY": "Pronto",
+      "DRAFT": "Bozza",
+      "STOPPED": "Chiuso",
+      "EXPIRED": "Scaduto"
     },
     "mat-paginator-intl": {
       "firstPageLabel": "Prima pagina",
@@ -146,7 +147,6 @@
         "start-date": "Data inizio validità",
         "end-date": "Data fine validità",
         "clear-filter-btn": "Cancella filtri",
-        "show-deleted-btn": "Mostra eliminati",
         "hide-deleted-btn": "Nascondi eliminati"
       },
       "table-headers": {
@@ -171,6 +171,7 @@
       "dialog-confirm-restore": "Vuoi davvero ripristinare il questionario?",
       "dialog-confirm-clone": "Vuoi creare una nuova versione del questionario {{name}}?",
       "dialog-confirm-publish": "Vuoi davvero pubblicare il questionario?",
+      "dialog-confirm-restart": "Vuoi davvero riattivare il questionario?",
       "dialog-confirm-unpublish": "Il questionario {{name}} verrà chiuso e le risposte ai sondaggi verranno bloccate.",
       "dialog-confirm-unpublish-title": "Vuoi chiudere il questionario?",
       "dialog-confirm-unpublish-confirm": "Chiudi questionario"
@@ -178,6 +179,7 @@
     "survey-form": {
       "title-new": "Nuovo questionario",
       "title-edit": "Modifica questionario",
+      "title-clone": "Nuova versione questionario",
       "title-sections-empty": "Non ci sono sezioni. Per poter creare un questionario è necessario creare almeno una sezione.",
       "save-survey-btn": "Salva",
       "edit-survey-btn": "Salva modifiche",
@@ -195,6 +197,7 @@
       "survey-created-dialog-title": "Nuovo questionario salvato",
       "survey-pubblish-dialog": "Il questionaro è stato pubblicato e verrà aggiunto alla lista dei questionari presenti nella dashboard.",
       "survey-pubblish-dialog-title": "Nuovo questionario pubblicato",
+      "survey-edited-dialog-title": "Questionario aggiornato",
       "survey-edited-dialog": "Il questionario è stato aggiornato correttamente",
       "move-up-btn": "Sposta su",
       "move-down-btn": "Sposta giù",
@@ -238,6 +241,7 @@
       "table-headers": {
         "name": "Nome sezione",
         "present-in": "Presente in",
+        "status": "Stato",
         "version": "Versione",
         "actions": "Azioni"
       },

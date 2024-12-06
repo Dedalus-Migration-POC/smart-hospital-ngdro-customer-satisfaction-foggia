@@ -3,13 +3,15 @@
   border-top-right-radius: 0 !important;
 }
 
-mat-chip.INACTIVE {
+mat-chip.DRAFT {
   background-color: #fef7e0;
   font-weight: bold;
+
   ::ng-deep {
     .mdc-evolution-chip__text-label {
       color: #3c4043;
     }
+
     .mdc-evolution-chip__action--primary {
       &::before {
         border-color: #fef7e0 !important;
@@ -18,13 +20,15 @@ mat-chip.INACTIVE {
   }
 }
 
-mat-chip.ACTIVE {
+mat-chip.PUBLISHED {
   background-color: #e6f4ea;
   font-weight: bold;
+
   ::ng-deep {
     .mdc-evolution-chip__text-label {
       color: #188038;
     }
+
     .mdc-evolution-chip__action--primary {
       &::before {
         border-color: #e6f4ea !important;
@@ -33,13 +37,15 @@ mat-chip.ACTIVE {
   }
 }
 
-mat-chip.EXPIRED {
+mat-chip.EXPIRED, mat-chip.STOPPED {
   background-color: #ffe1e1;
   font-weight: bold;
+
   ::ng-deep {
     .mdc-evolution-chip__text-label {
       color: #b3261e;
     }
+
     .mdc-evolution-chip__action--primary {
       &::before {
         border-color: #ffe1e1 !important;
@@ -48,20 +54,8 @@ mat-chip.EXPIRED {
   }
 }
 
-mat-chip.deleted {
-  text-decoration: line-through;
-  background-color: #ffe1e1;
-  font-weight: bold;
-  ::ng-deep {
-    .mdc-evolution-chip__text-label {
-      color: #ff0000;
-    }
-    .mdc-evolution-chip__action--primary {
-      &::before {
-        border-color: #ffe1e1 !important;
-      }
-    }
-  }
+mat-chip {
+  min-width: 100px;
 }
 
 .datasource-empty {

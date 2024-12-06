@@ -1,32 +1,22 @@
-import { Component, OnInit } from '@angular/core'
-import { MatFormField, MatLabel } from '@angular/material/form-field'
-import { MatInput } from '@angular/material/input'
-import {
-  FormBuilder,
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms'
-import { MatButton } from '@angular/material/button'
-import { MatIcon } from '@angular/material/icon'
-import { AsyncPipe, NgForOf } from '@angular/common'
-import { TranslateModule } from '@ngx-translate/core'
-import { combineLatest, debounceTime, distinctUntilChanged, map } from 'rxjs'
-import { Store } from '@ngrx/store'
-import { SurveyAdminState } from '../../../../store/store'
-import { WithSubscriptionsComponent } from '../../../../support/with-subscriptions-component'
-import { MatOption, MatSelect } from '@angular/material/select'
-import {
-  SectionFilterForm,
-  selectSectionList,
-  selectSectionState,
-} from '../../../../store/section/reducer'
-import { SectionActions } from '../../../../store/section/actions'
-import { selectSurveyState } from '../../../../store/survey/reducer'
-import { selectUser } from '../../../../store/application/reducer'
-import { MatTooltip } from '@angular/material/tooltip'
-import { SurveyUtils } from '../../../../support/survey-utils'
-import { Survey } from '../../../../repository/dto/survey'
+import {Component, OnInit} from '@angular/core'
+import {MatFormField, MatLabel} from '@angular/material/form-field'
+import {MatInput} from '@angular/material/input'
+import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule,} from '@angular/forms'
+import {MatButton} from '@angular/material/button'
+import {MatIcon} from '@angular/material/icon'
+import {AsyncPipe, NgForOf} from '@angular/common'
+import {TranslateModule} from '@ngx-translate/core'
+import {combineLatest, debounceTime, distinctUntilChanged, map} from 'rxjs'
+import {Store} from '@ngrx/store'
+import {SurveyAdminState} from '../../../../store/store'
+import {WithSubscriptionsComponent} from '../../../../support/with-subscriptions-component'
+import {MatOption, MatSelect} from '@angular/material/select'
+import {SectionFilterForm, selectSectionList, selectSectionState,} from '../../../../store/section/reducer'
+import {SectionActions} from '../../../../store/section/actions'
+import {selectSurveyState} from '../../../../store/survey/reducer'
+import {MatTooltip} from '@angular/material/tooltip'
+import {SurveyUtils} from '../../../../support/survey-utils'
+import {Survey} from '../../../../repository/dto/survey'
 
 @Component({
   selector: 'app-section-filter',
@@ -49,11 +39,7 @@ import { Survey } from '../../../../repository/dto/survey'
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss',
 })
-export class FilterComponent
-  extends WithSubscriptionsComponent
-  implements OnInit
-{
-  showDeleted$ = this.store.select((s) => s.section.showDeleted)
+export class FilterComponent extends WithSubscriptionsComponent implements OnInit {
 
   protected form: SectionFilterForm = this.fb.group({
     name: new FormControl<string | null>(null),
@@ -69,12 +55,14 @@ export class FilterComponent
   }
 
   ngOnInit() {
+    this.store.dispatch(SectionActions.fetchAllSections())
+
     this.addSubscriptions(
       this.form.valueChanges
         .pipe(debounceTime(500), distinctUntilChanged())
         .subscribe(() => {
           this.store.dispatch(
-            SectionActions.fetchSections({ form: this.form.value }),
+            SectionActions.fetchSections({form: this.form.value}),
           )
         }),
 
@@ -86,24 +74,17 @@ export class FilterComponent
         }
       }),
     )
-
-    this.store.dispatch(
-      SectionActions.fetchAllSections({ form: this.form.value }),
-    )
   }
-
-  canShowDeleted$ = this.store
-    .select(selectUser)
-    .pipe(map((user) => user?.roles.includes('ROLE_ADMIN') ?? false))
 
   state$ = this.store.select(selectSectionState)
   surveyState$ = this.store.select(selectSurveyState)
   versions$ = this.state$.pipe(map((s) => s.versions))
   surveys$ = this.surveyState$.pipe(map((s) => s.surveys))
+  surveysFullList$ = this.surveyState$.pipe(map((s) => s.allSurveys))
   sections$ = this.store.select(selectSectionList)
 
-  presentInOptions$ = combineLatest([this.sections$, this.surveys$]).pipe(
-    map(([{ sections }, surveys]) =>
+  presentInOptions$ = combineLatest([this.sections$, this.surveysFullList$]).pipe(
+    map(([{sections}, surveys]) =>
       (sections?.content ?? [])
         .map((section) =>
           (section.associatedSurveys ?? []).map((ass) => ({
@@ -121,8 +102,4 @@ export class FilterComponent
       ...new Map(data.map((item) => [item['id'], item])).values(),
     ]),
   )
-
-  protected toggleDeleted() {
-    this.store.dispatch(SectionActions.toggleShowDeleted())
-  }
 }

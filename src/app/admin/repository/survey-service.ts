@@ -52,6 +52,10 @@ export class SurveyService {
     return this.http.patch<void>(`${baseUrl}/unpublish/${surveyId}`, null)
   }
 
+  public restart(surveyId: string, endDate: Date) {
+    return this.http.patch<Survey>(`${baseUrl}/restart/${surveyId}`, endDate)
+  }
+
   public fetchPrintData() {
     return this.http.get<PrintDataResponse>(`${baseUrl}/print`)
   }

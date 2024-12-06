@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {map, take, tap} from "rxjs";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
-import {MatButton, MatIconButton} from "@angular/material/button";
+import {ActivatedRoute, Router} from "@angular/router";
+import {MatButton} from "@angular/material/button";
 import {MatError, MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
@@ -45,12 +45,10 @@ export type SectionForm = FormGroup<{
     MatButton,
     MatFormField,
     MatIcon,
-    MatIconButton,
     MatInput,
     MatLabel,
     MatSuffix,
     ReactiveFormsModule,
-    RouterLink,
     TranslateModule,
     FormsModule,
     NgForOf,
@@ -61,7 +59,6 @@ export type SectionForm = FormGroup<{
 })
 export class SectionFormComponent extends WithSubscriptionsComponent implements OnInit, OnDestroy {
   editMode = false;
-  isSectionDeleted = false;
 
   form: SectionForm = this.fb.group({
     id: new FormControl<number | null>(null),
@@ -115,7 +112,6 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
         take(1),
         map(sections => {
           const section = (sections?.content ?? []).find((section) => section.id === Number(sectionId));
-          this.isSectionDeleted = section?.deleted ?? false
           if (section) {
             this.initializeForm(section);
           } else {
@@ -135,7 +131,6 @@ export class SectionFormComponent extends WithSubscriptionsComponent implements 
 
   private initializeForm(section: Section) {
     console.log({section})
-    this.isSectionDeleted = section.deleted
     this.form.patchValue({
       id: section.id!,
       name: section.name,

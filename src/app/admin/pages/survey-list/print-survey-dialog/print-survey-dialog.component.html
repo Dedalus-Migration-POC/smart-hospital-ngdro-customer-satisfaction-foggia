@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>{{ 'admin.print-survey-dialog.title' | translate }}</h2>
 <mat-dialog-content>
-  <app-print-survey [data]="data"></app-print-survey>
+  <app-print-survey [data]="data" [user]="user$ | async"></app-print-survey>
 </mat-dialog-content>
 <mat-dialog-actions style="align-self: end">
   <ng-container *ngIf="(printSurveyComponent?.printing$ | async) ?? false else notPrinting">

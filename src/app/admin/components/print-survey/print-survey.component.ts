@@ -1,9 +1,8 @@
 import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
-import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatButton} from "@angular/material/button";
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
-import {MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption} from "@angular/material/core";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
@@ -22,6 +21,7 @@ import {Store} from "@ngrx/store";
 import {SurveyAdminState} from "../../store/store";
 import {DialogService} from "../../support/dialog-service";
 import {PrintDataResponse} from "../../repository/dto/print-data-response";
+import {User} from "../../repository/dto/user";
 
 export type PrintSurveyForm = FormGroup<{
   healthcareUnit: FormControl<HealthcareUnit | null>;
@@ -34,15 +34,9 @@ export type PrintSurveyForm = FormGroup<{
   selector: 'app-print-survey',
   standalone: true,
   imports: [
-    AsyncPipe,
     FormsModule,
-    MatButton,
     MatButtonToggle,
     MatButtonToggleGroup,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogContent,
-    MatDialogTitle,
     MatError,
     MatFormField,
     MatLabel,
@@ -59,19 +53,22 @@ export type PrintSurveyForm = FormGroup<{
   styleUrl: './print-survey.component.scss'
 })
 export class PrintSurveyComponent extends WithSubscriptionsComponent implements OnInit, AfterViewInit {
+  @Input({alias: 'user', required: true}) user!: User | null
   @Input({alias: 'data', required: true}) data!: PrintDataResponse
 
   protected readonly SurveyUtils = SurveyUtils;
 
   form: PrintSurveyForm = this.fb.group({
     healthcareUnit: new FormControl<HealthcareUnit | null>(null, Validators.required),
-    structure: new FormControl<HealthcareUnitStructure | null>(null, Validators.required),
+    structure: new FormControl<HealthcareUnitStructure | null>({value: null, disabled: true}, Validators.required),
     survey: new FormControl<Survey | null>(null, Validators.required),
     copies: new FormControl<number>(0),
   });
 
   state$ = this.store.select(selectSurveyState)
   printing$ = this.state$.pipe(map(({operatingStatus}) => operatingStatus?.status === SurveyOperatingStatus.PRINTING));
+
+  isOperator = false
 
   constructor(
     private actions: Actions,
@@ -84,6 +81,8 @@ export class PrintSurveyComponent extends WithSubscriptionsComponent implements 
   }
 
   ngOnInit() {
+    this.isOperator = this.user?.roles?.length === 1 && this.user.roles.includes("ROLE_OPERATOR")
+
     this.addSubscriptions(
       this.actions.pipe(
         ofType(SurveyActions.printSurveySucceeded),
@@ -111,12 +110,18 @@ export class PrintSurveyComponent extends WithSubscriptionsComponent implements 
 
   ngAfterViewInit() {
     this.addSubscription(
-      this.form.valueChanges.subscribe(({healthcareUnit}) => {
-        if (healthcareUnit && !this.canChooseType(healthcareUnit)) {
-          this.form.patchValue({structure: healthcareUnit.departments.at(0)}, {emitEvent: false})
-        }
-        console.log(this.form.getRawValue())
-      })
+      this.form.valueChanges.pipe(
+        tap(({healthcareUnit}) => {
+          if (healthcareUnit && !this.canChooseType(healthcareUnit)) {
+            this.form.patchValue({structure: healthcareUnit.departments.at(0)}, {emitEvent: false})
+            console.log('patch structure')
+            this.form.controls.structure.disable({emitEvent: false})
+          } else {
+            this.form.controls.structure.patchValue(null, {emitEvent: false})
+            this.form.controls.structure.enable({emitEvent: false})
+          }
+        })
+      ).subscribe()
     )
   }
 

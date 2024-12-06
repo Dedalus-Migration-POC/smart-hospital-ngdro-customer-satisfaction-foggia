@@ -21,7 +21,7 @@ const routes: Routes = [
       import('./pages/survey-form/survey-form.component').then(({SurveyFormComponent}) => SurveyFormComponent),
   },
   {
-    path: 'survey-form/:surveyId',
+    path: 'survey-form/:surveyId/:mode',
     pathMatch: 'full',
     loadComponent: () =>
       import('./pages/survey-form/survey-form.component').then(({SurveyFormComponent}) => SurveyFormComponent),

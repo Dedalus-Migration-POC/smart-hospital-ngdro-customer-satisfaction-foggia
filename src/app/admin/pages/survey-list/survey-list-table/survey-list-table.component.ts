@@ -8,29 +8,23 @@ import {
   Output,
   ViewChild,
 } from '@angular/core'
-import { TranslateModule, TranslateService } from '@ngx-translate/core'
-import { Survey, SurveyStatus } from '../../../repository/dto/survey'
+import {TranslateModule, TranslateService} from '@ngx-translate/core'
+import {Survey, SurveyStatus} from '../../../repository/dto/survey'
+import {AsyncPipe, DatePipe, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet,} from '@angular/common'
+import {map, Observable} from 'rxjs'
+import {Store} from '@ngrx/store'
+import {SurveyAdminState} from '../../../store/store'
 import {
-  AsyncPipe,
-  DatePipe,
-  NgIf,
-  NgSwitch,
-  NgSwitchCase,
-  NgTemplateOutlet,
-} from '@angular/common'
-import { combineLatest, map, Observable } from 'rxjs'
-import { Store } from '@ngrx/store'
-import { SurveyAdminState } from '../../../store/store'
-import {
+  selectSurveyFullList,
   selectSurveyList,
   selectSurveyState,
   SurveyOperatingStatus,
 } from '../../../store/survey/reducer'
-import { MatProgressSpinner } from '@angular/material/progress-spinner'
-import { MatIconButton } from '@angular/material/button'
-import { MatTooltip } from '@angular/material/tooltip'
-import { MatIcon } from '@angular/material/icon'
-import { FilterComponent } from './filter/filter.component'
+import {MatProgressSpinner} from '@angular/material/progress-spinner'
+import {MatIconButton} from '@angular/material/button'
+import {MatTooltip} from '@angular/material/tooltip'
+import {MatIcon} from '@angular/material/icon'
+import {FilterComponent} from './filter/filter.component'
 import {
   MatCell,
   MatCellDef,
@@ -45,13 +39,13 @@ import {
   MatTableDataSource,
   MatTableModule,
 } from '@angular/material/table'
-import { MatChipsModule } from '@angular/material/chips'
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator'
-import { MatProgressBar } from '@angular/material/progress-bar'
-import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-button.component'
-import { MatSort, MatSortModule } from '@angular/material/sort'
-import { WithSubscriptionsComponent } from '../../../support/with-subscriptions-component'
-import { SurveyActions } from '../../../store/survey/actions'
+import {MatChipsModule} from '@angular/material/chips'
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator'
+import {MatProgressBar} from '@angular/material/progress-bar'
+import {ToggleButtonComponent} from '../../../components/toggle-button/toggle-button.component'
+import {MatSort, MatSortModule} from '@angular/material/sort'
+import {WithSubscriptionsComponent} from '../../../support/with-subscriptions-component'
+import {SurveyActions} from '../../../store/survey/actions'
 
 @Component({
   selector: 'app-survey-list-table',
@@ -93,9 +87,8 @@ import { SurveyActions } from '../../../store/survey/actions'
 })
 export class SurveyListTableComponent
   extends WithSubscriptionsComponent
-  implements OnInit, AfterViewInit
-{
-  @Input({ alias: 'surveys', required: true }) surveys$!: Observable<
+  implements OnInit, AfterViewInit {
+  @Input({alias: 'surveys', required: true}) surveys$!: Observable<
     Array<Survey>
   >
   @Output('onEdit') editSurvey: EventEmitter<{
@@ -116,15 +109,15 @@ export class SurveyListTableComponent
   length = 0
 
   state$ = this.store.select(selectSurveyState)
+  surveyFullList$ = this.store.select(selectSurveyFullList)
   loading$ = this.store
     .select(selectSurveyList)
-    .pipe(map(({ fetchingSurveys }) => fetchingSurveys))
+    .pipe(map(({fetchingSurveys}) => fetchingSurveys))
   error$ = this.store
     .select(selectSurveyList)
-    .pipe(map(({ fetchSurveysError }) => fetchSurveysError))
+    .pipe(map(({fetchSurveysError}) => fetchSurveysError))
   dataSource = new MatTableDataSource<Survey>()
   pageSizeOptions$!: Observable<Array<number>>
-  showDeleted$ = this.store.select((s) => s.survey.showDeleted)
 
   columns: string[] = [
     'name',
@@ -149,10 +142,9 @@ export class SurveyListTableComponent
   ngOnInit() {
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort
-    //FIXME non appaiono nel paginator
     this.pageSizeOptions$ = this.surveys$.pipe(
       map((surveys) => {
-        return Array.from({ length: Math.ceil(surveys.length / 5) }, (_, i) => {
+        return Array.from({length: Math.ceil(surveys.length / 5)}, (_, i) => {
           const value = (i + 1) * 5
           return value >= 30 ? Math.ceil(value / 10) * 10 : value
         }).filter((value, index, self) => self.indexOf(value) === index)
@@ -162,23 +154,20 @@ export class SurveyListTableComponent
 
   ngAfterViewInit() {
     this.addSubscriptions(
-      combineLatest([this.state$, this.showDeleted$])
+      this.state$
         .pipe(
-          map(([state, showDeleted]) => {
-            const { surveys, searchCriteria } = state
-            const data = (surveys?.content ?? []).filter(
-              (entity) => showDeleted || !entity.deleted,
-            )
+          map((state) => {
+            const {surveys, searchCriteria} = state
             this.pageIndex = surveys?.pageable.pageNumber ?? 0
             this.pageSize = searchCriteria?.tablePagination?.size ?? 0
-            this.dataSource.data = data
+            this.dataSource.data = (surveys?.content ?? [])
             this.length = surveys?.totalElements ?? 0
             console.log('UPDATED')
           }),
         )
         .subscribe(),
 
-      this.sort.sortChange.subscribe(({ active, direction }) => {
+      this.sort.sortChange.subscribe(({active, direction}) => {
         if (direction.length) {
           this.store.dispatch(
             SurveyActions.fetchSurveys({
@@ -190,7 +179,7 @@ export class SurveyListTableComponent
         }
       }),
 
-      this.paginator.page.subscribe(({ pageIndex, pageSize }) => {
+      this.paginator.page.subscribe(({pageIndex, pageSize}) => {
         this.store.dispatch(
           SurveyActions.fetchSurveys({
             tablePagination: {
@@ -227,25 +216,33 @@ export class SurveyListTableComponent
       case 'createdAt':
         return this.datePipe.transform(survey[key], 'dd/MM/yyyy') as string
       case 'status':
-        if (survey.deleted)
-          return this.translate.instant('admin.survey-status.DELETED')
-        else if (!survey[key]) return ''
+        if (!survey[key]) return ''
         return this.translate.instant('admin.survey-status.' + survey[key])
       default:
         return survey[key] as string
     }
   }
 
+  protected canShowEditOrCloneButton(survey: Survey) {
+    return this.surveyFullList$.pipe(
+      map(full => {
+        const list = full?.content ?? []
+        return [SurveyStatus.DRAFT, SurveyStatus.READY, SurveyStatus.STOPPED, SurveyStatus.PUBLISHED, SurveyStatus.EXPIRED].includes(survey.status) &&
+          list.find(s => s.name === survey.name && s.version === survey.version + 1 && [SurveyStatus.DRAFT, SurveyStatus.READY].includes(s.status)) === undefined
+      })
+    )
+
+  }
+
   protected onEdit(survey: Survey) {
     this.editSurvey.emit({
       survey,
-      mode: survey.status === SurveyStatus.ACTIVE ? 'clone' : 'edit',
+      mode: [SurveyStatus.STOPPED, SurveyStatus.PUBLISHED, SurveyStatus.EXPIRED].includes(survey.status) ? 'clone' : 'edit',
     })
   }
 
   protected changeDeletedStatus(entity: Survey) {
-    if (entity.deleted) this.restoreSurvey.emit(entity)
-    else this.deleteSurvey.emit(entity)
+    this.deleteSurvey.emit(entity)
   }
 
   protected readonly SurveyOperatingStatus = SurveyOperatingStatus

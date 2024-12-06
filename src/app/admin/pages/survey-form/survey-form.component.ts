@@ -1,54 +1,32 @@
-import { Component, OnInit } from '@angular/core'
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms'
-import { BehaviorSubject, combineLatest, map, take, tap } from 'rxjs'
-import { Store } from '@ngrx/store'
-import { Actions, ofType } from '@ngrx/effects'
-import { ActivatedRoute, Router, RouterLink } from '@angular/router'
-import { SubmitSurveyOption, SurveyActions } from '../../store/survey/actions'
-import { MatButton, MatIconButton } from '@angular/material/button'
-import { TranslateModule, TranslateService } from '@ngx-translate/core'
-import {
-  MatError,
-  MatFormField,
-  MatLabel,
-  MatSuffix,
-} from '@angular/material/form-field'
-import { MatInput } from '@angular/material/input'
-import { MatCard } from '@angular/material/card'
-import { AsyncPipe, DatePipe, NgForOf, NgIf } from '@angular/common'
-import { MatIcon } from '@angular/material/icon'
-import { DialogService } from '../../support/dialog-service'
-import { Section } from '../../repository/dto/section'
-import { Survey } from '../../repository/dto/survey'
-import { MatOption } from '@angular/material/core'
-import { MatSelect } from '@angular/material/select'
-import { MatProgressSpinner } from '@angular/material/progress-spinner'
-import { WithSubscriptionsComponent } from '../../support/with-subscriptions-component'
-import {
-  MatDatepicker,
-  MatDatepickerInput,
-  MatDatepickerToggle,
-} from '@angular/material/datepicker'
-import { SurveyAdminState } from '../../store/store'
-import {
-  selectSectionList,
-  selectSectionState,
-} from '../../store/section/reducer'
-import {
-  selectSurveyState,
-  SurveyOperatingStatus,
-} from '../../store/survey/reducer'
-import { withLatestFrom } from 'rxjs/operators'
-import { MatTooltip } from '@angular/material/tooltip'
-import { SurveyNameValidator } from '../../support/form-validators'
-import { SectionUtils } from '../../support/section-utils'
+import {Component, OnInit} from '@angular/core'
+import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms'
+import {BehaviorSubject, combineLatest, map, take, tap} from 'rxjs'
+import {Store} from '@ngrx/store'
+import {Actions, ofType} from '@ngrx/effects'
+import {ActivatedRoute, Router, RouterLink} from '@angular/router'
+import {SubmitSurveyOption, SurveyActions} from '../../store/survey/actions'
+import {MatButton, MatIconButton} from '@angular/material/button'
+import {TranslateModule, TranslateService} from '@ngx-translate/core'
+import {MatError, MatFormField, MatLabel, MatSuffix,} from '@angular/material/form-field'
+import {MatInput} from '@angular/material/input'
+import {MatCard} from '@angular/material/card'
+import {AsyncPipe, DatePipe, NgForOf, NgIf} from '@angular/common'
+import {MatIcon} from '@angular/material/icon'
+import {DialogService} from '../../support/dialog-service'
+import {Section} from '../../repository/dto/section'
+import {Survey} from '../../repository/dto/survey'
+import {MatOption} from '@angular/material/core'
+import {MatSelect} from '@angular/material/select'
+import {MatProgressSpinner} from '@angular/material/progress-spinner'
+import {WithSubscriptionsComponent} from '../../support/with-subscriptions-component'
+import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle,} from '@angular/material/datepicker'
+import {SurveyAdminState} from '../../store/store'
+import {selectSectionList, selectSectionState,} from '../../store/section/reducer'
+import {selectSurveyState, SurveyOperatingStatus,} from '../../store/survey/reducer'
+import {withLatestFrom} from 'rxjs/operators'
+import {MatTooltip} from '@angular/material/tooltip'
+import {SurveyNameValidator} from '../../support/form-validators'
+import {SectionUtils} from '../../support/section-utils'
 
 export type SurveyForm = FormGroup<{
   id: FormControl<string | null>
@@ -98,9 +76,9 @@ type DateRange = {
 })
 export class SurveyFormComponent
   extends WithSubscriptionsComponent
-  implements OnInit
-{
-  editMode = false
+  implements OnInit {
+
+  editMode?: string
 
   form: SurveyForm = this.fb.group({
     id: new FormControl<string | null>(null),
@@ -109,7 +87,7 @@ export class SurveyFormComponent
       asyncValidators: [this.nameValidator.validate.bind(this.nameValidator)],
       updateOn: 'blur',
     }),
-    version: new FormControl<number | null>({ value: 1, disabled: true }),
+    version: new FormControl<number | null>({value: 1, disabled: true}),
     description: new FormControl<string | null>(null),
     startDate: new FormControl<Date | null>(null),
     endDate: new FormControl<Date | null>(null),
@@ -117,16 +95,16 @@ export class SurveyFormComponent
   })
 
   state$ = this.store.select(selectSurveyState)
-  surveys$ = this.state$.pipe(map(({ surveys }) => surveys))
+  surveys$ = this.state$.pipe(map(({surveys}) => surveys))
   sections$ = this.store
     .select(selectSectionList)
-    .pipe(map(({ sections }) => sections?.content ?? []))
+    .pipe(map(({sections}) => sections?.content ?? []))
   sectionResponse$ = this.store
     .select(selectSectionState)
-    .pipe(map(({ sections }) => sections))
+    .pipe(map(({sections}) => sections))
   selectableSections$ = new BehaviorSubject<Array<Section>>([])
   operatingStatus$ = this.state$.pipe(
-    map(({ operatingStatus }) => operatingStatus?.status),
+    map(({operatingStatus}) => operatingStatus?.status),
   )
 
   protected dateRange$: BehaviorSubject<DateRange> =
@@ -151,7 +129,7 @@ export class SurveyFormComponent
 
   protected get versions() {
     const length = this.form.controls.version.value!
-    return Array.from({ length }, (_, i) => i + 1).sort((a, b) =>
+    return Array.from({length}, (_, i) => i + 1).sort((a, b) =>
       a > b ? 1 : -1,
     )
   }
@@ -219,14 +197,19 @@ export class SurveyFormComponent
 
     const surveyId = this.activatedRoute.snapshot.paramMap.get('surveyId')
     if (surveyId) {
-      this.editMode = true
+      this.editMode = this.activatedRoute.snapshot.paramMap.get('mode') as string
+
+      if (this.editMode === 'clone') {
+        this.form.controls.name.disable()
+      }
+
       this.form.get('name')?.clearAsyncValidators()
       this.surveys$
         .pipe(
           take(1),
           map((surveys) => {
             const survey = (surveys?.content ?? []).find(
-              ({ id }) => id?.toString() === surveyId,
+              ({id}) => id?.toString() === surveyId,
             )
             if (survey) {
               this.initializeForm(survey)
@@ -234,7 +217,7 @@ export class SurveyFormComponent
               const text = `Survey with id [${surveyId}] not found`
               this.addSubscription(
                 this.dialog
-                  .error({ text, buttonsType: 'ok' })
+                  .error({text, buttonsType: 'ok'})
                   .afterClosed()
                   .subscribe(() => this.router.navigate(['/'])),
               )
@@ -275,7 +258,7 @@ export class SurveyFormComponent
         .pipe(
           ofType(SurveyActions.submitSurveySucceeded),
           tap(() => {
-            const translation = this.editMode ? 'edited' : 'created'
+            const translation = !!this.editMode ? 'edited' : 'created'
             this.dialog
               .success({
                 buttonsType: 'ok',
@@ -297,7 +280,7 @@ export class SurveyFormComponent
       this.actions
         .pipe(
           ofType(SurveyActions.submitSurveyFailed),
-          tap(() => this.dialog.error({ buttonsType: 'ok' })),
+          tap(() => this.dialog.error({buttonsType: 'ok'})),
         )
         .subscribe(),
     )
@@ -305,7 +288,7 @@ export class SurveyFormComponent
 
   protected getTitlePlaceholder() {
     const prefix = 'admin.survey-form.title'
-    const suffix = !this.editMode ? 'new' : 'edit'
+    const suffix = !this.editMode ? 'new' : this.editMode
     return `${prefix}-${suffix}`
   }
 
@@ -314,7 +297,7 @@ export class SurveyFormComponent
       new FormControl(null, [Validators.required]),
     )
     window.setTimeout(() => {
-      window.scroll({ behavior: 'smooth', top: document.body.scrollHeight })
+      window.scroll({behavior: 'smooth', top: document.body.scrollHeight})
     }, 100)
   }
 

@@ -13,7 +13,12 @@
         {{ 'admin.section-list.table-headers.' + column | translate }}
       </mat-header-cell>
       <mat-cell *matCellDef="let element" [class.deleted]="element.deleted">
-        {{ handleColumn(element, column) }}
+        <mat-chip [class]="handleColumn(element, column)" *ngIf="column === 'status'">
+          {{ ('admin.survey-status.' + handleColumn(element, column)) | translate }}
+        </mat-chip>
+        <div *ngIf="column !== 'status'">
+          {{ handleColumn(element, column) }}
+        </div>
       </mat-cell>
     </ng-container>
   }
@@ -77,6 +82,6 @@
 
 <ng-template #noErr>
   <span *ngIf="!dataSource.data.length" class="datasource-empty">{{
-    'admin.section-list.datasource-empty' | translate
-  }}</span>
+      'admin.section-list.datasource-empty' | translate
+    }}</span>
 </ng-template>

@@ -18,24 +18,39 @@
       <button
         [class]="'button-action-stop_circle'"
         mat-icon-button
-        *ngSwitchCase="'ACTIVE'"
+        *ngSwitchCase="'PUBLISHED'"
         (click)="unpublishSurvey.emit(survey)"
       >
         <mat-icon
           [matTooltip]="'admin.survey-list.actions-hints.unpublish' | translate"
-          >stop</mat-icon
+        >stop
+        </mat-icon
         >
       </button>
       <button
         [class]="'button-action-play_arrow'"
         mat-icon-button
-        *ngSwitchCase="'INACTIVE'"
+        *ngSwitchCase="'DRAFT'"
         (click)="publishSurvey.emit(survey)"
       >
         <mat-icon
           fontSet="material-icons-outlined"
           [matTooltip]="'admin.survey-list.actions-hints.publish' | translate"
-          >play_arrow</mat-icon
+        >play_arrow
+        </mat-icon
+        >
+      </button>
+      <button
+        [class]="'button-action-play_arrow'"
+        mat-icon-button
+        *ngSwitchCase="'STOPPED'"
+        (click)="publishSurvey.emit(survey)"
+      >
+        <mat-icon
+          fontSet="material-icons-outlined"
+          [matTooltip]="'admin.survey-list.actions-hints.publish' | translate"
+        >play_arrow
+        </mat-icon
         >
       </button>
     </ng-container>
@@ -47,30 +62,26 @@
   let-survey="survey"
   let-operatingStatus="operatingStatus"
 >
-  <ng-container
-    *ngIf="survey.status === SurveyStatus.ACTIVE ? 'clone' : 'edit'; let mode"
-  >
-    <mat-spinner
-      *ngIf="
+  <mat-spinner
+    *ngIf="
         operatingStatus &&
           operatingStatus.surveyId === survey.id &&
           operatingStatus.status === SurveyOperatingStatus.CLONING;
         else notEditing
       "
-      diameter="20"
-    ></mat-spinner>
-    <ng-template #notEditing>
-      <app-toggle-button
-        [style]="{ visibility: survey.deleted ? 'hidden' : undefined }"
-        [isActive]="mode === 'edit'"
-        [activeTooltip]="'admin.survey-list.actions-hints.edit' | translate"
-        [inactiveTooltip]="'admin.survey-list.actions-hints.clone' | translate"
-        activeIcon="edit"
-        inactiveIcon="post_add"
-        (onClick)="onEdit(survey)"
-      ></app-toggle-button>
-    </ng-template>
-  </ng-container>
+    diameter="20"
+  ></mat-spinner>
+  <ng-template #notEditing>
+    <app-toggle-button
+      [style]="{ visibility: (canShowEditOrCloneButton(survey) | async) ? undefined : 'hidden'}"
+      [isActive]="[SurveyStatus.DRAFT, SurveyStatus.READY].includes(survey.status)"
+      [activeTooltip]="'admin.survey-list.actions-hints.edit' | translate"
+      [inactiveTooltip]="'admin.survey-list.actions-hints.clone' | translate"
+      activeIcon="edit"
+      inactiveIcon="post_add"
+      (onClick)="onEdit(survey)"
+    ></app-toggle-button>
+  </ng-template>
 </ng-template>
 
 <ng-template
@@ -90,7 +101,7 @@
   <ng-template #notDeleting>
     <app-toggle-button
       [style]="{
-        visibility: survey.status === 'ACTIVE' ? 'hidden' : undefined,
+        visibility: [SurveyStatus.DRAFT, SurveyStatus.READY].includes(survey.status) ? undefined : 'hidden',
       }"
       [isActive]="survey.deleted"
       [activeTooltip]="'admin.survey-list.actions-hints.restore' | translate"
@@ -120,7 +131,6 @@
       <mat-cell
         *matCellDef="let survey"
         [class]="survey.status"
-        [class.deleted]="survey.deleted"
       >
         <div
           *ngIf="surveyProperty !== 'status'"
@@ -128,8 +138,9 @@
           [innerHtml]="handleColumn(survey, surveyProperty)"
         ></div>
         <mat-chip [class]="survey.status" *ngIf="surveyProperty === 'status'">{{
-          handleColumn(survey, surveyProperty)
-        }}</mat-chip>
+            handleColumn(survey, surveyProperty)
+          }}
+        </mat-chip>
       </mat-cell>
     </ng-container>
   }
@@ -195,6 +206,6 @@
 
 <ng-template #noErr>
   <span *ngIf="!dataSource.data.length" class="datasource-empty">{{
-    'admin.survey-list.datasource-empty' | translate
-  }}</span>
+      'admin.survey-list.datasource-empty' | translate
+    }}</span>
 </ng-template>
