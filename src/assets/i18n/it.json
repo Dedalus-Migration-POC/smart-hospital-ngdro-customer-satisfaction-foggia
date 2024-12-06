@@ -121,7 +121,7 @@
         "version": "Versione",
         "status": "Stato",
         "validity": "Validità",
-        "createdAt": "Data pubblicazione",
+        "createdAt": "Data creazione",
         "actions": "Azioni"
       },
       "actions-hints": {

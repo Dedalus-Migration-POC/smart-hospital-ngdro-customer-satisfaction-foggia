@@ -8,6 +8,11 @@
   </div>
 </ng-template>
 
+<button type="button" mat-button (click)="goBack()" style="padding: 0">
+  <mat-icon>arrow_back</mat-icon>
+  {{ 'go-back' | translate }}
+</button>
+
 <form [formGroup]="form" *ngIf="(sections$ | async)?.length; else noSections">
   <div class="head">
     <h4>{{ getTitlePlaceholder() | translate }}</h4>
@@ -30,9 +35,9 @@
         ></mat-spinner>
         <ng-template #canSave>
           <span>{{
-              'admin.survey-form.' + (editMode ? 'edit' : 'save') + '-survey-btn'
-                | translate
-            }}</span>
+            'admin.survey-form.' + (editMode ? 'edit' : 'save') + '-survey-btn'
+              | translate
+          }}</span>
         </ng-template>
       </button>
 
@@ -69,22 +74,25 @@
       floatLabel="always"
       *ngIf="form.controls.name; let field"
     >
-      <mat-label>{{
-          'admin.survey-form.survey-name-field' | translate
-        }}
+      <mat-label
+        >{{ 'admin.survey-form.survey-name-field' | translate }}
       </mat-label>
-      <input minlength="2" matInput type="text" [formControl]="field" [readonly]="editMode === 'clone'"/>
+      <input
+        minlength="2"
+        matInput
+        type="text"
+        [formControl]="field"
+        [readonly]="editMode === 'clone'"
+      />
       <mat-error *ngIf="hasError(field, 'required', 'required-field') as msg"
-      >{{ msg }}
+        >{{ msg }}
+      </mat-error>
+      <mat-error *ngIf="hasError(field, 'minlength', 'name-min-length') as msg"
+        >{{ msg }}
       </mat-error>
       <mat-error
-        *ngIf="hasError(field, 'minlength', 'name-min-length') as msg"
-      >{{ msg }}
-      </mat-error
-      >
-      <mat-error
         *ngIf="hasError(field, 'alreadyExists', 'name-already-exists') as msg"
-      >{{ msg }}
+        >{{ msg }}
       </mat-error>
     </mat-form-field>
 
@@ -94,9 +102,8 @@
       floatLabel="always"
       *ngIf="form.controls.version; let field"
     >
-      <mat-label>{{
-          'admin.survey-form.survey-version-field' | translate
-        }}
+      <mat-label
+        >{{ 'admin.survey-form.survey-version-field' | translate }}
       </mat-label>
       <mat-select [formControl]="field" [value]="field.value">
         <mat-option *ngFor="let version of versions" [value]="version">
@@ -104,7 +111,7 @@
         </mat-option>
       </mat-select>
       <mat-error *ngIf="field.hasError('required')"
-      >{{ 'admin.survey-form.validators.required-field' | translate }}
+        >{{ 'admin.survey-form.validators.required-field' | translate }}
       </mat-error>
     </mat-form-field>
 
@@ -115,9 +122,8 @@
         floatLabel="always"
         *ngIf="form.controls.startDate; let field"
       >
-        <mat-label>{{
-            'admin.survey-form.survey-start-date-field' | translate
-          }}
+        <mat-label
+          >{{ 'admin.survey-form.survey-start-date-field' | translate }}
         </mat-label>
         <input
           matInput
@@ -131,7 +137,7 @@
         ></mat-datepicker-toggle>
         <mat-datepicker #startDatePicker></mat-datepicker>
         <mat-error *ngIf="field.hasError('required')"
-        >{{ 'admin.survey-form.validators.required-field' | translate }}
+          >{{ 'admin.survey-form.validators.required-field' | translate }}
         </mat-error>
       </mat-form-field>
 
@@ -141,9 +147,8 @@
         floatLabel="always"
         *ngIf="form.controls.endDate; let field"
       >
-        <mat-label>{{
-            'admin.survey-form.survey-end-date-field' | translate
-          }}
+        <mat-label
+          >{{ 'admin.survey-form.survey-end-date-field' | translate }}
         </mat-label>
         <input
           matInput
@@ -183,24 +188,24 @@
         floatLabel="always"
         *ngIf="(selectableSections$ | async)! as sections"
       >
-        <mat-label>{{
-            'admin.survey-form.section-field-label' | translate: {index: i + 1}
+        <mat-label
+          >{{
+            'admin.survey-form.section-field-label'
+              | translate: { index: i + 1 }
           }}
         </mat-label>
         <mat-select [formControl]="control">
           @for (section of selectableSections$ | async; track section) {
-            <mat-option [value]="section">{{
-                SectionUtils.getNameAndVersion(sections, section)
-              }}
+            <mat-option [value]="section"
+              >{{ SectionUtils.getNameAndVersion(sections, section) }}
             </mat-option>
           }
-          <mat-option *ngIf="control.value as selected" [value]="selected">{{
-              selected.name
-            }}
+          <mat-option *ngIf="control.value as selected" [value]="selected"
+            >{{ selected.name }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="control.hasError('required')"
-        >{{ 'admin.survey-form.validators.required-field' | translate }}
+          >{{ 'admin.survey-form.validators.required-field' | translate }}
         </mat-error>
       </mat-form-field>
 
@@ -212,9 +217,8 @@
           [disabled]="i === 0"
         >
           <mat-icon [matTooltip]="'admin.survey-form.move-up-btn' | translate"
-          >arrow_drop_up
-          </mat-icon
-          >
+            >arrow_drop_up
+          </mat-icon>
         </button>
         <button
           type="button"
@@ -223,9 +227,8 @@
           [disabled]="i === form.controls.sections.controls.length - 1"
         >
           <mat-icon [matTooltip]="'admin.survey-form.move-down-btn' | translate"
-          >arrow_drop_down
-          </mat-icon
-          >
+            >arrow_drop_down
+          </mat-icon>
         </button>
       </div>
       <button
@@ -248,9 +251,9 @@
           *ngFor="let q of control.value?.questions ?? []; let j = index"
         >
           <span>{{
-              'admin.survey-form.section-question-label'
-                | translate: {index: j + 1}
-            }}</span>
+            'admin.survey-form.section-question-label'
+              | translate: { index: j + 1 }
+          }}</span>
           <span>{{ q.name }}</span>
         </div>
       </div>

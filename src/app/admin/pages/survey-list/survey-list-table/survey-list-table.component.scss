@@ -2,6 +2,9 @@
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
 }
+.mat-column-actions {
+  min-width: 160px;
+}
 
 mat-chip.DRAFT {
   background-color: #fef7e0;
@@ -37,7 +40,8 @@ mat-chip.PUBLISHED {
   }
 }
 
-mat-chip.EXPIRED, mat-chip.STOPPED {
+mat-chip.EXPIRED,
+mat-chip.STOPPED {
   background-color: #ffe1e1;
   font-weight: bold;
 
@@ -64,6 +68,10 @@ mat-chip {
   left: 20px;
 }
 
+.buttons-container {
+  min-width: 50px;
+  display: flex;
+}
 .button-action-play_arrow,
 .button-action-stop_circle {
   background-color: #6750a4;

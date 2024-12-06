@@ -1,4 +1,11 @@
-import {AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild,} from '@angular/core'
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core'
 import {
   MatCell,
   MatCellDef,
@@ -13,25 +20,29 @@ import {
   MatTableDataSource,
   MatTableModule,
 } from '@angular/material/table'
-import {MatIcon} from '@angular/material/icon'
-import {MatIconButton} from '@angular/material/button'
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator'
-import {AsyncPipe, NgIf} from '@angular/common'
-import {TranslateModule} from '@ngx-translate/core'
-import {Section} from '../../../repository/dto/section'
-import {Store} from '@ngrx/store'
-import {map, Observable} from 'rxjs'
-import {FormsModule} from '@angular/forms'
-import {MatTooltip} from '@angular/material/tooltip'
-import {SurveyAdminState} from '../../../store/store'
-import {selectSectionList, selectSectionState,} from '../../../store/section/reducer'
-import {MatSort, MatSortHeader, MatSortModule} from '@angular/material/sort'
-import {WithSubscriptionsComponent} from '../../../support/with-subscriptions-component'
-import {SectionActions} from '../../../store/section/actions'
-import {MatProgressBar} from '@angular/material/progress-bar'
-import {ToggleButtonComponent} from '../../../components/toggle-button/toggle-button.component'
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {MatChip} from "@angular/material/chips";
+import { MatIcon } from '@angular/material/icon'
+import { MatIconButton } from '@angular/material/button'
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator'
+import { AsyncPipe, NgIf } from '@angular/common'
+import { TranslateModule } from '@ngx-translate/core'
+import { Section } from '../../../repository/dto/section'
+import { Store } from '@ngrx/store'
+import { map, Observable, take } from 'rxjs'
+import { FormsModule } from '@angular/forms'
+import { MatTooltip } from '@angular/material/tooltip'
+import { SurveyAdminState } from '../../../store/store'
+import {
+  selectAllSectionList,
+  selectSectionList,
+  selectSectionState,
+} from '../../../store/section/reducer'
+import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort'
+import { WithSubscriptionsComponent } from '../../../support/with-subscriptions-component'
+import { SectionActions } from '../../../store/section/actions'
+import { MatProgressBar } from '@angular/material/progress-bar'
+import { ToggleButtonComponent } from '../../../components/toggle-button/toggle-button.component'
+import { MatProgressSpinner } from '@angular/material/progress-spinner'
+import { MatChip } from '@angular/material/chips'
 
 @Component({
   selector: 'app-section-list-table',
@@ -70,7 +81,8 @@ import {MatChip} from "@angular/material/chips";
 })
 export class SectionListTableComponent
   extends WithSubscriptionsComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @Output('onEdit') onEdit: EventEmitter<Section> = new EventEmitter()
   @Output('onDelete') deleteSection: EventEmitter<Section> = new EventEmitter()
   @Output('onRestore') restoreSection: EventEmitter<Section> =
@@ -86,11 +98,12 @@ export class SectionListTableComponent
   state$ = this.store.select(selectSectionState)
   loading$ = this.store
     .select(selectSectionList)
-    .pipe(map(({fetchingSections}) => fetchingSections))
+    .pipe(map(({ fetchingSections }) => fetchingSections))
   error$ = this.store
     .select(selectSectionList)
-    .pipe(map(({fetchSectionsError}) => fetchSectionsError))
-  sections$ = this.state$.pipe(map(({sections}) => sections?.content ?? []))
+    .pipe(map(({ fetchSectionsError }) => fetchSectionsError))
+  sections$ = this.state$.pipe(map(({ sections }) => sections?.content ?? []))
+  sectionsFullList$ = this.store.select(selectAllSectionList)
   dataSource = new MatTableDataSource<Section>()
   pageSizeOptions$!: Observable<Array<number>>
 
@@ -105,7 +118,7 @@ export class SectionListTableComponent
     this.pageSizeOptions$ = this.sections$.pipe(
       map((sections) => {
         return Array.from(
-          {length: Math.ceil(sections.length / 5)},
+          { length: Math.ceil(sections.length / 5) },
           (_, i) => {
             const value = (i + 1) * 5
             return value >= 30 ? Math.ceil(value / 10) * 10 : value
@@ -120,17 +133,17 @@ export class SectionListTableComponent
       this.state$
         .pipe(
           map((state) => {
-            const {sections, searchCriteria} = state
+            const { sections, searchCriteria } = state
             this.pageIndex = sections?.pageable.pageNumber ?? 0
             this.pageSize = searchCriteria?.tablePagination?.size ?? 0
-            this.dataSource.data = (sections?.content ?? [])
+            this.dataSource.data = sections?.content ?? []
             this.length = sections?.totalElements ?? 0
             console.log('UPDATED')
           }),
         )
         .subscribe(),
 
-      this.sort.sortChange.subscribe(({active, direction}) => {
+      this.sort.sortChange.subscribe(({ active, direction }) => {
         if (direction.length) {
           this.store.dispatch(
             SectionActions.fetchSections({
@@ -142,7 +155,7 @@ export class SectionListTableComponent
         }
       }),
 
-      this.paginator.page.subscribe(({pageIndex, pageSize}) => {
+      this.paginator.page.subscribe(({ pageIndex, pageSize }) => {
         this.store.dispatch(
           SectionActions.fetchSections({
             tablePagination: {
@@ -159,6 +172,23 @@ export class SectionListTableComponent
     this.store.dispatch(SectionActions.fetchSections({}))
   }
 
+  protected canShowEditOrCloneButton(section: Section) {
+    return this.sectionsFullList$.pipe(
+      map((full) => {
+        const list = full?.allSections?.content ?? []
+
+        return (
+          list.find(
+            (s) =>
+              s.name === section.name &&
+              s.version === section.version + 1 &&
+              section.associatedSurveys?.length! > 0,
+          ) === undefined
+        )
+      }),
+    )
+  }
+
   deletingId$ = this.store
     .select(selectSectionState)
     .pipe(map((s) => s.editingSectionId))
@@ -172,7 +202,7 @@ export class SectionListTableComponent
       case 'present-in':
         return (section.associatedSurveys ?? [])
           .map((survey) => {
-            const {name, version} = survey
+            const { name, version } = survey
             return `${name} (v${version})`
           })
           .sort((a, b) => (a < b ? -1 : 1))

@@ -1,11 +1,16 @@
-import {createFeatureSelector, createReducer, createSelector, on,} from '@ngrx/store'
-import {SectionActions} from './actions'
-import {Section} from '../../repository/dto/section'
-import {AppActions} from '../application/actions'
-import {SurveyAdminState} from '../store'
-import {TablePagination} from '../../support/domain/table-pagination'
-import {FormControl, FormGroup} from '@angular/forms'
-import {PagedList} from '../../repository/dto/paged_list'
+import {
+  createFeatureSelector,
+  createReducer,
+  createSelector,
+  on,
+} from '@ngrx/store'
+import { SectionActions } from './actions'
+import { Section } from '../../repository/dto/section'
+import { AppActions } from '../application/actions'
+import { SurveyAdminState } from '../store'
+import { TablePagination } from '../../support/domain/table-pagination'
+import { FormControl, FormGroup } from '@angular/forms'
+import { PagedList } from '../../repository/dto/paged_list'
 
 export type SectionFilterForm = FormGroup<{
   name: FormControl<string | null>
@@ -63,7 +68,7 @@ export const reducer = createReducer(
     allSections: action.response,
     versions: new Set<number>(
       action.response.content
-        .map(({version}) => version)
+        .map(({ version }) => version)
         .filter(Boolean)
         .sort((a, b) => (a > b ? 1 : -1)),
     ),
@@ -73,12 +78,12 @@ export const reducer = createReducer(
     fetchingSections: false,
     fetchSectionsError: true,
   })),
-  on(SectionActions.fetchSections, (state, {form, tablePagination}) => ({
+  on(SectionActions.fetchSections, (state, { form, tablePagination }) => ({
     ...state,
     fetchingSections: true,
     fetchSectionsError: false,
     searchCriteria: {
-      filter: {...state.searchCriteria.filter, ...form},
+      filter: { ...state.searchCriteria.filter, ...form },
       tablePagination: {
         ...state.searchCriteria.tablePagination,
         ...tablePagination,
@@ -162,7 +167,7 @@ export const reducer = createReducer(
       ...state.sections!,
       content: state.sections!.content.map((section) =>
         section.id === action.section.id
-          ? {...section, deleted: true}
+          ? { ...section, deleted: true }
           : section,
       ),
     },
@@ -182,7 +187,7 @@ export const reducer = createReducer(
       ...state.sections!,
       content: state.sections!.content.map((section) =>
         section.id === action.section.id
-          ? {...section, deleted: false}
+          ? { ...section, deleted: false }
           : section,
       ),
     },
@@ -197,13 +202,21 @@ export const reducer = createReducer(
 export const selectSectionState = createFeatureSelector<State>('section')
 export const selectSectionSearchCriteria = createSelector(
   (state: SurveyAdminState) => state.section,
-  ({searchCriteria}) => searchCriteria,
+  ({ searchCriteria }) => searchCriteria,
 )
 export const selectSectionList = createSelector(
   (state: SurveyAdminState) => state.section,
-  ({fetchingSections, fetchSectionsError, sections}) => ({
+  ({ fetchingSections, fetchSectionsError, sections }) => ({
     fetchingSections,
     fetchSectionsError,
     sections,
+  }),
+)
+export const selectAllSectionList = createSelector(
+  (state: SurveyAdminState) => state.section,
+  ({ fetchingSections, fetchSectionsError, allSections }) => ({
+    fetchingSections,
+    fetchSectionsError,
+    allSections,
   }),
 )
