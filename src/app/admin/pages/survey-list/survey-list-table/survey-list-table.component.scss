@@ -5,6 +5,11 @@
 .mat-column-actions {
   min-width: 160px;
 }
+mat-chip {
+  ::ng-deep .mdc-evolution-chip__cell {
+    justify-content: center;
+  }
+}
 
 mat-chip.DRAFT {
   background-color: #fef7e0;

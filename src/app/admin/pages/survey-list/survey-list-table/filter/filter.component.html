@@ -72,7 +72,12 @@
   </div>
 
   <div>
-    <button type="button" mat-stroked-button (click)="form.reset()">
+    <button
+      type="button"
+      mat-stroked-button
+      (click)="form.reset()"
+      class="clear-filter-btn"
+    >
       {{ 'admin.survey-list.search-filter.clear-filter-btn' | translate }}
       <mat-icon
         class="clear-filter-btn"
