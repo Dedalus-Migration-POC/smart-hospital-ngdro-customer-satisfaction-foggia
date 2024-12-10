@@ -180,9 +180,12 @@ export class SectionListTableComponent
         return (
           list.find(
             (s) =>
-              s.name === section.name &&
-              s.version === section.version + 1 &&
-              section.associatedSurveys?.length! > 0,
+              (s.name === section.name &&
+                s.version === section.version + 1 &&
+                section.associatedSurveys?.length! > 0) ||
+              (s.name === section.name &&
+                s.version === 2 &&
+                section.associatedSurveys?.length! > 0),
           ) === undefined
         )
       }),

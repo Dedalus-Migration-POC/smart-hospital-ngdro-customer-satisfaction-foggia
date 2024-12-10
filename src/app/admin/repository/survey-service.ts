@@ -1,23 +1,23 @@
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {Survey} from "./dto/survey";
-import {SurveyPersistRequest} from "./dto/survey-persist-request";
-import {FilterSurveyRequest} from "./dto/filter-survey-request";
-import {PagedList} from "./dto/paged_list";
-import {TablePagination} from "../support/domain/table-pagination";
-import {PrintSurveyRequest} from "./dto/print-survey-request";
-import {PrintDataResponse} from "./dto/print-data-response";
+import { Injectable } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
+import { Survey } from './dto/survey'
+import { SurveyPersistRequest } from './dto/survey-persist-request'
+import { FilterSurveyRequest } from './dto/filter-survey-request'
+import { PagedList } from './dto/paged_list'
+import { TablePagination } from '../support/domain/table-pagination'
+import { PrintSurveyRequest } from './dto/print-survey-request'
+import { PrintDataResponse } from './dto/print-data-response'
 
 const baseUrl = '/survey/api/v1/survey'
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class SurveyService {
-  constructor(private http: HttpClient) {
-
-  }
+  constructor(private http: HttpClient) {}
 
   public find(request: FilterSurveyRequest, filter?: TablePagination) {
-    return this.http.post<PagedList<Survey>>(baseUrl, request, {params: filter})
+    return this.http.post<PagedList<Survey>>(baseUrl, request, {
+      params: filter,
+    })
   }
 
   public findById(id: string) {
@@ -52,8 +52,11 @@ export class SurveyService {
     return this.http.patch<void>(`${baseUrl}/unpublish/${surveyId}`, null)
   }
 
-  public restart(surveyId: string, endDate: Date) {
-    return this.http.patch<Survey>(`${baseUrl}/restart/${surveyId}`, endDate)
+  public restart(surveyId: string, endDate: string) {
+    return this.http.patch<Survey>(
+      `${baseUrl}/restart/${surveyId}`,
+      new Date(endDate),
+    )
   }
 
   public fetchPrintData() {
@@ -61,6 +64,8 @@ export class SurveyService {
   }
 
   public print(request: PrintSurveyRequest) {
-    return this.http.post<Blob>(`${baseUrl}/print`, request, {responseType: 'blob' as 'json'})
+    return this.http.post<Blob>(`${baseUrl}/print`, request, {
+      responseType: 'blob' as 'json',
+    })
   }
 }
