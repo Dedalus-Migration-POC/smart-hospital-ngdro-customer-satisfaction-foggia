@@ -6,6 +6,7 @@ import { TablePagination } from '../../support/domain/table-pagination'
 import { SurveyFilterForm } from './reducer'
 import { PrintDataResponse } from '../../repository/dto/print-data-response'
 import { PrintSurveyForm } from '../../components/print-survey/print-survey.component'
+import { FormGroup } from '@angular/forms'
 
 export type SubmitSurveyOption = 'save' | 'publish'
 
@@ -114,7 +115,10 @@ const publishSurveyFailed = createAction('[Survey] Publish Survey Failed')
 
 const unpublishSurvey = createAction(
   '[Survey] Unpublish Survey',
-  props<{ survey: Survey }>(),
+  props<{
+    survey: Survey
+    thenPublishSurvey?: Survey
+  }>(),
 )
 
 const unpublishSurveySucceeded = createAction(

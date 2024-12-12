@@ -168,7 +168,10 @@ export class SurveyListComponent
       this.needToStopOtherVersion(survey)
     ) {
       this.dialog.attention({
-        buttonsType: 'yes_no',
+        buttonsType: 'confirm_cancel',
+        onConfirmLabel: this.translate.instant(
+          'admin.survey-list.dialog-confirm-stop-oter-survey-button',
+        ),
         text: this.translate.instant(
           'admin.survey-list.dialog-confirm-stop-oter-survey',
         ),
@@ -177,6 +180,7 @@ export class SurveyListComponent
           this.store.dispatch(
             SurveyActions.unpublishSurvey({
               survey: this.needToStopOtherVersion(survey)!,
+              thenPublishSurvey: survey,
             }),
           ),
       })
