@@ -1,17 +1,15 @@
 <form [formGroup]="form" class="section-filter">
   <div>
     <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{
-          'admin.section-list.search-filter.name' | translate
-        }}
+      <mat-label
+        >{{ 'admin.section-list.search-filter.name' | translate }}
       </mat-label>
-      <input matInput type="text" [formControl]="form.controls.name"/>
+      <input matInput type="text" [formControl]="form.controls.name" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{
-          'admin.section-list.search-filter.version' | translate
-        }}
+      <mat-label
+        >{{ 'admin.section-list.search-filter.version' | translate }}
       </mat-label>
       <mat-select
         [formControl]="form.controls.version"
@@ -24,9 +22,8 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>{{
-          'admin.section-list.search-filter.present-in' | translate
-        }}
+      <mat-label
+        >{{ 'admin.section-list.search-filter.present-in' | translate }}
       </mat-label>
       <mat-select
         [formControl]="form.controls.presentIn"
@@ -43,16 +40,20 @@
   </div>
 
   <div>
-    <button type="button" mat-stroked-button (click)="form.reset()">
+    <button
+      type="button"
+      mat-stroked-button
+      (click)="form.reset()"
+      class="clear-filter-btn"
+    >
       {{ 'admin.section-list.search-filter.clear-filter-btn' | translate }}
       <mat-icon
         class="clear-filter-btn"
         [matTooltip]="
           'admin.section-list.search-filter.clear-filter-btn' | translate
         "
-      >close
-      </mat-icon
-      >
+        >close
+      </mat-icon>
     </button>
   </div>
 </form>

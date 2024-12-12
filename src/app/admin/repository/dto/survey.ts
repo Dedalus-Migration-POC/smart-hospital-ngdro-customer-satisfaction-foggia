@@ -1,6 +1,6 @@
-import {BaseDTO, VersionableDTO} from "./base_dto";
-import {Section} from "./section";
-import {DateRange} from "./date_range";
+import { BaseDTO, VersionableDTO } from './base_dto'
+import { Section } from './section'
+import { DateRange } from './date_range'
 
 export enum SurveyStatus {
   PUBLISHED = 'PUBLISHED',
@@ -10,10 +10,11 @@ export enum SurveyStatus {
   EXPIRED = 'EXPIRED',
 }
 
-export type Survey = BaseDTO & VersionableDTO & {
-  createdAt: Date;
-  dateRange?: DateRange;
-  status: SurveyStatus;
-  sections: Array<Section>;
-  results: any[]
-}
+export type Survey = BaseDTO &
+  VersionableDTO & {
+    createdAt: Date
+    dateRange?: DateRange
+    status: SurveyStatus
+    sections: Array<Section>
+    results: any[]
+  }

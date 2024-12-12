@@ -3,12 +3,18 @@
   #dual
   let-confirmLabel="confirmLabel"
   let-cancelLabel="cancelLabel"
+  let-disabled="disabled"
 >
   <div class="inline-buttons">
     <button mat-button mat-dialog-close (click)="cancel()">
       {{ data.onCancelLabel ?? (cancelLabel | translate) }}
     </button>
-    <button mat-button mat-dialog-close (click)="confirm()">
+    <button
+      mat-button
+      mat-dialog-close
+      (click)="confirm()"
+      [disabled]="disabled"
+    >
       {{ data.onConfirmLabel ?? (confirmLabel | translate) }}
     </button>
   </div>
@@ -36,6 +42,23 @@
       : data.text
   }}
 </div>
+
+<div *ngIf="data.form && data.fields" class="content">
+  <form [formGroup]="data.form" class="section-filter">
+    <div *ngFor="let formField of data.fields">
+      <mat-form-field appearance="outline" floatLabel="always">
+        <mat-label
+          >{{
+            formField === 'endDate'
+              ? ('admin.survey-form.survey-end-date-field' | translate)
+              : ('admin.survey-form.survey-start-date-field' | translate)
+          }}
+        </mat-label>
+        <input matInput type="date" [formControlName]="formField" />
+      </mat-form-field>
+    </div>
+  </form>
+</div>
 <!-- DIALOG -->
 
 <div class="actions">
@@ -44,7 +67,11 @@
       <ng-container
         *ngTemplateOutlet="
           dual;
-          context: { confirmLabel: 'yes', cancelLabel: 'no' }
+          context: {
+            confirmLabel: 'yes',
+            cancelLabel: 'no',
+            disabled: data.form && data.form.invalid ? true : false,
+          }
         "
       ></ng-container>
     </ng-container>

@@ -1,14 +1,20 @@
-import {Injectable} from '@angular/core'
-import {Actions, createEffect, ofType} from '@ngrx/effects'
-import {catchError, concatMap, filter, map, withLatestFrom} from 'rxjs/operators'
-import {of, tap} from 'rxjs'
-import {SectionActions} from './actions'
-import {CreateSectionRequest} from '../../repository/dto/create-section-request'
-import {SectionService} from '../../repository/section-service'
-import {Store} from '@ngrx/store'
-import {SurveyAdminState} from '../store'
-import {selectSectionSearchCriteria} from './reducer'
-import {SurveyActions} from "../survey/actions";
+import { Injectable } from '@angular/core'
+import { Actions, createEffect, ofType } from '@ngrx/effects'
+import {
+  catchError,
+  concatMap,
+  filter,
+  map,
+  withLatestFrom,
+} from 'rxjs/operators'
+import { of, tap } from 'rxjs'
+import { SectionActions } from './actions'
+import { CreateSectionRequest } from '../../repository/dto/create-section-request'
+import { SectionService } from '../../repository/section-service'
+import { Store } from '@ngrx/store'
+import { SurveyAdminState } from '../store'
+import { selectSectionSearchCriteria } from './reducer'
+import { SurveyActions } from '../survey/actions'
 
 @Injectable()
 export class SectionEffects {
@@ -16,37 +22,40 @@ export class SectionEffects {
     private store: Store<SurveyAdminState>,
     private actions$: Actions,
     private sectionService: SectionService,
-  ) {
-  }
+  ) {}
 
-  private readonly autoUpdate$ = this.actions$.pipe(
-    filter((action) => ([
-      SurveyActions.submitSurveySucceeded.type.toString(),
-      SurveyActions.deleteSurveySucceeded.type.toString(),
-      SurveyActions.cloneSurveySucceeded.type.toString(),
-      SurveyActions.publishSurveySucceeded.type.toString(),
-      SurveyActions.unpublishSurveySucceeded.type.toString(),
-      SurveyActions.restartSurveySucceeded.type.toString(),
-    ].includes(action.type))),
-    withLatestFrom(this.store),
-    tap(([action, state]) => {
-      this.store.dispatch(SectionActions.fetchSections({}))
-      this.store.dispatch(SectionActions.fetchAllSections())
-    })
-  ).subscribe()
+  private readonly autoUpdate$ = this.actions$
+    .pipe(
+      filter((action) =>
+        [
+          SurveyActions.submitSurveySucceeded.type.toString(),
+          SurveyActions.deleteSurveySucceeded.type.toString(),
+          SurveyActions.cloneSurveySucceeded.type.toString(),
+          SurveyActions.publishSurveySucceeded.type.toString(),
+          SurveyActions.unpublishSurveySucceeded.type.toString(),
+          SurveyActions.restartSurveySucceeded.type.toString(),
+          SectionActions.cloneSectionSucceeded.type.toString(),
+          SectionActions.deleteSectionSucceeded.type.toString(),
+        ].includes(action.type),
+      ),
+      withLatestFrom(this.store),
+      tap(([action, state]) => {
+        this.store.dispatch(SectionActions.fetchSections({}))
+        this.store.dispatch(SectionActions.fetchAllSections())
+      }),
+    )
+    .subscribe()
 
   private readonly fetchAllSections$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SectionActions.fetchAllSections),
       concatMap(() =>
-        this.sectionService
-          .find({}, {size: 999, sort: 'name,asc'})
-          .pipe(
-            map((response) =>
-              SectionActions.fetchAllSectionsSucceeded({response}),
-            ),
-            catchError(() => of(SectionActions.fetchAllSectionsFailed())),
+        this.sectionService.find({}, { size: 999, sort: 'name,asc' }).pipe(
+          map((response) =>
+            SectionActions.fetchAllSectionsSucceeded({ response }),
           ),
+          catchError(() => of(SectionActions.fetchAllSectionsFailed())),
+        ),
       ),
     )
   })
@@ -55,7 +64,7 @@ export class SectionEffects {
     return this.actions$.pipe(
       ofType(SectionActions.fetchSections),
       withLatestFrom(this.store.select(selectSectionSearchCriteria)),
-      concatMap(([_, {filter, tablePagination}]) =>
+      concatMap(([_, { filter, tablePagination }]) =>
         this.sectionService
           .find(
             {
@@ -69,7 +78,7 @@ export class SectionEffects {
           )
           .pipe(
             map((response) =>
-              SectionActions.fetchSectionsSucceeded({response}),
+              SectionActions.fetchSectionsSucceeded({ response }),
             ),
             catchError(() => of(SectionActions.fetchSectionsFailed())),
           ),
@@ -80,10 +89,10 @@ export class SectionEffects {
   private readonly fetchSectionById$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SectionActions.fetchSectionById),
-      concatMap(({section}) =>
+      concatMap(({ section }) =>
         this.sectionService.findById(section.id!.toString()).pipe(
           map((section) =>
-            SectionActions.fetchSectionByIdSucceeded({section}),
+            SectionActions.fetchSectionByIdSucceeded({ section }),
           ),
           catchError(() => of(SectionActions.fetchSectionByIdFailed())),
         ),
@@ -94,11 +103,11 @@ export class SectionEffects {
   private readonly submitSection$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SectionActions.submitSection),
-      concatMap(({sectionForm}) => {
+      concatMap(({ sectionForm }) => {
         if (!sectionForm.questions) {
           throw new Error(
             'Cannot submit sectionForm because question list is not valid: ' +
-            sectionForm.questions,
+              sectionForm.questions,
           )
         }
         const section: CreateSectionRequest = {
@@ -115,7 +124,7 @@ export class SectionEffects {
           ? this.sectionService.create(section)
           : this.sectionService.update(section)
         return api.pipe(
-          map((section) => SectionActions.submitSectionSucceeded({section})),
+          map((section) => SectionActions.submitSectionSucceeded({ section })),
           catchError(() => of(SectionActions.submitSectionFailed())),
         )
       }),
@@ -125,9 +134,9 @@ export class SectionEffects {
   private readonly cloneSection$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SectionActions.cloneSection),
-      concatMap(({section}) =>
+      concatMap(({ section }) =>
         this.sectionService.clone(section.id!.toString()).pipe(
-          map((section) => SectionActions.cloneSectionSucceeded({section})),
+          map((section) => SectionActions.cloneSectionSucceeded({ section })),
           catchError(() => of(SectionActions.cloneSectionFailed())),
         ),
       ),
@@ -137,9 +146,9 @@ export class SectionEffects {
   private readonly deleteSection$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SectionActions.deleteSection),
-      concatMap(({section}) =>
+      concatMap(({ section }) =>
         this.sectionService.delete(section.id!.toString()).pipe(
-          map(() => SectionActions.deleteSectionSucceeded({section})),
+          map(() => SectionActions.deleteSectionSucceeded({ section })),
           catchError(() => of(SectionActions.deleteSectionFailed())),
         ),
       ),
@@ -149,9 +158,9 @@ export class SectionEffects {
   private readonly restoreSection$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SectionActions.restoreSection),
-      concatMap(({section}) =>
+      concatMap(({ section }) =>
         this.sectionService.restore(section.id!.toString()).pipe(
-          map(() => SectionActions.restoreSectionSucceeded({section})),
+          map(() => SectionActions.restoreSectionSucceeded({ section })),
           catchError(() => of(SectionActions.restoreSectionFailed())),
         ),
       ),

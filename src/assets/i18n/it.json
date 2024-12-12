@@ -154,7 +154,7 @@
         "version": "Versione",
         "status": "Stato",
         "validity": "Validità",
-        "createdAt": "Data pubblicazione",
+        "createdAt": "Data creazione",
         "actions": "Azioni"
       },
       "actions-hints": {
@@ -174,7 +174,9 @@
       "dialog-confirm-restart": "Vuoi davvero riattivare il questionario?",
       "dialog-confirm-unpublish": "Il questionario {{name}} verrà chiuso e le risposte ai sondaggi verranno bloccate.",
       "dialog-confirm-unpublish-title": "Vuoi chiudere il questionario?",
-      "dialog-confirm-unpublish-confirm": "Chiudi questionario"
+      "dialog-confirm-unpublish-confirm": "Chiudi questionario",
+      "dialog-confirm-stop-oter-survey": "Un’altra versione di questo questionario è già stata pubblicata. Vuoi chiudere l’altra versione del questionario per poter pubblicare questo?",
+      "dialog-confirm-stop-oter-survey-button": "Chiudi l’altra versione"
     },
     "survey-form": {
       "title-new": "Nuovo questionario",

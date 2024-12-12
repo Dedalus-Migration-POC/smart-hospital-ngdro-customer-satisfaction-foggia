@@ -13,8 +13,13 @@
         {{ 'admin.section-list.table-headers.' + column | translate }}
       </mat-header-cell>
       <mat-cell *matCellDef="let element" [class.deleted]="element.deleted">
-        <mat-chip [class]="handleColumn(element, column)" *ngIf="column === 'status'">
-          {{ ('admin.survey-status.' + handleColumn(element, column)) | translate }}
+        <mat-chip
+          [class]="handleColumn(element, column)"
+          *ngIf="column === 'status'"
+        >
+          {{
+            'admin.survey-status.' + handleColumn(element, column) | translate
+          }}
         </mat-chip>
         <div *ngIf="column !== 'status'">
           {{ handleColumn(element, column) }}
@@ -28,35 +33,51 @@
       {{ 'admin.section-list.table-headers.actions' | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <app-toggle-button
-        [isActive]="!!element.associatedSurveys?.length"
-        activeIcon="post_add"
-        inactiveIcon="edit"
-        [activeTooltip]="'admin.section-list.actions-hints.clone' | translate"
-        [inactiveTooltip]="'admin.section-list.actions-hints.edit' | translate"
-        (onClick)="onEdit.emit(element)"
-      ></app-toggle-button>
-      <ng-template #notDeleting>
+      <div class="buttons-container">
         <app-toggle-button
-          [isActive]="!element.deleted"
-          activeIcon="delete"
-          inactiveIcon="restore"
-          [activeTooltip]="
-            'admin.section-list.actions-hints.delete' | translate
-          "
+          [style]="{
+            visibility:
+              (canShowEditOrCloneButton(element) | async)
+                ? undefined
+                : 'hidden',
+          }"
+          [isActive]="!!element.associatedSurveys?.length"
+          activeIcon="post_add"
+          inactiveIcon="edit"
+          [activeTooltip]="'admin.section-list.actions-hints.clone' | translate"
           [inactiveTooltip]="
-            'admin.section-list.actions-hints.restore' | translate
+            'admin.section-list.actions-hints.edit' | translate
           "
-          (onClick)="changeDeletedStatus(element)"
+          (onClick)="onEdit.emit(element)"
         ></app-toggle-button>
-      </ng-template>
-      <mat-spinner
-        *ngIf="
-          (deletingId$ | async) === element.id?.toString();
-          else notDeleting
-        "
-        diameter="20"
-      ></mat-spinner>
+      </div>
+      <div class="buttons-container">
+        <ng-template #notDeleting>
+          <app-toggle-button
+            [style]="{
+              visibility:
+                element.associatedSurveys.length > 0 ? 'hidden' : undefined,
+            }"
+            [isActive]="!element.deleted"
+            activeIcon="delete"
+            inactiveIcon="restore"
+            [activeTooltip]="
+              'admin.section-list.actions-hints.delete' | translate
+            "
+            [inactiveTooltip]="
+              'admin.section-list.actions-hints.restore' | translate
+            "
+            (onClick)="changeDeletedStatus(element)"
+          ></app-toggle-button>
+        </ng-template>
+        <mat-spinner
+          *ngIf="
+            (deletingId$ | async) === element.id?.toString();
+            else notDeleting
+          "
+          diameter="20"
+        ></mat-spinner>
+      </div>
     </mat-cell>
   </ng-container>
 
@@ -82,6 +103,6 @@
 
 <ng-template #noErr>
   <span *ngIf="!dataSource.data.length" class="datasource-empty">{{
-      'admin.section-list.datasource-empty' | translate
-    }}</span>
+    'admin.section-list.datasource-empty' | translate
+  }}</span>
 </ng-template>

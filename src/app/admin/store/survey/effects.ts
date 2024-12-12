@@ -1,14 +1,24 @@
-import {Injectable} from '@angular/core'
-import {Actions, createEffect, ofType} from '@ngrx/effects'
-import {catchError, concatMap, filter, map, switchMap, withLatestFrom,} from 'rxjs/operators'
-import {of, tap} from 'rxjs'
-import {SurveyService} from '../../repository/survey-service'
-import {SurveyActions} from './actions'
-import {Store} from '@ngrx/store'
-import {SurveyPersistRequest} from '../../repository/dto/survey-persist-request'
-import {SurveyAdminState} from '../store'
-import {selectSectionSearchCriteria} from './reducer'
-import {SurveyForm} from '../../pages/survey-form/survey-form.component'
+import { Injectable } from '@angular/core'
+import { Actions, createEffect, ofType } from '@ngrx/effects'
+import {
+  catchError,
+  concatMap,
+  filter,
+  map,
+  switchMap,
+  withLatestFrom,
+} from 'rxjs/operators'
+import { of, tap } from 'rxjs'
+import { SurveyService } from '../../repository/survey-service'
+import { SurveyActions } from './actions'
+import { Store } from '@ngrx/store'
+import { SurveyPersistRequest } from '../../repository/dto/survey-persist-request'
+import { SurveyAdminState } from '../store'
+import { selectSectionSearchCriteria } from './reducer'
+import { SurveyForm } from '../../pages/survey-form/survey-form.component'
+import { DialogService } from '../../support/dialog-service'
+import { TranslateService } from '@ngx-translate/core'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 const surveyFormToPersistRequest = (
   surveyForm: SurveyForm['value'],
@@ -30,37 +40,40 @@ export class SurveyEffects {
     private store: Store<SurveyAdminState>,
     private actions$: Actions,
     private surveyService: SurveyService,
-  ) {
-  }
+    private dialog: DialogService,
+    private translate: TranslateService,
+  ) {}
 
-  private readonly autoUpdate$ = this.actions$.pipe(
-    filter((action) => ([
-      SurveyActions.submitSurveySucceeded.type.toString(),
-      SurveyActions.deleteSurveySucceeded.type.toString(),
-      SurveyActions.cloneSurveySucceeded.type.toString(),
-      SurveyActions.publishSurveySucceeded.type.toString(),
-      SurveyActions.unpublishSurveySucceeded.type.toString(),
-      SurveyActions.restartSurveySucceeded.type.toString(),
-    ].includes(action.type))),
-    withLatestFrom(this.store),
-    tap(() => {
-      this.store.dispatch(SurveyActions.fetchSurveys({}))
-      this.store.dispatch(SurveyActions.fetchAllSurveys())
-    })
-  ).subscribe()
+  private readonly autoUpdate$ = this.actions$
+    .pipe(
+      filter((action) =>
+        [
+          SurveyActions.submitSurveySucceeded.type.toString(),
+          SurveyActions.deleteSurveySucceeded.type.toString(),
+          SurveyActions.cloneSurveySucceeded.type.toString(),
+          SurveyActions.publishSurveySucceeded.type.toString(),
+          SurveyActions.unpublishSurveySucceeded.type.toString(),
+          SurveyActions.restartSurveySucceeded.type.toString(),
+        ].includes(action.type),
+      ),
+      withLatestFrom(this.store),
+      tap(() => {
+        this.store.dispatch(SurveyActions.fetchSurveys({}))
+        this.store.dispatch(SurveyActions.fetchAllSurveys())
+      }),
+    )
+    .subscribe()
 
   private readonly fetchAllSurveys$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.fetchAllSurveys),
       switchMap(() =>
-        this.surveyService
-          .find({}, {size: 999, sort: 'name,asc'})
-          .pipe(
-            map((allSurveys) =>
-              SurveyActions.fetchAllSurveysSucceeded({allSurveys}),
-            ),
-            catchError(() => of(SurveyActions.fetchAllSurveysFailed())),
+        this.surveyService.find({}, { size: 999, sort: 'name,asc' }).pipe(
+          map((allSurveys) =>
+            SurveyActions.fetchAllSurveysSucceeded({ allSurveys }),
           ),
+          catchError(() => of(SurveyActions.fetchAllSurveysFailed())),
+        ),
       ),
     )
   })
@@ -69,7 +82,7 @@ export class SurveyEffects {
     return this.actions$.pipe(
       ofType(SurveyActions.fetchSurveys),
       withLatestFrom(this.store.select(selectSectionSearchCriteria)),
-      switchMap(([_, {filter, tablePagination}]) =>
+      switchMap(([_, { filter, tablePagination }]) =>
         this.surveyService
           .find(
             {
@@ -84,7 +97,7 @@ export class SurveyEffects {
             tablePagination,
           )
           .pipe(
-            map((surveys) => SurveyActions.fetchSurveysSucceeded({surveys})),
+            map((surveys) => SurveyActions.fetchSurveysSucceeded({ surveys })),
             catchError(() => of(SurveyActions.fetchSurveysFailed())),
           ),
       ),
@@ -94,9 +107,9 @@ export class SurveyEffects {
   private readonly fetchSurveyById$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.fetchSurveyById),
-      switchMap(({surveyId}) =>
+      switchMap(({ surveyId }) =>
         this.surveyService.findById(surveyId).pipe(
-          map((survey) => SurveyActions.fetchSurveyByIdSucceeded({survey})),
+          map((survey) => SurveyActions.fetchSurveyByIdSucceeded({ survey })),
           catchError(() => of(SurveyActions.fetchSurveyByIdFailed())),
         ),
       ),
@@ -106,8 +119,8 @@ export class SurveyEffects {
   private readonly saveSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.submitSurvey),
-      filter(({submitOption}) => submitOption === 'publish'),
-      switchMap(({surveyForm}) => {
+      filter(({ submitOption }) => submitOption === 'publish'),
+      switchMap(({ surveyForm }) => {
         const request = surveyFormToPersistRequest(surveyForm)
         const api = !request.id
           ? this.surveyService.create(request)
@@ -115,11 +128,9 @@ export class SurveyEffects {
         return api.pipe(
           concatMap((survey) =>
             this.surveyService.publish(survey.id!.toString()).pipe(
-              map(() =>
-                SurveyActions.submitSurveySucceeded({survey}),
-              ),
+              map(() => SurveyActions.submitSurveySucceeded({ survey })),
               catchError(() =>
-                of(SurveyActions.submitSurveySucceeded({survey})),
+                of(SurveyActions.submitSurveySucceeded({ survey })),
               ),
             ),
           ),
@@ -132,16 +143,14 @@ export class SurveyEffects {
   private readonly saveAndPublishSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.submitSurvey),
-      filter(({submitOption}) => submitOption === 'save'),
-      switchMap(({surveyForm}) => {
+      filter(({ submitOption }) => submitOption === 'save'),
+      switchMap(({ surveyForm }) => {
         const request = surveyFormToPersistRequest(surveyForm)
         const api = !request.id
           ? this.surveyService.create(request)
           : this.surveyService.update(request)
         return api.pipe(
-          map((survey) =>
-            SurveyActions.submitSurveySucceeded({survey}),
-          ),
+          map((survey) => SurveyActions.submitSurveySucceeded({ survey })),
           catchError(() => of(SurveyActions.submitSurveyFailed())),
         )
       }),
@@ -151,9 +160,9 @@ export class SurveyEffects {
   private readonly cloneSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.cloneSurvey),
-      concatMap(({survey}) =>
+      concatMap(({ survey }) =>
         this.surveyService.clone(survey.id!.toString()).pipe(
-          map((survey) => SurveyActions.cloneSurveySucceeded({survey})),
+          map((survey) => SurveyActions.cloneSurveySucceeded({ survey })),
           catchError(() => of(SurveyActions.cloneSurveyFailed())),
         ),
       ),
@@ -163,10 +172,10 @@ export class SurveyEffects {
   private readonly deleteSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.deleteSurvey),
-      concatMap(({survey}) =>
+      concatMap(({ survey }) =>
         this.surveyService.delete(survey.id!.toString()).pipe(
-          map(() => SurveyActions.deleteSurveySucceeded({survey})),
-          catchError(() => of(SurveyActions.deleteSurveyFailed({survey}))),
+          map(() => SurveyActions.deleteSurveySucceeded({ survey })),
+          catchError(() => of(SurveyActions.deleteSurveyFailed({ survey }))),
         ),
       ),
     )
@@ -175,10 +184,10 @@ export class SurveyEffects {
   private readonly restoreSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.restoreSurvey),
-      switchMap(({survey}) =>
+      switchMap(({ survey }) =>
         this.surveyService.restore(survey.id!.toString()).pipe(
-          map(() => SurveyActions.restoreSurveySucceeded({survey})),
-          catchError(() => of(SurveyActions.restoreSurveyFailed({survey}))),
+          map(() => SurveyActions.restoreSurveySucceeded({ survey })),
+          catchError(() => of(SurveyActions.restoreSurveyFailed({ survey }))),
         ),
       ),
     )
@@ -187,21 +196,50 @@ export class SurveyEffects {
   private readonly publishSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.publishSurvey),
-      switchMap(({survey}) =>
+      switchMap(({ survey }) =>
         this.surveyService.publish(survey.id!.toString()).pipe(
-          map(() => SurveyActions.publishSurveySucceeded({survey})),
+          map(() => SurveyActions.publishSurveySucceeded({ survey })),
           catchError(() => of(SurveyActions.publishSurveyFailed())),
         ),
       ),
     )
   })
-
+  publishForm = new FormGroup({
+    startDate: new FormControl(undefined, [Validators.required]),
+    endDate: new FormControl(undefined, [Validators.required]),
+  })
   private readonly unpublishSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.unpublishSurvey),
-      switchMap(({survey}) =>
+      switchMap(({ survey, thenPublishSurvey }) =>
         this.surveyService.unpublish(survey.id!.toString()).pipe(
-          map(() => SurveyActions.unpublishSurveySucceeded({survey})),
+          map(() => {
+            if (thenPublishSurvey && this.publishForm) {
+              console.log('+++thenPublishSurvey', thenPublishSurvey)
+              console.log('+++publishForm', this.publishForm)
+              this.dialog.attention({
+                buttonsType: 'yes_no',
+                text: this.translate.instant(
+                  'admin.survey-list.dialog-confirm-publish',
+                ),
+                form: this.publishForm,
+                fields: ['startDate', 'endDate'],
+                onConfirm: () =>
+                  this.store.dispatch(
+                    SurveyActions.submitSurvey({
+                      surveyForm: {
+                        ...thenPublishSurvey,
+                        id: thenPublishSurvey.id!.toString(),
+                        startDate: new Date(this.publishForm?.value.startDate!),
+                        endDate: new Date(this.publishForm?.value.endDate!),
+                      },
+                      submitOption: 'publish',
+                    }),
+                  ),
+              })
+            }
+            return SurveyActions.unpublishSurveySucceeded({ survey })
+          }),
           catchError(() => of(SurveyActions.unpublishSurveyFailed())),
         ),
       ),
@@ -211,9 +249,9 @@ export class SurveyEffects {
   private readonly restartSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.restartSurvey),
-      concatMap(({survey, endDate}) =>
+      concatMap(({ survey, endDate }) =>
         this.surveyService.restart(survey.id!.toString(), endDate).pipe(
-          map((survey) => SurveyActions.restartSurveySucceeded({survey})),
+          map((survey) => SurveyActions.restartSurveySucceeded({ survey })),
           catchError(() => of(SurveyActions.restartSurveyFailed())),
         ),
       ),
@@ -231,10 +269,10 @@ export class SurveyEffects {
                 error: 'admin.print-survey-dialog.no-surveys-error',
               })
             }
-            return SurveyActions.fetchPrintSurveyDataSucceeded({data})
+            return SurveyActions.fetchPrintSurveyDataSucceeded({ data })
           }),
           catchError(() =>
-            of(SurveyActions.fetchPrintSurveyDataFailed({error: undefined})),
+            of(SurveyActions.fetchPrintSurveyDataFailed({ error: undefined })),
           ),
         ),
       ),
@@ -244,7 +282,7 @@ export class SurveyEffects {
   private readonly printSurvey$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SurveyActions.printSurvey),
-      switchMap(({printSurveyForm}) =>
+      switchMap(({ printSurveyForm }) =>
         this.surveyService
           .print({
             surveyId: printSurveyForm.survey!.id!,
@@ -253,7 +291,7 @@ export class SurveyEffects {
             copies: printSurveyForm.copies!,
           })
           .pipe(
-            map((document) => SurveyActions.printSurveySucceeded({document})),
+            map((document) => SurveyActions.printSurveySucceeded({ document })),
             catchError(() => of(SurveyActions.printSurveyFailed())),
           ),
       ),

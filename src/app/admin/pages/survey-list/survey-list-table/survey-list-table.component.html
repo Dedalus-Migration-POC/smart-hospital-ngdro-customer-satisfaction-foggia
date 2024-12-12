@@ -23,9 +23,8 @@
       >
         <mat-icon
           [matTooltip]="'admin.survey-list.actions-hints.unpublish' | translate"
-        >stop
-        </mat-icon
-        >
+          >stop
+        </mat-icon>
       </button>
       <button
         [class]="'button-action-play_arrow'"
@@ -36,9 +35,8 @@
         <mat-icon
           fontSet="material-icons-outlined"
           [matTooltip]="'admin.survey-list.actions-hints.publish' | translate"
-        >play_arrow
-        </mat-icon
-        >
+          >play_arrow
+        </mat-icon>
       </button>
       <button
         [class]="'button-action-play_arrow'"
@@ -49,9 +47,8 @@
         <mat-icon
           fontSet="material-icons-outlined"
           [matTooltip]="'admin.survey-list.actions-hints.publish' | translate"
-        >play_arrow
-        </mat-icon
-        >
+          >play_arrow
+        </mat-icon>
       </button>
     </ng-container>
   </ng-template>
@@ -64,17 +61,22 @@
 >
   <mat-spinner
     *ngIf="
-        operatingStatus &&
-          operatingStatus.surveyId === survey.id &&
-          operatingStatus.status === SurveyOperatingStatus.CLONING;
-        else notEditing
-      "
+      operatingStatus &&
+        operatingStatus.surveyId === survey.id &&
+        operatingStatus.status === SurveyOperatingStatus.CLONING;
+      else notEditing
+    "
     diameter="20"
   ></mat-spinner>
   <ng-template #notEditing>
     <app-toggle-button
-      [style]="{ visibility: (canShowEditOrCloneButton(survey) | async) ? undefined : 'hidden'}"
-      [isActive]="[SurveyStatus.DRAFT, SurveyStatus.READY].includes(survey.status)"
+      [style]="{
+        visibility:
+          (canShowEditOrCloneButton(survey) | async) ? undefined : 'hidden',
+      }"
+      [isActive]="
+        [SurveyStatus.DRAFT, SurveyStatus.READY].includes(survey.status)
+      "
       [activeTooltip]="'admin.survey-list.actions-hints.edit' | translate"
       [inactiveTooltip]="'admin.survey-list.actions-hints.clone' | translate"
       activeIcon="edit"
@@ -101,7 +103,11 @@
   <ng-template #notDeleting>
     <app-toggle-button
       [style]="{
-        visibility: [SurveyStatus.DRAFT, SurveyStatus.READY].includes(survey.status) ? undefined : 'hidden',
+        visibility: [SurveyStatus.DRAFT, SurveyStatus.READY].includes(
+          survey.status
+        )
+          ? undefined
+          : 'hidden',
       }"
       [isActive]="survey.deleted"
       [activeTooltip]="'admin.survey-list.actions-hints.restore' | translate"
@@ -128,18 +134,14 @@
       <mat-header-cell mat-sort-header *matHeaderCellDef>
         {{ 'admin.survey-list.table-headers.' + surveyProperty | translate }}
       </mat-header-cell>
-      <mat-cell
-        *matCellDef="let survey"
-        [class]="survey.status"
-      >
+      <mat-cell *matCellDef="let survey" [class]="survey.status">
         <div
           *ngIf="surveyProperty !== 'status'"
           class="element-description"
           [innerHtml]="handleColumn(survey, surveyProperty)"
         ></div>
-        <mat-chip [class]="survey.status" *ngIf="surveyProperty === 'status'">{{
-            handleColumn(survey, surveyProperty)
-          }}
+        <mat-chip [class]="survey.status" *ngIf="surveyProperty === 'status'"
+          >{{ handleColumn(survey, surveyProperty) }}
         </mat-chip>
       </mat-cell>
     </ng-container>
@@ -150,37 +152,42 @@
       {{ 'admin.survey-list.table-headers.actions' | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <ng-container [ngSwitch]="element.status" *ngIf="!element.deleted">
+      <div class="buttons-container">
+        <ng-container [ngSwitch]="element.status" *ngIf="!element.deleted">
+          <ng-container
+            *ngTemplateOutlet="
+              publishStatusButton;
+              context: {
+                survey: element,
+                operatingStatus: operatingStatus$ | async,
+              }
+            "
+          ></ng-container>
+        </ng-container>
+      </div>
+      <div class="buttons-container">
         <ng-container
           *ngTemplateOutlet="
-            publishStatusButton;
+            editStatusButton;
             context: {
               survey: element,
               operatingStatus: operatingStatus$ | async,
             }
           "
         ></ng-container>
-      </ng-container>
+      </div>
 
-      <ng-container
-        *ngTemplateOutlet="
-          editStatusButton;
-          context: {
-            survey: element,
-            operatingStatus: operatingStatus$ | async,
-          }
-        "
-      ></ng-container>
-
-      <ng-container
-        *ngTemplateOutlet="
-          deleteStatusButton;
-          context: {
-            survey: element,
-            operatingStatus: operatingStatus$ | async,
-          }
-        "
-      ></ng-container>
+      <div class="buttons-container">
+        <ng-container
+          *ngTemplateOutlet="
+            deleteStatusButton;
+            context: {
+              survey: element,
+              operatingStatus: operatingStatus$ | async,
+            }
+          "
+        ></ng-container>
+      </div>
     </mat-cell>
   </ng-container>
 
@@ -206,6 +213,6 @@
 
 <ng-template #noErr>
   <span *ngIf="!dataSource.data.length" class="datasource-empty">{{
-      'admin.survey-list.datasource-empty' | translate
-    }}</span>
+    'admin.survey-list.datasource-empty' | translate
+  }}</span>
 </ng-template>

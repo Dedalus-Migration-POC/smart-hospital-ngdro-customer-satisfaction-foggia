@@ -1,17 +1,16 @@
-import {createAction, props} from '@ngrx/store'
-import {Survey} from '../../repository/dto/survey'
-import {SurveyForm} from '../../pages/survey-form/survey-form.component'
-import {PagedList} from '../../repository/dto/paged_list'
-import {TablePagination} from '../../support/domain/table-pagination'
-import {SurveyFilterForm} from './reducer'
-import {PrintDataResponse} from '../../repository/dto/print-data-response'
-import {PrintSurveyForm} from '../../components/print-survey/print-survey.component'
+import { createAction, props } from '@ngrx/store'
+import { Survey } from '../../repository/dto/survey'
+import { SurveyForm } from '../../pages/survey-form/survey-form.component'
+import { PagedList } from '../../repository/dto/paged_list'
+import { TablePagination } from '../../support/domain/table-pagination'
+import { SurveyFilterForm } from './reducer'
+import { PrintDataResponse } from '../../repository/dto/print-data-response'
+import { PrintSurveyForm } from '../../components/print-survey/print-survey.component'
+import { FormGroup } from '@angular/forms'
 
 export type SubmitSurveyOption = 'save' | 'publish'
 
-const fetchAllSurveys = createAction(
-  '[Survey] Fetch All Surveys',
-)
+const fetchAllSurveys = createAction('[Survey] Fetch All Surveys')
 const fetchAllSurveysSucceeded = createAction(
   '[Survey] Fetch All Surveys Succeeded',
   props<{ allSurveys: PagedList<Survey> }>(),
@@ -116,7 +115,10 @@ const publishSurveyFailed = createAction('[Survey] Publish Survey Failed')
 
 const unpublishSurvey = createAction(
   '[Survey] Unpublish Survey',
-  props<{ survey: Survey }>(),
+  props<{
+    survey: Survey
+    thenPublishSurvey?: Survey
+  }>(),
 )
 
 const unpublishSurveySucceeded = createAction(
@@ -128,7 +130,7 @@ const unpublishSurveyFailed = createAction('[Survey] Unpublish Survey Failed')
 
 const restartSurvey = createAction(
   '[Survey] Restart Survey',
-  props<{ survey: Survey, endDate: Date }>(),
+  props<{ survey: Survey; endDate: string }>(),
 )
 
 const restartSurveySucceeded = createAction(

@@ -18,9 +18,9 @@
   <form [formGroup]="form" (ngSubmit)="login('ROLE_ADMIN')">
     <mat-form-field appearance="outline">
       <mat-label>{{ 'admin.login.form.username' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="form.controls.username" />
+      <input matInput type="text" [formControl]="form.controls.username"/>
       <mat-error *ngIf="form.controls.username.hasError('required')"
-        >{{
+      >{{
           'admin.print-survey-dialog.form-validations.required-field'
             | translate
         }}
@@ -28,9 +28,9 @@
     </mat-form-field>
     <mat-form-field appearance="outline" style="margin-top: 10px">
       <mat-label>{{ 'admin.login.form.password' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="form.controls.password" />
+      <input matInput type="text" [formControl]="form.controls.password"/>
       <mat-error *ngIf="form.controls.username.hasError('required')"
-        >{{
+      >{{
           'admin.print-survey-dialog.form-validations.required-field'
             | translate
         }}
@@ -39,6 +39,9 @@
     <button mat-flat-button>
       {{ 'admin.login.form.submit-btn' | translate }}
     </button>
-    <button type="button" (click)="login('ROLE_OPERATOR')">Operatore</button>
+    <button mat-flat-button type="button" (click)="login('ROLE_OPERATOR')"
+            [style]="{backgroundColor: '#d4d4d4', color: '#000'}">
+      Operatore
+    </button>
   </form>
 </div>
