@@ -246,7 +246,7 @@ export class SurveyListTableComponent
           list.find(
             (s) =>
               s.name === survey.name &&
-              s.version === survey.version + 1 &&
+              s.version >= survey.version + 1 &&
               [SurveyStatus.DRAFT, SurveyStatus.READY].includes(s.status),
           ) === undefined
         )
