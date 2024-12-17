@@ -3,7 +3,9 @@
   <app-print-survey [data]="data" [user]="user$ | async"></app-print-survey>
 </mat-dialog-content>
 <mat-dialog-actions style="align-self: end">
-  <ng-container *ngIf="(printSurveyComponent?.printing$ | async) ?? false else notPrinting">
+  <ng-container
+    *ngIf="(printSurveyComponent?.printing$ | async) ?? false; else notPrinting"
+  >
     <span>{{ 'admin.print-survey-dialog.printing' | translate }}</span>
   </ng-container>
 
@@ -12,8 +14,11 @@
       <button mat-button mat-dialog-close>
         {{ 'cancel' | translate }}
       </button>
-      <button mat-button
-              [disabled]="!form.valid || form.controls.copies.value! < 1" (click)="printSurveyComponent.print()">
+      <button
+        mat-button
+        [disabled]="!form.valid || form.controls.copies.value! < 1"
+        (click)="printSurveyComponent.print()"
+      >
         {{ 'admin.print-survey-dialog.button' | translate }}
       </button>
     </ng-container>
