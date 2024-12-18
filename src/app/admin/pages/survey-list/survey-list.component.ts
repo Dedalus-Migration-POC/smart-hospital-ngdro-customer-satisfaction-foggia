@@ -184,7 +184,7 @@ export class SurveyListComponent
             }),
           ),
       })
-    } else if (survey.status === 'STOPPED') {
+    } else if (survey.status === 'STOPPED' || survey.status === 'EXPIRED') {
       this.dialog.attention({
         buttonsType: 'yes_no',
         text: this.translate.instant(

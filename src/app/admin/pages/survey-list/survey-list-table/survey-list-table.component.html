@@ -50,6 +50,18 @@
           >play_arrow
         </mat-icon>
       </button>
+      <button
+        [class]="'button-action-play_arrow'"
+        mat-icon-button
+        *ngSwitchCase="'EXPIRED'"
+        (click)="publishSurvey.emit(survey)"
+      >
+        <mat-icon
+          fontSet="material-icons-outlined"
+          [matTooltip]="'admin.survey-list.actions-hints.publish' | translate"
+          >play_arrow
+        </mat-icon>
+      </button>
     </ng-container>
   </ng-template>
 </ng-template>
