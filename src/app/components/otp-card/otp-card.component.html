@@ -19,22 +19,47 @@
       <h2 class="h5">{{ 'otp.authentication' | translate }}</h2>
 
       <form [formGroup]="otpInputForm" class="mt-3">
-        <div class="form-floating mb-3" id="it-input-description">
+        <div class="mb-3" id="it-input-description">
+          <label for="otp" class="otp-input-label">{{
+            'otp.input-label' | translate
+          }}</label>
           <input
             required
             type="text"
-            class="form-control"
+            class="form-control fw-bold"
             formControlName="otp"
             id="otp"
-            [placeholder]="'otp.insert-otp' | translate"
           />
-          <label for="otp">{{ 'otp.input-label' | translate }}</label>
+
           <div
             *ngIf="!this.otpInputForm.value.otp && showError"
             class="disabled-error"
           >
             <it-icon name="error" [color]="'danger'"></it-icon>
             {{ 'otp.otp-error' | translate }}
+          </div>
+        </div>
+
+        <div
+          class="select-wrapper form-floating age-select mt-5 mb-4"
+          id="age-select"
+        >
+          <label for="ageSelect" class="age-select-label"
+            >Seleziona la tua fascia di età</label
+          >
+          <select id="ageSelect" required formControlName="ageSelect">
+            <option selected="" value=""></option>
+            <option value="18 - 30">18 - 30</option>
+            <option value="31 - 45">31 - 45</option>
+            <option value="46 - 60">46 - 60</option>
+            <option value="61 +">61 +</option>
+          </select>
+          <div
+            *ngIf="!this.otpInputForm.value.ageSelect && showError"
+            class="disabled-error"
+          >
+            <it-icon name="error" [color]="'danger'"></it-icon>
+            {{ 'otp.ageSelect-error' | translate }}
           </div>
         </div>
 
