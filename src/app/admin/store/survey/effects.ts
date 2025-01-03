@@ -215,8 +215,6 @@ export class SurveyEffects {
         this.surveyService.unpublish(survey.id!.toString()).pipe(
           map(() => {
             if (thenPublishSurvey && this.publishForm) {
-              console.log('+++thenPublishSurvey', thenPublishSurvey)
-              console.log('+++publishForm', this.publishForm)
               this.dialog.attention({
                 buttonsType: 'yes_no',
                 text: this.translate.instant(

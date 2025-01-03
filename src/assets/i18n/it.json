@@ -191,7 +191,8 @@
       "form-validations": {
         "required-field": "Campo obbligatorio"
       },
-      "no-surveys-error": "Non ci sono questionari attivi"
+      "no-surveys-error": "Non ci sono questionari attivi",
+      "no-units-error": "l'utente non ha associato alcuna unità, contattare l'amministratore"
     },
     "section-list": {
       "title": "Sezioni",

@@ -13,23 +13,29 @@
       [alt]="'header.name' | translate"
       ngSrc="assets/images/logo.png"
       priority="priority"
-      height="48" width="168"/>
+      height="48"
+      width="168"
+    />
     <span class="spacer"></span>
-    <button mat-button [matMenuTriggerFor]="menu" *ngIf="!(user$ | async); else loggedIn">
+    <button
+      mat-button
+      [matMenuTriggerFor]="menu"
+      *ngIf="!(user$ | async); else loggedIn"
+    >
       <mat-icon>person</mat-icon>
     </button>
   </mat-toolbar-row>
 </mat-toolbar>
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="login('ROLE_ADMIN')">
+  <!-- <button mat-menu-item (click)="login('ROLE_ADMIN')">
     <mat-icon>admin_panel_settings</mat-icon>
     <span>Admin</span>
-  </button>
-  <button mat-menu-item (click)="login('ROLE_OPERATOR')">
+  </button> -->
+  <!-- <button mat-menu-item (click)="login('ROLE_OPERATOR')">
     <mat-icon>supervised_user_circle</mat-icon>
     <span>Operator</span>
-  </button>
+  </button> -->
   <button mat-menu-item (click)="logout()" *ngIf="!!(user$ | async)">
     <mat-icon>logout</mat-icon>
     <span>Logout</span>
