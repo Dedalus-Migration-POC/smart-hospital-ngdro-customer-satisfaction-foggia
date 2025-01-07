@@ -1,45 +1,55 @@
 import { Injectable } from '@angular/core'
 import {
+  HttpClient,
+  HttpErrorResponse,
   HttpEvent,
   HttpHandler,
   HttpHeaders,
   HttpInterceptor,
   HttpRequest,
+  HttpResponse,
 } from '@angular/common/http'
-import { catchError, EMPTY, finalize, map, Observable, switchMap } from 'rxjs'
+import { catchError, Observable, tap, throwError } from 'rxjs'
 import { User } from '../repository/dto/user'
 import { jwtDecode } from 'jwt-decode'
 import { Router } from '@angular/router'
-import { IamService } from '../repository/iam.service'
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(
-    private router: Router,
-    private iamService: IamService,
-  ) {}
+  constructor(private router: Router) {}
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    const record = window.localStorage.getItem('profile')
+    let record = window.localStorage.getItem('profile')
 
     if (record) {
+      const user = JSON.parse(record!) as User
       if (this.tokenWillExpireSoon()) {
-        const refreshToken = window.localStorage.getItem('token')
-        const refreshTokenParse = JSON.parse(refreshToken!)
-
-        return next.handle(
-          request.clone({
-            headers: request.headers.set(
-              'Authorization',
-              'Bearer ' + refreshTokenParse.refresh_token,
-            ),
-          }),
-        )
+        next
+          .handle(this.getRefreshTokenHttpRequest())
+          .pipe(
+            tap((event) => {
+              if (event instanceof HttpResponse) {
+                window.localStorage.setItem(
+                  'profile',
+                  JSON.stringify({
+                    ...user,
+                    jwt: event.body.access_token,
+                  }),
+                )
+                window.localStorage.setItem('token', JSON.stringify(event.body))
+                record = window.localStorage.getItem('profile')
+              }
+            }),
+            catchError((err) => {
+              this.handleExpiredAuthentication(err)
+              return throwError(() => err)
+            }),
+          )
+          .subscribe()
       }
-      const user = JSON.parse(record) as User
       return next.handle(
         request.clone({
           headers: request.headers.set('Authorization', 'Bearer ' + user.jwt),
@@ -47,16 +57,6 @@ export class AuthInterceptor implements HttpInterceptor {
       )
     }
     return next.handle(request)
-    // return this.store.select(selectUser).pipe(
-    //   switchMap((user) => {
-    //       if (!user) {
-    //         console.log('NO USER')
-    //         this.router.navigate(["/login"]).then(r => r);
-    //       }
-    //       console.log('USER FOUND', user)
-    //       return next.handle(request)
-    //     }
-    //   ))
   }
 
   tokenWillExpireSoon() {
@@ -69,7 +69,6 @@ export class AuthInterceptor implements HttpInterceptor {
       const now = Math.round(Date.now() / 1000)
       const remainingAccessToken = Math.round(decodedAccessToken.exp - now)
       const remainingRefreshToken = Math.round(decodedRefreshToken.exp - now)
-      console.log('+++remainingAccessToken', remainingAccessToken)
 
       if (remainingAccessToken < 100) {
         // se sta per scadere l'accessToken oppure se è scaduto ma non è scaduto il refresh
@@ -86,5 +85,41 @@ export class AuthInterceptor implements HttpInterceptor {
     localStorage.removeItem('profile')
     localStorage.removeItem('token')
     this.router.navigate(['/login'])
+  }
+
+  getRefreshTokenHttpRequest() {
+    let headers = new HttpHeaders()
+
+    const token = window.localStorage.getItem('token')
+    const refreshTokenParse = JSON.parse(token!).refresh_token
+    let body = new URLSearchParams()
+    body.set('grant_type', 'refresh_token')
+    body.set('scope', 'openid profile')
+    body.set('client_id', 'account')
+    body.set('client_secret', 'L9KdHGh6ZdJIDHpQMC2bn3zDRiZYbC0D')
+    body.set('refresh_token', refreshTokenParse)
+
+    const headerName = 'Content-Type'
+    if (refreshTokenParse) {
+      headers = headers.set(headerName, 'application/x-www-form-urlencoded')
+    }
+    return new HttpRequest(
+      'POST',
+      '/protocol/openid-connect/token',
+      body.toString(),
+      {
+        headers: headers,
+        withCredentials: true,
+      },
+    )
+  }
+
+  private handleExpiredAuthentication(event: HttpEvent<any>) {
+    if (event instanceof HttpErrorResponse) {
+      if (event && event.status === 401) {
+        this.clearAndReauthenticate()
+      }
+    }
+    return event
   }
 }

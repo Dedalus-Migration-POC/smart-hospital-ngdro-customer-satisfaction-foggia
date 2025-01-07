@@ -286,7 +286,7 @@ export class SurveyEffects {
             surveyId: printSurveyForm.survey!.id!,
             healthcareUnitId: printSurveyForm.healthcareUnit!.id,
             structure: printSurveyForm.structure!,
-            copies: printSurveyForm.copies!,
+            copies: printSurveyForm.copies === 0 ? 1 : printSurveyForm.copies!,
           })
           .pipe(
             map((document) => SurveyActions.printSurveySucceeded({ document })),

@@ -32,25 +32,14 @@ export class IamService {
   //   return of(user)
   // }
 
-  public login(payload: {
-    username?: string
-    password?: string
-    refresh_token?: string
-  }) {
+  public login(payload: { username: string; password: string }) {
     let body = new URLSearchParams()
-    if (payload.username && payload.password) {
-      body.set('grant_type', 'password')
-      body.set('scope', 'openid profile')
-      body.set('client_id', 'account')
-      body.set('client_secret', 'L9KdHGh6ZdJIDHpQMC2bn3zDRiZYbC0D')
-      body.set('username', payload.username)
-      body.set('password', payload.password)
-    }
-    if (payload.refresh_token) {
-      body.set('grant_type', 'refresh_token')
-      body.set('client_id', 'XYZ')
-      body.set('refresh_token', payload.refresh_token)
-    }
+    body.set('grant_type', 'password')
+    body.set('scope', 'openid profile')
+    body.set('client_id', 'account')
+    body.set('client_secret', 'L9KdHGh6ZdJIDHpQMC2bn3zDRiZYbC0D')
+    body.set('username', payload.username)
+    body.set('password', payload.password)
 
     return this.http.post<any>(
       `/protocol/openid-connect/token`,

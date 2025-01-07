@@ -13,7 +13,7 @@ const initializeFailed = createAction('[SurveyApp] Initialize Failed')
 const login = createAction(
   '[SurveyApp] Login',
   props<{
-    payload: { username?: string; password?: string; refresh_token?: string }
+    payload: { username: string; password: string }
   }>(),
 )
 
