@@ -36,8 +36,7 @@ export class IamService {
     let body = new URLSearchParams()
     body.set('grant_type', 'password')
     body.set('scope', 'openid profile')
-    body.set('client_id', 'account')
-    body.set('client_secret', 'L9KdHGh6ZdJIDHpQMC2bn3zDRiZYbC0D')
+    body.set('client_id', 'frontend')
     body.set('username', payload.username)
     body.set('password', payload.password)
 

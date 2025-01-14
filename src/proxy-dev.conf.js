@@ -14,7 +14,7 @@ module.exports = {
     pathRewrite: null,
   },
   '/oauth': {
-    target: 'http://54.155.59.59:5100',
+    target: 'http://54.155.59.59:5019',
     secure: false,
     changeOrigin: true,
     logLevel: 'debug',

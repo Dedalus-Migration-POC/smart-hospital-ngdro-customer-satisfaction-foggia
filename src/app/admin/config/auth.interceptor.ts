@@ -95,8 +95,7 @@ export class AuthInterceptor implements HttpInterceptor {
     let body = new URLSearchParams()
     body.set('grant_type', 'refresh_token')
     body.set('scope', 'openid profile')
-    body.set('client_id', 'account')
-    body.set('client_secret', 'L9KdHGh6ZdJIDHpQMC2bn3zDRiZYbC0D')
+    body.set('client_id', 'frontend')
     body.set('refresh_token', refreshTokenParse)
 
     const headerName = 'Content-Type'
