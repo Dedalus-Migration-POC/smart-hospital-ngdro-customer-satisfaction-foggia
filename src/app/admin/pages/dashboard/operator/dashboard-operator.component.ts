@@ -16,7 +16,6 @@ import { MatCard } from '@angular/material/card'
 import { MatButton } from '@angular/material/button'
 import { selectUser } from '../../../store/application/reducer'
 import { ReactiveFormsModule } from '@angular/forms'
-import { Router } from '@angular/router'
 import { AppActions } from 'src/app/admin/store/application/actions'
 
 @Component({
@@ -72,14 +71,15 @@ export class DashboardOperatorComponent
       this.actions
         .pipe(
           ofType(SurveyActions.fetchPrintSurveyDataFailed),
-          tap(({ error }) =>
+          tap(({ error }) => {
+            this.store.dispatch(AppActions.logout())
             this.dialogService.error({
               buttonsType: 'ok',
               text: this.translate.instant(
                 error ? 'admin.print-survey-dialog.no-surveys-error' : 'error',
               ),
-            }),
-          ),
+            })
+          }),
         )
         .subscribe(),
     )

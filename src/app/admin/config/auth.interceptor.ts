@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
 import {
-  HttpClient,
   HttpErrorResponse,
   HttpEvent,
   HttpHandler,
@@ -9,7 +8,7 @@ import {
   HttpRequest,
   HttpResponse,
 } from '@angular/common/http'
-import { catchError, Observable, tap, throwError } from 'rxjs'
+import { catchError, EMPTY, Observable, Subject, tap, throwError } from 'rxjs'
 import { User } from '../repository/dto/user'
 import { jwtDecode } from 'jwt-decode'
 import { Router } from '@angular/router'
@@ -17,44 +16,81 @@ import { Router } from '@angular/router'
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private router: Router) {}
-
+  tokenRefreshedSource = new Subject()
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     let record = window.localStorage.getItem('profile')
-
-    if (record) {
+    if (record && !this.tokenWillExpireSoon()) {
       const user = JSON.parse(record!) as User
-      if (this.tokenWillExpireSoon()) {
-        next
-          .handle(this.getRefreshTokenHttpRequest())
-          .pipe(
-            tap((event) => {
-              if (event instanceof HttpResponse) {
-                window.localStorage.setItem(
-                  'profile',
-                  JSON.stringify({
-                    ...user,
-                    jwt: event.body.access_token,
-                  }),
-                )
-                window.localStorage.setItem('token', JSON.stringify(event.body))
-                record = window.localStorage.getItem('profile')
-              }
-            }),
-            catchError((err) => {
-              this.handleExpiredAuthentication(err)
-              return throwError(() => err)
-            }),
-          )
-          .subscribe()
-      }
       return next.handle(
         request.clone({
           headers: request.headers.set('Authorization', 'Bearer ' + user.jwt),
         }),
       )
+    } else if (record && this.tokenWillExpireSoon()) {
+      const user = JSON.parse(record!) as User
+      let newUser: User | null
+      let newrecord
+      next
+        .handle(this.getRefreshTokenHttpRequest())
+        .pipe(
+          tap((event) => {
+            if (event instanceof HttpResponse) {
+              window.localStorage.setItem(
+                'profile',
+                JSON.stringify({
+                  ...user,
+                  jwt: event.body.access_token,
+                }),
+              )
+              window.localStorage.setItem('token', JSON.stringify(event.body))
+              newrecord = window.localStorage.getItem('profile')
+              newUser = JSON.parse(newrecord!) as User
+            }
+            this.tokenRefreshedSource.next(event)
+          }),
+          catchError((err) => {
+            this.handleExpiredAuthentication(err)
+            return throwError(() => err)
+          }),
+        )
+        .subscribe()
+
+      return new Observable((observer) => {
+        let tokenRefreshed$ = this.tokenRefreshedSource
+          .asObservable()
+          .subscribe((event: any) => {
+            next
+              .handle(
+                request.clone({
+                  headers: request.headers.set(
+                    'Authorization',
+                    'Bearer ' + event.body.access_token,
+                  ),
+                }),
+              )
+              .pipe(
+                catchError((error) => {
+                  this.handleExpiredAuthentication(error)
+                  observer.error(error)
+                  observer.complete()
+                  observer.unsubscribe()
+                  tokenRefreshed$.unsubscribe()
+                  return EMPTY
+                }),
+              )
+              .subscribe((event) => {
+                if (event instanceof HttpResponse) {
+                  observer.next(event)
+                  observer.complete()
+                  observer.unsubscribe()
+                  tokenRefreshed$.unsubscribe()
+                }
+              })
+          })
+      })
     }
     return next.handle(request)
   }
@@ -104,7 +140,7 @@ export class AuthInterceptor implements HttpInterceptor {
     }
     return new HttpRequest(
       'POST',
-      '/protocol/openid-connect/token',
+      'http://54.155.59.59:5100/realms/foggia_survey-dev/protocol/openid-connect/token',
       body.toString(),
       {
         headers: headers,

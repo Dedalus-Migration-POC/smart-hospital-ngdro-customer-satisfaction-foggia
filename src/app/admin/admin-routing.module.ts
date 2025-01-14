@@ -2,14 +2,15 @@ import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { NotFoundComponent } from './pages/not-found/not-found.component'
 import { DashboardComponent } from './pages/dashboard/admin/dashboard.component'
-import { UserRouteGuard } from './config/user.route-guard'
+import { UserAdminRouteGuard } from './config/admin.route-guard'
+import { UserOperatorRouteGuard } from './config/operator.route-guard'
 
 const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
     component: DashboardComponent,
-    canActivate: [UserRouteGuard],
+    canActivate: [UserAdminRouteGuard],
   },
   {
     path: 'login',
@@ -20,6 +21,7 @@ const routes: Routes = [
   },
   {
     path: 'survey-form',
+    canActivate: [UserAdminRouteGuard],
     loadComponent: () =>
       import('./pages/survey-form/survey-form.component').then(
         ({ SurveyFormComponent }) => SurveyFormComponent,
@@ -27,6 +29,7 @@ const routes: Routes = [
   },
   {
     path: 'survey-form/:surveyId/:mode',
+    canActivate: [UserAdminRouteGuard],
     pathMatch: 'full',
     loadComponent: () =>
       import('./pages/survey-form/survey-form.component').then(
@@ -35,6 +38,7 @@ const routes: Routes = [
   },
   {
     path: 'section-form',
+    canActivate: [UserAdminRouteGuard],
     loadComponent: () =>
       import('./pages/section-form/section-form.component').then(
         ({ SectionFormComponent }) => SectionFormComponent,
@@ -42,6 +46,7 @@ const routes: Routes = [
   },
   {
     path: 'section-form/:sectionId',
+    canActivate: [UserAdminRouteGuard],
     pathMatch: 'full',
     loadComponent: () =>
       import('./pages/section-form/section-form.component').then(
@@ -51,7 +56,7 @@ const routes: Routes = [
   {
     path: 'print',
     pathMatch: 'full',
-    canActivate: [UserRouteGuard],
+    canActivate: [UserOperatorRouteGuard],
     loadComponent: () =>
       import('./pages/dashboard/operator/dashboard-operator.component').then(
         ({ DashboardOperatorComponent }) => DashboardOperatorComponent,
