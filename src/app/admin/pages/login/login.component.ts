@@ -19,6 +19,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms'
+import { MatIcon } from '@angular/material/icon'
 
 export type LoginForm = FormGroup<{
   username: FormControl<string | null>
@@ -38,6 +39,7 @@ export type LoginForm = FormGroup<{
     ReactiveFormsModule,
     MatError,
     NgIf,
+    MatIcon,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -54,7 +56,7 @@ export class LoginComponent
   ) {
     super()
   }
-
+  showPassword = false
   form: LoginForm = this.fb.group({
     username: new FormControl<string | null>(null, [Validators.required]),
     password: new FormControl<string | null>(null, [Validators.required]),
@@ -87,6 +89,9 @@ export class LoginComponent
   protected login() {
     //this.form.markAllAsTouched()
     //if (this.form.valid)
+    if (this.form.invalid) {
+      return
+    }
     this.store.dispatch(
       AppActions.login({
         payload: {

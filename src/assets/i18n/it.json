@@ -93,7 +93,9 @@
         "username": "Mail",
         "password": "Password",
         "submit-btn": "Accedi"
-      }
+      },
+      "error": "La preghiamo di riprovare controllando i dati inseriti.",
+      "error-title": "Errore di accesso."
     },
     "operator-dashboard": {
       "title": "Dashboard {{department}}",

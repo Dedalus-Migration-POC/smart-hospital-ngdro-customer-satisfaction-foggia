@@ -6,6 +6,8 @@ import { IamService } from '../../repository/iam.service'
 import { catchError } from 'rxjs/operators'
 import { jwtDecode } from 'jwt-decode'
 import { Router } from '@angular/router'
+import { DialogService } from '../../support/dialog-service'
+import { TranslateService } from '@ngx-translate/core'
 
 @Injectable()
 export class AppEffects {
@@ -13,6 +15,8 @@ export class AppEffects {
     private actions$: Actions,
     private iamService: IamService,
     private router: Router,
+    private dialog: DialogService,
+    private translate: TranslateService,
   ) {}
 
   private readonly initialize$ = createEffect(() => {
@@ -54,7 +58,14 @@ export class AppEffects {
               },
             })
           }),
-          catchError(() => of(AppActions.loginFailed())),
+          catchError(() => {
+            this.dialog.error({
+              buttonsType: 'ok',
+              title: this.translate.instant('admin.login.error-title'),
+              text: this.translate.instant('admin.login.error'),
+            })
+            return of(AppActions.loginFailed())
+          }),
         ),
       ),
     )
