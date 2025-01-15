@@ -12,6 +12,7 @@ import { catchError, EMPTY, Observable, Subject, tap, throwError } from 'rxjs'
 import { User } from '../repository/dto/user'
 import { jwtDecode } from 'jwt-decode'
 import { Router } from '@angular/router'
+import { environment } from 'src/environments/environment'
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -140,7 +141,7 @@ export class AuthInterceptor implements HttpInterceptor {
     }
     return new HttpRequest(
       'POST',
-      'http://54.155.59.59:5100/realms/foggia_survey-dev/protocol/openid-connect/token',
+      environment.keycloakEndpoint + '/protocol/openid-connect/token',
       body.toString(),
       {
         headers: headers,
