@@ -23,6 +23,7 @@ import { metaReducers, reducers } from './store/reducers'
 import { LayoutModule } from './layout/layout.module'
 import { APP_BASE_HREF } from '@angular/common'
 import { BaseUrlInterceptor } from './utils/baseUrl.interceptor'
+import { environment } from 'src/environments/environment'
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,7 +33,7 @@ import { BaseUrlInterceptor } from './utils/baseUrl.interceptor'
     EffectsModule.forRoot(effects),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
-      logOnly: false, //environment.production,
+      logOnly: environment.production,
     }),
     AppRoutingModule,
     DesignAngularKitModule,
@@ -47,6 +48,7 @@ import { BaseUrlInterceptor } from './utils/baseUrl.interceptor'
       useClass: BaseUrlInterceptor,
       multi: true,
     },
+    { provide: APP_BASE_HREF, useValue: window.location.origin + '/ui/' },
     provideDesignAngularKit({
       translateLoader: (itPrefix: string, itSuffix: string) => ({
         provide: TranslateLoader,

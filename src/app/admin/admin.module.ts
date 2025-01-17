@@ -44,6 +44,7 @@ import {
 } from '@angular/material/core'
 import { AuthInterceptor } from './config/auth.interceptor'
 import { BaseUrlInterceptor } from '../utils/baseUrl.interceptor'
+import { environment } from 'src/environments/environment'
 
 @NgModule({
   declarations: [AdminComponent],
@@ -53,7 +54,7 @@ import { BaseUrlInterceptor } from '../utils/baseUrl.interceptor'
     EffectsModule.forRoot(effects),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
-      logOnly: false, //environment.production,
+      logOnly: environment.production,
     }),
     DesignAngularKitModule,
     TranslateModule,

@@ -87,7 +87,13 @@
                   "maximumError": "4MB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.integration.ts"
+                }
+              ]
             },
             "staging": {
               "budgets": [
@@ -102,12 +108,24 @@
                   "maximumError": "4MB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
+                }
+              ]
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ]
             },
             "admin/production": {
               "browser": "src/main.admin.ts",
@@ -126,7 +144,13 @@
                   "maximumError": "4MB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.admin/production.ts"
+                }
+              ]
             },
             "admin/integration": {
               "browser": "src/main.admin.ts",
@@ -145,7 +169,13 @@
                   "maximumError": "4MB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.admin/integration.ts"
+                }
+              ]
             },
             "admin/staging": {
               "browser": "src/main.admin.ts",
@@ -164,7 +194,13 @@
                   "maximumError": "4MB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.admin/staging.ts"
+                }
+              ]
             },
             "admin/development": {
               "browser": "src/main.admin.ts",
@@ -173,7 +209,13 @@
               ],
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.admin/development.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"

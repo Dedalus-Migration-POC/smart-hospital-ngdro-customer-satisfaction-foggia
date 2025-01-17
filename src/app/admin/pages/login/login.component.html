@@ -15,12 +15,12 @@
     <span class="title">Accedi alla dashboard</span>
   </div>
 
-  <form [formGroup]="form" (ngSubmit)="login('ROLE_ADMIN')">
+  <form [formGroup]="form" (ngSubmit)="login()">
     <mat-form-field appearance="outline">
       <mat-label>{{ 'admin.login.form.username' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="form.controls.username"/>
+      <input matInput type="text" [formControl]="form.controls.username" />
       <mat-error *ngIf="form.controls.username.hasError('required')"
-      >{{
+        >{{
           'admin.print-survey-dialog.form-validations.required-field'
             | translate
         }}
@@ -28,9 +28,20 @@
     </mat-form-field>
     <mat-form-field appearance="outline" style="margin-top: 10px">
       <mat-label>{{ 'admin.login.form.password' | translate }}</mat-label>
-      <input matInput type="text" [formControl]="form.controls.password"/>
+      <input
+        style="width: 90%"
+        matInput
+        [type]="showPassword ? 'text' : 'password'"
+        [formControl]="form.controls.password"
+      />
+
+      <mat-icon
+        (click)="showPassword = !showPassword"
+        style="vertical-align: bottom; width: 9%; color: #858388"
+        >{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon
+      >
       <mat-error *ngIf="form.controls.username.hasError('required')"
-      >{{
+        >{{
           'admin.print-survey-dialog.form-validations.required-field'
             | translate
         }}
@@ -39,9 +50,13 @@
     <button mat-flat-button>
       {{ 'admin.login.form.submit-btn' | translate }}
     </button>
-    <button mat-flat-button type="button" (click)="login('ROLE_OPERATOR')"
-            [style]="{backgroundColor: '#d4d4d4', color: '#000'}">
+    <!-- <button
+      mat-flat-button
+      type="button"
+      (click)="login()"
+      [style]="{ backgroundColor: '#d4d4d4', color: '#000' }"
+    >
       Operatore
-    </button>
+    </button> -->
   </form>
 </div>

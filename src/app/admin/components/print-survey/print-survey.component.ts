@@ -17,7 +17,7 @@ import { MatError, MatFormField, MatLabel } from '@angular/material/form-field'
 import { MatOption } from '@angular/material/core'
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio'
 import { MatSelect } from '@angular/material/select'
-import { TranslateModule } from '@ngx-translate/core'
+import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import {
   HealthcareUnit,
   HealthcareUnitStructure,
@@ -38,6 +38,7 @@ import { SurveyAdminState } from '../../store/store'
 import { DialogService } from '../../support/dialog-service'
 import { PrintDataResponse } from '../../repository/dto/print-data-response'
 import { User } from '../../repository/dto/user'
+import { AppActions } from '../../store/application/actions'
 
 export type PrintSurveyForm = FormGroup<{
   healthcareUnit: FormControl<HealthcareUnit | null>
@@ -106,14 +107,14 @@ export class PrintSurveyComponent
     private fb: FormBuilder,
     private dialog: DialogService,
     private matDialog: MatDialog,
+    private translate: TranslateService,
   ) {
     super()
   }
 
   ngOnInit() {
     this.isOperator =
-      this.user?.roles?.length === 1 &&
-      this.user.roles.includes('ROLE_OPERATOR')
+      this.user?.roles?.length === 1 && this.user.roles.includes('OPERATOR')
 
     this.addSubscriptions(
       this.actions
@@ -150,27 +151,66 @@ export class PrintSurveyComponent
   }
 
   ngAfterViewInit() {
-    this.addSubscription(
-      this.form.valueChanges
-        .pipe(
-          tap(({ healthcareUnit }) => {
-            if (healthcareUnit && !this.canChooseType(healthcareUnit)) {
-              this.form.patchValue(
-                { structure: healthcareUnit.departments[0] },
-                { emitEvent: false },
-              )
-              this.form.controls.structure.disable({ emitEvent: false })
-            } else {
-              // this.form.controls.structure.patchValue(null, {emitEvent: false})
-              this.form.controls.structure.enable({ emitEvent: false })
-            }
-          }),
+    if (this.getUnit()) {
+      if (!this.canChooseType(this.getUnit())) {
+        this.form.patchValue(
+          {
+            healthcareUnit: this.getUnit(),
+            structure: this.getUnit()?.departments[0],
+          },
+          { emitEvent: false },
         )
-        .subscribe(),
-    )
+        this.form.controls.structure.disable({ emitEvent: false })
+      } else {
+        this.form.patchValue(
+          {
+            healthcareUnit: this.getUnit(),
+            structure: this.getUnit()?.departments[0],
+          },
+          { emitEvent: false },
+        )
+        this.form.controls.structure.enable({ emitEvent: false })
+      }
+    }
+
+    if (
+      (this.user && this.isOperator && !this.user.unit) ||
+      (this.user &&
+        this.isOperator &&
+        this.user.unit &&
+        !this.user.unit?.length)
+    ) {
+      this.dialog.info({
+        buttonsType: 'ok',
+        text: this.translate.instant(
+          'admin.print-survey-dialog.no-units-error',
+        ),
+        onConfirm: () => this.store.dispatch(AppActions.logout()),
+      })
+    }
+    if (!this.isOperator) {
+      this.addSubscription(
+        this.form.valueChanges
+          .pipe(
+            tap(({ healthcareUnit }) => {
+              if (healthcareUnit && !this.canChooseType(healthcareUnit)) {
+                this.form.patchValue(
+                  { structure: healthcareUnit.departments[0] },
+                  { emitEvent: false },
+                )
+                this.form.controls.structure.disable({ emitEvent: false })
+              } else {
+                // this.form.controls.structure.patchValue(null, {emitEvent: false})
+                this.form.controls.structure.enable({ emitEvent: false })
+              }
+            }),
+          )
+          .subscribe(),
+      )
+    }
   }
 
-  protected canChooseType(unit: HealthcareUnit | null): boolean {
+  protected canChooseType(unit: HealthcareUnit | undefined): boolean {
     return !!unit && unit.departments.length > 1
   }
 
@@ -189,5 +229,13 @@ export class PrintSurveyComponent
         SurveyActions.printSurvey({ printSurveyForm: this.form.getRawValue() }),
       )
     }
+  }
+  getUnit() {
+    if (this.user?.unit && this.user?.unit !== undefined) {
+      return this.data?.healthcareUnits.find(
+        (healthcareUnit) => healthcareUnit.name === this.user?.unit![0],
+      )
+    }
+    return
   }
 }

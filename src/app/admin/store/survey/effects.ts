@@ -215,8 +215,6 @@ export class SurveyEffects {
         this.surveyService.unpublish(survey.id!.toString()).pipe(
           map(() => {
             if (thenPublishSurvey && this.publishForm) {
-              console.log('+++thenPublishSurvey', thenPublishSurvey)
-              console.log('+++publishForm', this.publishForm)
               this.dialog.attention({
                 buttonsType: 'yes_no',
                 text: this.translate.instant(
@@ -288,7 +286,7 @@ export class SurveyEffects {
             surveyId: printSurveyForm.survey!.id!,
             healthcareUnitId: printSurveyForm.healthcareUnit!.id,
             structure: printSurveyForm.structure!,
-            copies: printSurveyForm.copies!,
+            copies: printSurveyForm.copies === 0 ? 1 : printSurveyForm.copies!,
           })
           .pipe(
             map((document) => SurveyActions.printSurveySucceeded({ document })),

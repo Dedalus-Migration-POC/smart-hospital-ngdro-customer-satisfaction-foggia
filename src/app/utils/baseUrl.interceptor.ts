@@ -6,6 +6,7 @@ import {
   HttpRequest,
 } from '@angular/common/http'
 import { Observable } from 'rxjs'
+import { environment } from 'src/environments/environment'
 
 @Injectable()
 export class BaseUrlInterceptor implements HttpInterceptor {
@@ -15,9 +16,12 @@ export class BaseUrlInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    console.log({ url: request.url })
-    return next.handle(
-      request.clone({ url: window.location.origin + request.url }),
-    )
+    let url
+    if (request.url === '/protocol/openid-connect/token') {
+      url = environment.keycloakEndpoint + request.url
+    } else {
+      url = window.location.origin + request.url
+    }
+    return next.handle(request.clone({ url: url }))
   }
 }
