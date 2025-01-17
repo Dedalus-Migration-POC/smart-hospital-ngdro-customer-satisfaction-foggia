@@ -17,11 +17,11 @@ export class AuthService {
   constructor(private http: HttpClient) {}
   private readonly IS_DEV = false
 
-  sendOtp(otp: string, payload: { surveyId: string }) {
+  sendOtp(otp: string, age: string) {
     if (this.IS_DEV) {
       return of(true).pipe(delay(500))
     }
-    return this.http.get<any>(`${baseUrl}/verify?otp=${otp}`)
+    return this.http.get<any>(`${baseUrl}/verify?otp=${otp}&age=${age}`)
   }
 
   fetchQuestionnaire(surveyId: string) {

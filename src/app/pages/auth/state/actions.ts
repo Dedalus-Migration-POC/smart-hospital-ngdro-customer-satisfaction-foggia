@@ -5,6 +5,7 @@ export const sendOtp = createAction(
   '[Auth] Send Otp',
   props<{
     otp: string
+    age: string
     payload: { surveyId: string }
   }>(),
 )

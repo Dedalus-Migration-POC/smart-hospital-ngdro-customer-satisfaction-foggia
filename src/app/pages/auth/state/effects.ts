@@ -16,7 +16,7 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(QuestionnaireActions.sendOtp),
       concatMap((action) =>
-        this.authService.sendOtp(action.otp, action.payload).pipe(
+        this.authService.sendOtp(action.otp, action.age).pipe(
           map(() => {
             this.router.navigate([`/questionnaire/${action.payload.surveyId}`])
 

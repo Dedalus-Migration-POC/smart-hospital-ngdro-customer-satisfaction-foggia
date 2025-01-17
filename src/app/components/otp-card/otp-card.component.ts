@@ -37,7 +37,7 @@ export class OtpCardComponent {
 
   otpInputForm = new FormGroup({
     otp: new FormControl<string>('', Validators.required),
-    ageSelect: new FormControl<string>('', Validators.required),
+    age: new FormControl<string>('', Validators.required),
     consent: new FormControl<boolean>(false, Validators.required),
   })
 
@@ -51,8 +51,6 @@ export class OtpCardComponent {
     }
   }
   submit() {
-    console.log(this.otpInputForm.value)
-
     if (
       this.otpInputForm.invalid ||
       this.otpInputForm.value.consent === false

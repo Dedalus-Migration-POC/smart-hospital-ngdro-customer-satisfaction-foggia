@@ -44,10 +44,10 @@
           class="select-wrapper form-floating age-select mt-5 mb-4"
           id="age-select"
         >
-          <label for="ageSelect" class="age-select-label"
+          <label for="age" class="age-select-label"
             >Seleziona la tua fascia di età</label
           >
-          <select id="ageSelect" required formControlName="ageSelect">
+          <select id="age" required formControlName="age">
             <option selected="" value=""></option>
             <option value="18-30">18 - 30</option>
             <option value="31-45">31 - 45</option>
@@ -55,7 +55,7 @@
             <option value="61+">61 +</option>
           </select>
           <div
-            *ngIf="!this.otpInputForm.value.ageSelect && showError"
+            *ngIf="!this.otpInputForm.value.age && showError"
             class="disabled-error"
           >
             <it-icon name="error" [color]="'danger'"></it-icon>
