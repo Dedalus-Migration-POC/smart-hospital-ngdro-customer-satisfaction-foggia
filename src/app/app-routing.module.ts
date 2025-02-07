@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
+import { PrivacyComponent } from './pages/privacy/privacy.component'
 
 const routes: Routes = [
   {
@@ -13,6 +14,10 @@ const routes: Routes = [
       import('src/app/pages/questionnaire/quest.module').then(
         (m) => m.QuestModule,
       ),
+  },
+  {
+    path: 'privacy',
+    component: PrivacyComponent,
   },
 ]
 

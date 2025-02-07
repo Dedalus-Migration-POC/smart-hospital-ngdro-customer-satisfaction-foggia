@@ -74,7 +74,11 @@
             <span>
               {{ 'otp.consent' | translate }}
 
-              <a [routerLink]="['#']" class="consent-link">
+              <a
+                [routerLink]="['/privacy']"
+                target="_blank"
+                class="consent-link"
+              >
                 {{ 'otp.consent-link' | translate }}
               </a>
               {{ 'otp.consent-2' | translate }}
