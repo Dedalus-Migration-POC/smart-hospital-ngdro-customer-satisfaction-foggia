@@ -98,7 +98,7 @@ export class DashboardOperatorComponent
   }
 
   protected viewAnalytics() {
-    console.log('missing analytics url')
+    window.open('http://138.66.71.123:3000/auth/login', '_blank')
   }
 
   protected print() {
