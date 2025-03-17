@@ -36,6 +36,7 @@
     "jwt-decode": "^4.0.0",
     "ngx-translate-multi-http-loader": "^18.0.0",
     "print-js": "^1.6.0",
+    "print-js-updated": "^1.6.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
