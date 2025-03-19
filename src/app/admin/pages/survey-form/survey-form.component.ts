@@ -38,6 +38,7 @@ import {
 } from '@angular/material/datepicker'
 import { SurveyAdminState } from '../../store/store'
 import {
+  selectAllSectionList,
   selectSectionList,
   selectSectionState,
 } from '../../store/section/reducer'
@@ -49,6 +50,7 @@ import { withLatestFrom } from 'rxjs/operators'
 import { MatTooltip } from '@angular/material/tooltip'
 import { SurveyNameValidator } from '../../support/form-validators'
 import { SectionUtils } from '../../support/section-utils'
+import { SectionActions } from '../../store/section/actions'
 
 export type SurveyForm = FormGroup<{
   id: FormControl<string | null>
@@ -120,8 +122,8 @@ export class SurveyFormComponent
   state$ = this.store.select(selectSurveyState)
   surveys$ = this.state$.pipe(map(({ surveys }) => surveys))
   sections$ = this.store
-    .select(selectSectionList)
-    .pipe(map(({ sections }) => sections?.content ?? []))
+    .select(selectAllSectionList)
+    .pipe(map(({ allSections }) => allSections?.content ?? []))
   sectionResponse$ = this.store
     .select(selectSectionState)
     .pipe(map(({ sections }) => sections))
@@ -176,24 +178,14 @@ export class SurveyFormComponent
 
   ngOnInit() {
     this.startActionsSubscription()
-
-    combineLatest([this.form.valueChanges, this.dateRange$]).subscribe(
-      ([value, range]) => {
-        console.log('errors: ', this.form.controls.name.errors)
-      },
-    )
+    this.store.dispatch(SectionActions.fetchAllSections())
 
     this.subscriptions.push(
-      this.form.valueChanges
+      combineLatest([this.form.valueChanges, this.sections$])
         .pipe(
-          withLatestFrom(this.sectionResponse$),
-          tap(([form, sections]) => {
-            console.log(
-              'Selected sections:',
-              this.form.get('sectionIds')?.value,
-            )
+          map(([form, sections]) => {
             this.selectableSections$.next(
-              (sections?.content ?? []).filter(
+              (sections ?? []).filter(
                 (section) => !form.sections?.find((s) => s?.id === section.id),
               ),
             )

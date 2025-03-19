@@ -138,7 +138,6 @@ export class SectionListTableComponent
             this.pageSize = searchCriteria?.tablePagination?.size ?? 0
             this.dataSource.data = sections?.content ?? []
             this.length = sections?.totalElements ?? 0
-            console.log('UPDATED')
           }),
         )
         .subscribe(),

@@ -6,7 +6,10 @@ import { RouterLink } from '@angular/router'
 import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import { map, Observable, tap } from 'rxjs'
 import { Section } from '../../../repository/dto/section'
-import { selectSectionState } from '../../../store/section/reducer'
+import {
+  selectAllSectionList,
+  selectSectionState,
+} from '../../../store/section/reducer'
 import { Store } from '@ngrx/store'
 import { SurveyAdminState } from '../../../store/store'
 import { MatDialog } from '@angular/material/dialog'
@@ -86,8 +89,8 @@ export class TopRightButtonsComponent
     .pipe(map(({ surveys }) => surveys?.content))
 
   sections$: Observable<Array<Section> | undefined> = this.store
-    .select(selectSectionState)
-    .pipe(map(({ sections }) => sections?.content))
+    .select(selectAllSectionList)
+    .pipe(map(({ allSections }) => allSections?.content))
 
   protected loading$ = this.store
     .select(selectSurveyState)

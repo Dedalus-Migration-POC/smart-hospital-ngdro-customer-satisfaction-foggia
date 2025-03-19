@@ -170,7 +170,6 @@ export class SurveyListTableComponent
             this.pageSize = searchCriteria?.tablePagination?.size ?? 0
             this.dataSource.data = surveys?.content ?? []
             this.length = surveys?.totalElements ?? 0
-            console.log('UPDATED')
           }),
         )
         .subscribe(),
