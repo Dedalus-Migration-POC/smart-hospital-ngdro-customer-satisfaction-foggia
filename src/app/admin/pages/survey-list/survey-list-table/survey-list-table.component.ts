@@ -176,6 +176,9 @@ export class SurveyListTableComponent
 
       this.sort.sortChange.subscribe(({ active, direction }) => {
         if (direction.length) {
+          if (active === 'validity') {
+            active = 'startDate'
+          }
           this.store.dispatch(
             SurveyActions.fetchSurveys({
               tablePagination: {
