@@ -38,22 +38,23 @@ export class OtpCardComponent {
   otpInputForm = new FormGroup({
     otp: new FormControl<string>('', Validators.required),
     age: new FormControl<string>('', Validators.required),
-    consent: new FormControl<boolean>(false, Validators.required),
+    // consent: new FormControl<boolean>(false, Validators.required),
   })
 
   constructor(private store: Store<SmartHospitalState>) {}
 
   questionnaireLoading$ = this.store.select(selectQuestionnaireLoading)
 
-  onAccept() {
-    if (this.otpInputForm.value.consent === false) {
-      document.getElementById('consent')?.click()
-    }
-  }
+  // onAccept() {
+  //   if (this.otpInputForm.value.consent === false) {
+  //     document.getElementById('consent')?.click()
+  //   }
+  // }
   submit() {
     if (
-      this.otpInputForm.invalid ||
-      this.otpInputForm.value.consent === false
+      this.otpInputForm.invalid
+      // ||
+      // this.otpInputForm.value.consent === false
     ) {
       this.showError = true
       return

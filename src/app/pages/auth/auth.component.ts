@@ -53,7 +53,7 @@ export class AuthComponent implements OnInit {
   loading$ = this.store.select(selectQuestionnaireLoading)
   error$ = this.store.select(selectQuestionnaireError)
 
-  sendOtp(form: { otp: string; age: string; consent: boolean }) {
+  sendOtp(form: { otp: string; age: string; consent?: boolean }) {
     this.store.dispatch(
       sendOtp({
         otp: form.otp,
