@@ -25,7 +25,7 @@ export class AuthService {
   }
 
   fetchQuestionnaire(surveyId: string) {
-    if (!this.IS_DEV) {
+    if (this.IS_DEV) {
       return of(QUEST_LIST).pipe(delay(500))
     }
     return this.http.get<any>(`${baseUrl}/create/${surveyId}`)
