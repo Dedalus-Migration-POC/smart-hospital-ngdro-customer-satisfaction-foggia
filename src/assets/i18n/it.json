@@ -280,6 +280,20 @@
         "name-already-exists": "Nome già utilizzato",
         "name-min-length": "Deve contenere almeno 2 caratteri"
       }
+    },
+    "units-list": {
+      "title": "Gestione Unità",
+      "create-unit-btn": "Aggiungi Unità",
+      "name": "Nome",
+      "type": "Tipo",
+      "departments": "Ambulatorio/Reparto",
+      "haveQuestionary": "Questionario",
+      "actions": "Azioni",
+      "dialog-confirm-delete": "Vuoi davvero eliminare l'unità ",
+      "actions-hints": {
+        "edit": "Modifica",
+        "delete": "Elimina"
+      }
     }
   }
 }

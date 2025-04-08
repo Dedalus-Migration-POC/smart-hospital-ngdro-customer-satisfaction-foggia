@@ -54,6 +54,14 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'units',
+    canActivate: [UserAdminRouteGuard],
+    loadComponent: () =>
+      import('./pages/units-list/units-list.component').then(
+        ({ UnitsListComponent }) => UnitsListComponent,
+      ),
+  },
+  {
     path: 'print',
     pathMatch: 'full',
     canActivate: [UserOperatorRouteGuard],

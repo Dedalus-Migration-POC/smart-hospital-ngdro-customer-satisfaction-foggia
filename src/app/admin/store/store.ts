@@ -7,19 +7,26 @@ import {
   reducer as SectionReducer,
   State as SectionState,
 } from './section/reducer'
+
 import {
   reducer as SurveyReducer,
   State as SurveyState,
 } from './survey/reducer'
+import {
+  reducer as UnitsListReducer,
+  State as UnitsListState,
+} from './units/reducer'
 import { AppEffects } from './application/effects'
 import { SectionEffects } from './section/effects'
 import { SurveyEffects } from './survey/effects'
+import { UnitListEffects } from './units/effects'
 
 export interface SurveyAdminState {
   application: ApplicationState
   section: SectionState
   survey: SurveyState
   allSurvey: SurveyState
+  unitsList: UnitsListState
 }
 
 export const reducers: ActionReducerMap<SurveyAdminState> = {
@@ -27,6 +34,12 @@ export const reducers: ActionReducerMap<SurveyAdminState> = {
   section: SectionReducer,
   survey: SurveyReducer,
   allSurvey: SurveyReducer,
+  unitsList: UnitsListReducer,
 }
 
-export const effects = [AppEffects, SectionEffects, SurveyEffects]
+export const effects = [
+  AppEffects,
+  SectionEffects,
+  SurveyEffects,
+  UnitListEffects,
+]

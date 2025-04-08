@@ -3,7 +3,7 @@ import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar'
 import { MatIcon } from '@angular/material/icon'
 import { AsyncPipe, NgIf, NgOptimizedImage } from '@angular/common'
 import { TranslateModule } from '@ngx-translate/core'
-import { RouterLink } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 import { MatButton } from '@angular/material/button'
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu'
 import { Store } from '@ngrx/store'
@@ -37,6 +37,7 @@ export class HeaderComponent {
   constructor(
     private store: Store<SurveyAdminState>,
     private actions: Actions,
+    private router: Router,
   ) {
     this.actions
       .pipe(
@@ -65,5 +66,9 @@ export class HeaderComponent {
 
   protected logout() {
     this.store.dispatch(AppActions.logout())
+  }
+
+  protected goToUnits() {
+    this.router.navigate(['/units'])
   }
 }

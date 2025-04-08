@@ -1,0 +1,16 @@
+<div class="head">
+  <h4>{{ 'admin.units-list.title' | translate }}</h4>
+  <button mat-flat-button routerLink="/units-form" class="create-unit-btn">
+    <mat-icon>add</mat-icon>
+    <span>{{ 'admin.units-list.create-unit-btn' | translate }}</span>
+  </button>
+</div>
+
+<div class="wrapper" style="width: 100%; overflow: auto; display: flex">
+  <div style="width: 100%; min-width: 640px">
+    <app-units-list-table
+      (onEdit)="onEdit($event)"
+      (onDelete)="onDelete($event)"
+    ></app-units-list-table>
+  </div>
+</div>

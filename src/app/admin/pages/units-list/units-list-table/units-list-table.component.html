@@ -1,0 +1,75 @@
+<mat-progress-bar
+  mode="indeterminate"
+  *ngIf="loading$ | async"
+></mat-progress-bar>
+<mat-table
+  *ngIf="unitsList$ | async"
+  [dataSource]="(unitsList$ | async) || []"
+  class="mat-elevation-z8"
+>
+  @for (column of columns; track column) {
+    <ng-container *ngIf="column !== 'actions'" [matColumnDef]="column">
+      <mat-header-cell *matHeaderCellDef>
+        {{ 'admin.units-list.' + column | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element" [class.deleted]="element.deleted">
+        <mat-chip
+          [class]="handleColumn(element, column)"
+          *ngIf="column === 'status'"
+        >
+          {{
+            'admin.survey-status.' + handleColumn(element, column) | translate
+          }}
+        </mat-chip>
+        <div *ngIf="column !== 'status'">
+          {{ handleColumn(element, column) }}
+        </div>
+      </mat-cell>
+    </ng-container>
+  }
+
+  <ng-container *ngIf="columns.includes('actions')" [matColumnDef]="'actions'">
+    <mat-header-cell *matHeaderCellDef>
+      {{ 'admin.units-list.actions' | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <div class="buttons-container">
+        <button
+          type="button"
+          mat-icon-button
+          class="button-action-edit"
+          (click)="onEdit.emit(element)"
+        >
+          <mat-icon
+            fontSet="material-icons-outlined"
+            [matTooltip]="'admin.units-list.actions-hints.edit' | translate"
+            >edit
+          </mat-icon>
+        </button>
+      </div>
+      <div class="buttons-container">
+        <button
+          type="button"
+          mat-icon-button
+          class="button-action-delete"
+          (click)="onDelete.emit(element)"
+        >
+          <mat-icon
+            fontSet="material-icons-outlined"
+            [matTooltip]="'admin.units-list.actions-hints.delete' | translate"
+            >delete
+          </mat-icon>
+        </button>
+      </div>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: columns"></mat-row>
+</mat-table>
+
+<div *ngIf="error$ | async">
+  <span class="datasource-empty">
+    <span>{{ 'error' | translate }}</span>
+  </span>
+</div>

@@ -1,0 +1,17 @@
+.button-action-delete,
+.button-action-restore {
+  background-color: #f9dedc;
+  margin-right: 10px;
+  mat-icon {
+    color: #b3261e;
+  }
+}
+
+.button-action-post_add,
+.button-action-edit {
+  background-color: #625b71;
+  margin-right: 10px;
+  mat-icon {
+    color: #ffff;
+  }
+}
