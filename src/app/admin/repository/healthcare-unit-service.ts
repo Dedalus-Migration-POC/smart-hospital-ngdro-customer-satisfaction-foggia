@@ -9,6 +9,16 @@ export class HealthcareUnitService {
   constructor(private http: HttpClient) {}
 
   public find() {
-    return this.http.get<Array<HealthcareUnit | any>>(baseUrl)
+    return this.http.get<Array<HealthcareUnit>>(baseUrl)
+  }
+
+  public create(unit: HealthcareUnit) {
+    return unit.id
+      ? this.http.put<HealthcareUnit>(baseUrl, unit)
+      : this.http.post<HealthcareUnit>(baseUrl, unit)
+  }
+
+  public delete(id: number) {
+    return this.http.delete<HealthcareUnit>(baseUrl + '/' + id)
   }
 }

@@ -1,10 +1,20 @@
+<div class="units-filter-form">
+  <div>
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label
+        >{{ 'admin.units-list.search-filter-name' | translate }}
+      </mat-label>
+      <input matInput type="text" [formControl]="searchUnitText" />
+    </mat-form-field>
+  </div>
+</div>
 <mat-progress-bar
   mode="indeterminate"
   *ngIf="loading$ | async"
 ></mat-progress-bar>
 <mat-table
-  *ngIf="unitsList$ | async"
-  [dataSource]="(unitsList$ | async) || []"
+  *ngIf="units$ | async"
+  [dataSource]="(units$ | async) || []"
   class="mat-elevation-z8"
 >
   @for (column of columns; track column) {
@@ -12,16 +22,25 @@
       <mat-header-cell *matHeaderCellDef>
         {{ 'admin.units-list.' + column | translate }}
       </mat-header-cell>
-      <mat-cell *matCellDef="let element" [class.deleted]="element.deleted">
-        <mat-chip
+      <mat-cell *matCellDef="let element">
+        <mat-icon
+          fontSet="material-icons-outlined"
           [class]="handleColumn(element, column)"
-          *ngIf="column === 'status'"
+          *ngIf="
+            column === 'ambulatory' ||
+            column === 'department' ||
+            column === 'haveQuestionary'
+          "
+          >{{ handleColumn(element, column) }}</mat-icon
         >
-          {{
-            'admin.survey-status.' + handleColumn(element, column) | translate
-          }}
-        </mat-chip>
-        <div *ngIf="column !== 'status'">
+
+        <div
+          *ngIf="
+            column !== 'ambulatory' &&
+            column !== 'department' &&
+            column !== 'haveQuestionary'
+          "
+        >
           {{ handleColumn(element, column) }}
         </div>
       </mat-cell>

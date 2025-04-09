@@ -1,0 +1,13 @@
+.unit-form-container {
+  margin-top: 15px;
+  .name {
+    width: 100%;
+  }
+  mat-checkbox {
+    margin-left: 2rem;
+  }
+}
+
+mat-dialog-content {
+  height: 230px;
+}

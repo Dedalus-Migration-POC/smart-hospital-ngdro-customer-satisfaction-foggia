@@ -287,9 +287,14 @@
       "name": "Nome",
       "type": "Tipo",
       "departments": "Ambulatorio/Reparto",
+      "department": "Reparto",
+      "ambulatory": "Ambulatorio",
       "haveQuestionary": "Questionario",
       "actions": "Azioni",
       "dialog-confirm-delete": "Vuoi davvero eliminare l'unità ",
+      "search-filter-name": "Cerca unità",
+      "new-unit-title": "Crea nuova unità",
+      "edit-unit-title": "Modifica unità",
       "actions-hints": {
         "edit": "Modifica",
         "delete": "Elimina"

@@ -1,6 +1,11 @@
 <div class="head">
   <h4>{{ 'admin.units-list.title' | translate }}</h4>
-  <button mat-flat-button routerLink="/units-form" class="create-unit-btn">
+  <button
+    mat-flat-button
+    routerLink="/units-form"
+    class="create-unit-btn"
+    (click)="onCrate()"
+  >
     <mat-icon>add</mat-icon>
     <span>{{ 'admin.units-list.create-unit-btn' | translate }}</span>
   </button>

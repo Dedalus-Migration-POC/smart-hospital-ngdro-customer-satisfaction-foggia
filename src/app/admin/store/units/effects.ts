@@ -6,6 +6,7 @@ import { UnitsListActions } from './actions'
 import { Store } from '@ngrx/store'
 import { SurveyAdminState } from '../store'
 import { HealthcareUnitService } from '../../repository/healthcare-unit-service'
+import { DialogService } from '../../support/dialog-service'
 
 @Injectable()
 export class UnitListEffects {
@@ -13,6 +14,7 @@ export class UnitListEffects {
     private store: Store<SurveyAdminState>,
     private actions$: Actions,
     private healthcareUnitService: HealthcareUnitService,
+    private dialog: DialogService,
   ) {}
 
   fetchUnitsList$ = createEffect(() => {
@@ -31,48 +33,43 @@ export class UnitListEffects {
     )
   })
 
-  // private readonly submitSection$ = createEffect(() => {
-  //   return this.actions$.pipe(
-  //     ofType(UnitsListActions.submitSection),
-  //     concatMap(({ sectionForm }) => {
-  //       if (!sectionForm.questions) {
-  //         throw new Error(
-  //           'Cannot submit sectionForm because question list is not valid: ' +
-  //             sectionForm.questions,
-  //         )
-  //       }
-  //       const section: CreateSectionRequest = {
-  //         id: sectionForm.id ? Number(sectionForm.id) : undefined,
-  //         name: sectionForm.name!,
-  //         description: sectionForm.description ?? undefined,
-  //         version: sectionForm.version!,
-  //         questions: sectionForm.questions.map((q) => ({
-  //           answerType: 'RATE',
-  //           name: q!,
-  //         })),
-  //       }
-  //       const api = !section.id
-  //         ? this.sectionService.create(section)
-  //         : this.sectionService.update(section)
-  //       return api.pipe(
-  //         map((section) =>
-  //           UnitsListActions.submitSectionSucceeded({ section }),
-  //         ),
-  //         catchError(() => of(UnitsListActions.submitSectionFailed())),
-  //       )
-  //     }),
-  //   )
-  // })
+  createUnit$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(UnitsListActions.createUnit),
+      concatMap((action) =>
+        this.healthcareUnitService.create(action.unit).pipe(
+          map((data) => {
+            this.store.dispatch(UnitsListActions.fetchUnitsList())
+            return UnitsListActions.createUnitSucceeded()
+          }),
+          catchError((error) => {
+            this.dialog.error({
+              buttonsType: 'ok',
+            })
+            return of(UnitsListActions.createUnitFailed())
+          }),
+        ),
+      ),
+    )
+  })
 
-  // private readonly deleteSection$ = createEffect(() => {
-  //   return this.actions$.pipe(
-  //     ofType(UnitsListActions.deleteSection),
-  //     concatMap(({ section }) =>
-  //       this.sectionService.delete(section.id!.toString()).pipe(
-  //         map(() => UnitsListActions.deleteSectionSucceeded({ section })),
-  //         catchError(() => of(UnitsListActions.deleteSectionFailed())),
-  //       ),
-  //     ),
-  //   )
-  // })
+  deleteUnit$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(UnitsListActions.deleteUnit),
+      concatMap((action) =>
+        this.healthcareUnitService.delete(action.id).pipe(
+          map((data) => {
+            this.store.dispatch(UnitsListActions.fetchUnitsList())
+            return UnitsListActions.deleteUnitSucceeded()
+          }),
+          catchError((error) => {
+            this.dialog.error({
+              buttonsType: 'ok',
+            })
+            return of(UnitsListActions.deleteUnitFailed())
+          }),
+        ),
+      ),
+    )
+  })
 }

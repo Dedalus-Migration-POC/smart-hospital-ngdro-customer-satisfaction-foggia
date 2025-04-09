@@ -11,21 +11,18 @@ import { FormControl, FormGroup } from '@angular/forms'
 import { PagedList } from '../../repository/dto/paged_list'
 import { HealthcareUnit } from '../../repository/dto/healthcare-unit'
 
-export type UnitsListFilterForm = FormGroup<{
-  name: FormControl<string | null>
-  haveQuestionary: FormControl<boolean>
-}>
-
 export type State = {
   fetchUnitsListLoading: boolean
   fetchUnitsListError: boolean
   unitsList: HealthcareUnit[] | null
+  unitLoading: boolean
 }
 
 const initialState: State = {
   fetchUnitsListLoading: false,
   fetchUnitsListError: false,
   unitsList: null,
+  unitLoading: false,
 }
 
 export const reducer = createReducer(
@@ -48,43 +45,31 @@ export const reducer = createReducer(
     fetchUnitsListError: true,
   })),
 
-  // on(UnitsListActions.submitUnit, (state) => ({
-  //   ...state,
-  //   creatingSection: true,
-  // })),
-  // on(UnitsListActions.submitUnitSucceeded, (state, action) => ({
-  //   ...state,
-  //   creatingSection: false,
-  //   sections: {
-  //     ...state.sections!,
-  //     content: [action.section, ...state.sections!.content],
-  //   },
-  // })),
-  // on(UnitsListActions.submitUnitFailed, (state) => ({
-  //   ...state,
-  //   creatingSection: false,
-  // })),
+  on(UnitsListActions.createUnit, (state) => ({
+    ...state,
+    unitLoading: true,
+  })),
+  on(UnitsListActions.createUnitSucceeded, (state, action) => ({
+    ...state,
+    unitLoading: false,
+  })),
+  on(UnitsListActions.createUnitFailed, (state) => ({
+    ...state,
+    unitLoading: false,
+  })),
 
-  // on(UnitsListActions.deleteUnit, (state, action) => ({
-  //   ...state,
-  //   editingSectionId: action.section.id!,
-  // })),
-  // on(UnitsListActions.deleteUnitSucceeded, (state, action) => ({
-  //   ...state,
-  //   sections: {
-  //     ...state.sections!,
-  //     content: state.sections!.content.map((section) =>
-  //       section.id === action.section.id
-  //         ? { ...section, deleted: true }
-  //         : section,
-  //     ),
-  //   },
-  //   editingSectionId: null,
-  // })),
-  // on(UnitsListActions.deleteUnitFailed, (state) => ({
-  //   ...state,
-  //   editingSectionId: null,
-  // })),
+  on(UnitsListActions.deleteUnit, (state, action) => ({
+    ...state,
+    unitLoading: true,
+  })),
+  on(UnitsListActions.deleteUnitSucceeded, (state) => ({
+    ...state,
+    unitLoading: false,
+  })),
+  on(UnitsListActions.deleteUnitFailed, (state) => ({
+    ...state,
+    unitLoading: false,
+  })),
 )
 
 export const selectUnitsListState = createFeatureSelector<State>('unitsList')

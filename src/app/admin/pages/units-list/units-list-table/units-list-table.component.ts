@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core'
+import { Component, EventEmitter, Output } from '@angular/core'
 import {
   MatCell,
   MatCellDef,
@@ -12,11 +12,10 @@ import {
   MatTable,
   MatTableModule,
 } from '@angular/material/table'
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator'
 import { AsyncPipe, NgIf } from '@angular/common'
 import { TranslateModule } from '@ngx-translate/core'
 import { Store } from '@ngrx/store'
-import { FormsModule } from '@angular/forms'
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { SurveyAdminState } from '../../../store/store'
 import { selectUnitsList } from '../../../store/units/reducer'
 import { MatSort, MatSortModule } from '@angular/material/sort'
@@ -32,12 +31,14 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button'
 import { MatIcon } from '@angular/material/icon'
 import { MatTooltip } from '@angular/material/tooltip'
+import { MatFormField, MatLabel } from '@angular/material/form-field'
+import { MatInput } from '@angular/material/input'
+import { combineLatest, map, startWith } from 'rxjs'
 
 @Component({
   selector: 'app-units-list-table',
   standalone: true,
   imports: [
-    MatPaginatorModule,
     MatSortModule,
     MatTableModule,
     MatCell,
@@ -55,12 +56,16 @@ import { MatTooltip } from '@angular/material/tooltip'
     AsyncPipe,
     FormsModule,
     MatProgressBar,
-    MatChip,
     MatButton,
     MatIcon,
     MatTooltip,
     MatIconButton,
+    ReactiveFormsModule,
+    MatFormField,
+    MatInput,
+    MatLabel,
   ],
+
   templateUrl: './units-list-table.component.html',
   styleUrl: './units-list-table.component.scss',
 })
@@ -69,15 +74,28 @@ export class UnitsListTableComponent {
   @Output('onDelete') onDelete: EventEmitter<HealthcareUnit> =
     new EventEmitter()
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator
-  @ViewChild(MatSort) sort!: MatSort
-
   constructor(private store: Store<SurveyAdminState>) {}
 
   state$ = this.store.select(selectUnitsListState)
   loading$ = this.store.select(selectUnitsListLoading)
   error$ = this.store.select(selectUnitsListError)
   unitsList$ = this.store.select(selectUnitsList)
+
+  searchUnitText = new FormControl<string>('')
+
+  units$ = combineLatest([
+    this.unitsList$,
+    this.searchUnitText.valueChanges.pipe(startWith(this.searchUnitText.value)),
+  ]).pipe(
+    map(([unitsList, searchUnitText]) => {
+      if (unitsList) {
+        return unitsList.filter((unit) =>
+          unit.name.toLowerCase().includes(searchUnitText!.toLowerCase()),
+        )
+      }
+      return []
+    }),
+  )
 
   ngOnInit() {
     this.store.dispatch(UnitsListActions.fetchUnitsList())
@@ -86,7 +104,8 @@ export class UnitsListTableComponent {
   columns: string[] = [
     'name',
     'type',
-    'departments',
+    'department',
+    'ambulatory',
     'haveQuestionary',
     'actions',
   ]
@@ -97,14 +116,16 @@ export class UnitsListTableComponent {
         return unit.name
       case 'type':
         return unit.type
-      case 'departments':
-        return (unit.departments ?? [])
-          .map((department) => {
-            return department
-          })
-          .join(', ')
+      case 'department':
+        return (unit.departments ?? []).find((dep) => dep === 'DEPARTMENT')
+          ? 'check_circle'
+          : 'cancel'
+      case 'ambulatory':
+        return (unit.departments ?? []).find((dep) => dep === 'AMBULATORY')
+          ? 'check_circle'
+          : 'cancel'
       case 'haveQuestionary':
-        return unit.haveQuestionary ? 'si' : 'no'
+        return unit.haveQuestionary ? 'check_circle' : 'cancel'
       default:
         return ''
     }

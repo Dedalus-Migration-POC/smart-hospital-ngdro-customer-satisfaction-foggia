@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>
+  {{data.id? ('admin.units-list.edit-unit-title' | translate) :
+  ('admin.units-list.new-unit-title' | translate) }}
+</h2>
+<mat-dialog-content>
+  <form [formGroup]="data.form" class="unit-form">
+    <div class="unit-form-container">
+      <mat-form-field appearance="outline" floatLabel="always" class="name">
+        <mat-label>{{ 'admin.units-list.name' | translate }} </mat-label>
+        <input matInput type="text" [formControlName]="'name'" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" floatLabel="always" class="type">
+        <mat-label>{{ 'admin.units-list.type' | translate }} </mat-label>
+        <input matInput type="text" [formControlName]="'type'" />
+      </mat-form-field>
+
+      <mat-checkbox [formControlName]="'department'"
+        >{{ 'admin.units-list.department' | translate }}
+      </mat-checkbox>
+
+      <mat-checkbox [formControlName]="'ambulatory'"
+        >{{ 'admin.units-list.ambulatory' | translate }}
+      </mat-checkbox>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">{{'cancel' |translate }}</button>
+  <button
+    mat-button
+    mat-dialog-close
+    (click)="confirm()"
+    cdkFocusInitial
+    [disabled]="data.form.invalid"
+  >
+    {{'send' | translate }}
+  </button>
+</mat-dialog-actions>

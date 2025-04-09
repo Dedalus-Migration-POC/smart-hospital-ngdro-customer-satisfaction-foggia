@@ -1,6 +1,6 @@
 module.exports = {
   '/survey': {
-    target: 'http://54.155.59.59:5019',
+    target: 'http://138.66.71.123:8080',
     secure: false,
     changeOrigin: true,
     logLevel: 'debug',
@@ -14,7 +14,7 @@ module.exports = {
     pathRewrite: null,
   },
   '/oauth': {
-    target: 'http://54.155.59.59:5019',
+    target: 'http://138.66.71.123:8080',
     secure: false,
     changeOrigin: true,
     logLevel: 'debug',

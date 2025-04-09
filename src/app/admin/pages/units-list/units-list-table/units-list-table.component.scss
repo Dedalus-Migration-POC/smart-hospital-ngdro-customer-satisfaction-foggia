@@ -15,3 +15,38 @@
     color: #ffff;
   }
 }
+.mat-icon.check_circle {
+  color: green;
+}
+
+.mat-icon.cancel {
+  color: #b3261e;
+}
+
+.units-filter-form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1 1;
+  padding: 0 16px;
+  border: 1px solid #fff !important;
+  border-collapse: collapse !important;
+  border-top-left-radius: 0.5em !important;
+  border-top-right-radius: 0.5em !important;
+  background-color: #fff !important;
+  z-index: 3;
+
+  > div:first-child {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    padding-top: 16px;
+
+    > .mat-mdc-form-field {
+      margin-right: 12px;
+      width: 100%;
+    }
+  }
+}
