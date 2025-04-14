@@ -289,7 +289,7 @@
       "departments": "Ambulatorio/Reparto",
       "department": "Reparto",
       "ambulatory": "Ambulatorio",
-      "haveQuestionary": "Questionario",
+      "haveQuestionary": "Presenza sondaggi",
       "actions": "Azioni",
       "dialog-confirm-delete": "Vuoi davvero eliminare l'unità ",
       "search-filter-name": "Cerca unità",

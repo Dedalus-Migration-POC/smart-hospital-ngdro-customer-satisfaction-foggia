@@ -1,5 +1,4 @@
-.button-action-delete,
-.button-action-restore {
+.button-action-delete {
   background-color: #f9dedc;
   margin-right: 10px;
   mat-icon {
@@ -7,7 +6,6 @@
   }
 }
 
-.button-action-post_add,
 .button-action-edit {
   background-color: #625b71;
   margin-right: 10px;
@@ -22,7 +20,9 @@
 .mat-icon.cancel {
   color: #b3261e;
 }
-
+.mat-column-name {
+  flex: 0 0 35%;
+}
 .units-filter-form {
   display: flex;
   align-items: center;

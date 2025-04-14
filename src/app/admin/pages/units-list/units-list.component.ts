@@ -76,7 +76,7 @@ export class UnitsListComponent {
   }
 
   readonly unitDialog = inject(MatDialog)
-  onCrate(): void {
+  onCreate(): void {
     this.unitDialog.open(NewUnitDialog, {
       data: {
         form: this.unitForm,

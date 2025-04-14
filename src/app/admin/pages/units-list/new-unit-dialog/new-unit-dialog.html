@@ -7,11 +7,21 @@
     <div class="unit-form-container">
       <mat-form-field appearance="outline" floatLabel="always" class="name">
         <mat-label>{{ 'admin.units-list.name' | translate }} </mat-label>
-        <input matInput type="text" [formControlName]="'name'" />
+        <input
+          matInput
+          type="text"
+          [formControlName]="'name'"
+          oninput="this.value = this.value.toUpperCase()"
+        />
       </mat-form-field>
       <mat-form-field appearance="outline" floatLabel="always" class="type">
         <mat-label>{{ 'admin.units-list.type' | translate }} </mat-label>
-        <input matInput type="text" [formControlName]="'type'" />
+        <input
+          matInput
+          type="text"
+          [formControlName]="'type'"
+          oninput="this.value = this.value.toUpperCase()"
+        />
       </mat-form-field>
 
       <mat-checkbox [formControlName]="'department'"
