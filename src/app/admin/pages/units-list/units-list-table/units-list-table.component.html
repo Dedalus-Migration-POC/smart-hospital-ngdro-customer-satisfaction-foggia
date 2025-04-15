@@ -65,9 +65,8 @@
             >edit
           </mat-icon>
         </button>
-      </div>
-      <div class="buttons-container">
         <button
+          *ngIf="!element.haveQuestionary"
           type="button"
           mat-icon-button
           class="button-action-delete"
