@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store'
 import { SurveyAdminState } from '../store'
 import { HealthcareUnitService } from '../../repository/healthcare-unit-service'
 import { DialogService } from '../../support/dialog-service'
+import { TranslateService } from '@ngx-translate/core'
 
 @Injectable()
 export class UnitListEffects {
@@ -15,6 +16,7 @@ export class UnitListEffects {
     private actions$: Actions,
     private healthcareUnitService: HealthcareUnitService,
     private dialog: DialogService,
+    private translate: TranslateService,
   ) {}
 
   fetchUnitsList$ = createEffect(() => {
@@ -43,8 +45,22 @@ export class UnitListEffects {
             return UnitsListActions.createUnitSucceeded()
           }),
           catchError((error) => {
+            let errorText
+            if (error.status === 409) {
+              errorText = this.translate.instant(
+                'admin.units-list.errors.already-exist',
+              )
+            } else if (error.status === 500) {
+              errorText = error.error.errorMessage
+            } else {
+              errorText = this.translate.instant(
+                'admin.units-list.errors.general',
+              )
+            }
+
             this.dialog.error({
               buttonsType: 'ok',
+              text: errorText,
             })
             return of(UnitsListActions.createUnitFailed())
           }),

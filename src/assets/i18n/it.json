@@ -298,6 +298,10 @@
       "actions-hints": {
         "edit": "Modifica",
         "delete": "Elimina"
+      },
+      "errors": {
+        "already-exist": "Esiste già un'unità sanitaria con lo stesso nome e tipo",
+        "general": "Ci dispiace, è avvenuto un'errore. Chiediamo di riprovare"
       }
     }
   }

@@ -16,6 +16,8 @@ import { TranslateModule } from '@ngx-translate/core'
 import { Store } from '@ngrx/store'
 import { SurveyAdminState } from 'src/app/admin/store/store'
 import { UnitsListActions } from 'src/app/admin/store/units/actions'
+import { MatOption, MatSelect } from '@angular/material/select'
+import { NgForOf } from '@angular/common'
 
 export interface DialogData {
   form: FormGroup
@@ -40,6 +42,9 @@ export interface DialogData {
     MatFormField,
     TranslateModule,
     MatCheckboxModule,
+    MatSelect,
+    MatOption,
+    NgForOf,
   ],
 })
 export class NewUnitDialog {
@@ -47,7 +52,7 @@ export class NewUnitDialog {
   readonly data = inject<DialogData>(MAT_DIALOG_DATA)
 
   constructor(private store: Store<SurveyAdminState>) {}
-
+  unitTypes = ['SC', 'SS', 'SSD']
   onNoClick(): void {
     this.dialogRef.close()
     this.data.form.reset()

@@ -16,12 +16,11 @@
       </mat-form-field>
       <mat-form-field appearance="outline" floatLabel="always" class="type">
         <mat-label>{{ 'admin.units-list.type' | translate }} </mat-label>
-        <input
-          matInput
-          type="text"
-          [formControlName]="'type'"
-          oninput="this.value = this.value.toUpperCase()"
-        />
+        <mat-select [formControlName]="'type'">
+          <mat-option *ngFor="let option of unitTypes" [value]="option">
+            {{ option }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
 
       <mat-checkbox [formControlName]="'department'"
@@ -41,7 +40,7 @@
     mat-dialog-close
     (click)="confirm()"
     cdkFocusInitial
-    [disabled]="data.form.invalid"
+    [disabled]="data.form.invalid || (!this.data.form.value.department && !this.data.form.value.ambulatory)"
   >
     {{'send' | translate }}
   </button>
