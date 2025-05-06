@@ -102,6 +102,7 @@ export class UnitsListTableComponent {
   }
 
   columns: string[] = [
+    'dipartimento',
     'name',
     'type',
     'department',
@@ -112,6 +113,10 @@ export class UnitsListTableComponent {
 
   protected handleColumn(unit: HealthcareUnit, propertyName: string): string {
     switch (propertyName) {
+      case 'dipartimento':
+        return unit.dipartimento?.length > 100
+          ? unit.dipartimento.slice(0, 100) + '...'
+          : unit.dipartimento
       case 'name':
         return unit.name
       case 'type':

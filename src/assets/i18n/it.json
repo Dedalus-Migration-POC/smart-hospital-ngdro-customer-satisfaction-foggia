@@ -286,6 +286,7 @@
       "create-unit-btn": "Aggiungi Unità",
       "name": "Nome",
       "type": "Tipo",
+      "dipartimento": "Dipartimento",
       "departments": "Ambulatorio/Reparto",
       "department": "Reparto",
       "ambulatory": "Ambulatorio",

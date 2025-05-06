@@ -3,6 +3,7 @@ export type HealthcareUnit = {
   type: HealthcareUnitType
   name: string
   departments: Array<HealthcareUnitStructure>
+  dipartimento: string
   haveQuestionary?: boolean
 }
 

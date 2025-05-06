@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog'
 import { Store } from '@ngrx/store'
 import { SurveyAdminState } from '../../store/store'
 import { UnitsListActions } from '../../store/units/actions'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-units-list',
@@ -37,6 +38,7 @@ export class UnitsListComponent {
     private dialog: DialogService,
     private translate: TranslateService,
     private store: Store<SurveyAdminState>,
+    private router: Router,
   ) {}
 
   unitForm = new FormGroup({
@@ -74,7 +76,9 @@ export class UnitsListComponent {
         this.store.dispatch(UnitsListActions.deleteUnit({ id: unit.id })),
     })
   }
-
+  goBack() {
+    this.router.navigate(['/'])
+  }
   readonly unitDialog = inject(MatDialog)
   onCreate(): void {
     this.unitDialog.open(NewUnitDialog, {

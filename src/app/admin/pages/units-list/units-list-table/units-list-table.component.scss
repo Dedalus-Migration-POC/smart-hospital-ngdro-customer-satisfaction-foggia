@@ -21,8 +21,12 @@
   color: #b3261e;
 }
 .mat-column-name {
-  flex: 0 0 35%;
+  flex: 0 0 30%;
 }
+.mat-column-dipartimento {
+  flex: 0 0 20%;
+}
+
 .units-filter-form {
   display: flex;
   align-items: center;
@@ -57,7 +61,7 @@
   min-width: 68px;
 }
 
-@media screen and (max-width: 924px) {
+@media screen and (max-width: 1080px) {
   .small-icon-button {
     width: 24px !important;
     height: 24px !important;
@@ -76,5 +80,14 @@
         height: 16px;
       }
     }
+  }
+  .mat-column-name {
+    flex: 0 0 20%;
+  }
+}
+
+mat-cell:nth-child(2) {
+  > div {
+    text-align: center;
   }
 }
