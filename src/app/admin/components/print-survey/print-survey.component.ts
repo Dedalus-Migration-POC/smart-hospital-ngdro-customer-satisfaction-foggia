@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core'
-import { NgForOf, NgIf } from '@angular/common'
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common'
 import {
   FormBuilder,
   FormControl,
@@ -87,7 +87,10 @@ export class PrintSurveyComponent
       { value: null, disabled: true },
       Validators.required,
     ),
-    survey: new FormControl<Survey | null>(null, Validators.required),
+    survey: new FormControl<Survey | null>(
+      { value: null, disabled: true },
+      Validators.required,
+    ),
     copies: new FormControl<number>(0),
   })
 
@@ -98,6 +101,8 @@ export class PrintSurveyComponent
         operatingStatus?.status === SurveyOperatingStatus.PRINTING,
     ),
   )
+
+  filteredSurveys: Survey[] = []
 
   isOperator = false
 
@@ -151,28 +156,27 @@ export class PrintSurveyComponent
   }
 
   ngAfterViewInit() {
-    if (this.getUnit()) {
-      if (!this.canChooseType(this.getUnit())) {
-        this.form.patchValue(
-          {
-            healthcareUnit: this.getUnit(),
-            structure: this.getUnit()?.departments[0],
-          },
-          { emitEvent: false },
-        )
-        this.form.controls.structure.disable({ emitEvent: false })
-      } else {
-        this.form.patchValue(
-          {
-            healthcareUnit: this.getUnit(),
-            structure: this.getUnit()?.departments[0],
-          },
-          { emitEvent: false },
-        )
-        this.form.controls.structure.enable({ emitEvent: false })
-      }
-    }
+    const userHealthcareUnit = this.getUnit()
 
+    if (userHealthcareUnit) {
+      // !this.canChooseType(this.getUnit())
+      if (userHealthcareUnit.departments.length === 1) {
+        this.setStructureAndSurvey(true, userHealthcareUnit)
+      } else {
+        this.setStructureAndSurvey(false, userHealthcareUnit)
+      }
+
+      this.addSubscription(
+        this.form.controls.structure.valueChanges
+          .pipe(
+            tap(() => {
+              this.enableSurveys()
+              this.filterSurveys('structure')
+            }),
+          )
+          .subscribe(),
+      )
+    }
     if (
       (this.user && this.isOperator && !this.user.unit) ||
       (this.user &&
@@ -190,19 +194,30 @@ export class PrintSurveyComponent
     }
     if (!this.isOperator) {
       this.addSubscription(
-        this.form.valueChanges
+        this.form.controls.healthcareUnit.valueChanges
           .pipe(
-            tap(({ healthcareUnit }) => {
-              if (healthcareUnit && !this.canChooseType(healthcareUnit)) {
-                this.form.patchValue(
-                  { structure: healthcareUnit.departments[0] },
-                  { emitEvent: false },
-                )
-                this.form.controls.structure.disable({ emitEvent: false })
-              } else {
-                // this.form.controls.structure.patchValue(null, {emitEvent: false})
-                this.form.controls.structure.enable({ emitEvent: false })
+            tap((healthcareUnit) => {
+              if (!healthcareUnit) {
+                return
               }
+
+              // !this.canChooseType(healthcareUnit)
+              if (healthcareUnit.departments.length === 1) {
+                this.setStructureAndSurvey(true, healthcareUnit)
+              } else {
+                this.setStructureAndSurvey(false, healthcareUnit)
+              }
+            }),
+          )
+          .subscribe(),
+      )
+
+      this.addSubscription(
+        this.form.controls.structure.valueChanges
+          .pipe(
+            tap(() => {
+              this.enableSurveys()
+              this.filterSurveys('structure')
             }),
           )
           .subscribe(),
@@ -210,9 +225,9 @@ export class PrintSurveyComponent
     }
   }
 
-  protected canChooseType(unit: HealthcareUnit | undefined): boolean {
-    return !!unit && unit.departments.length > 1
-  }
+  // protected canChooseType(unit: HealthcareUnit | undefined): boolean {
+  //   return !!unit && unit.departments.length > 1
+  // }
 
   protected handleCopies(copies: number) {
     this.form.patchValue({ copies })
@@ -237,5 +252,63 @@ export class PrintSurveyComponent
       )
     }
     return
+  }
+
+  private filterSurveys(triggeredBy: 'healthcareUnit' | 'structure') {
+    let selectedStructureType: string | null = null
+
+    if (triggeredBy === 'healthcareUnit') {
+      const healthcareUnit = this.form.controls.healthcareUnit.value
+      selectedStructureType = healthcareUnit?.departments?.[0] || null
+    }
+
+    if (triggeredBy === 'structure') {
+      const structure = this.form.controls.structure.value
+      selectedStructureType = structure
+    }
+
+    if (!selectedStructureType) {
+      this.filteredSurveys = []
+      return
+    }
+
+    this.filteredSurveys = this.data.surveys.filter(
+      (survey) => survey.structureType === selectedStructureType,
+    )
+  }
+
+  private enableSurveys() {
+    const surveyControl = this.form.controls.survey
+    surveyControl?.enable({ emitEvent: false })
+    surveyControl?.reset(null, { emitEvent: false })
+  }
+
+  private setStructureAndSurvey(
+    isSingleDepartment: boolean,
+    healthcareUnit: HealthcareUnit,
+  ) {
+    if (isSingleDepartment) {
+      this.form.patchValue(
+        {
+          structure: healthcareUnit.departments[0] as HealthcareUnitStructure,
+        },
+        { emitEvent: false },
+      )
+
+      this.form.controls.structure.disable({ emitEvent: false })
+      this.enableSurveys()
+    } else {
+      this.form.controls.structure.patchValue(null, {
+        emitEvent: false,
+      })
+      this.form.controls.structure.enable({ emitEvent: false })
+
+      this.form.controls.survey.patchValue(null, {
+        emitEvent: false,
+      })
+      this.form.controls.survey.disable({ emitEvent: false })
+    }
+
+    this.filterSurveys('healthcareUnit')
   }
 }

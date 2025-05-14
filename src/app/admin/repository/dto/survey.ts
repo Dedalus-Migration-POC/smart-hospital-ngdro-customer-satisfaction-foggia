@@ -17,4 +17,5 @@ export type Survey = BaseDTO &
     status: SurveyStatus
     sections: Array<Section>
     results: any[]
+    structureType: string
   }

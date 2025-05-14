@@ -9,3 +9,8 @@ export type HealthcareUnit = {
 
 export type HealthcareUnitType = 'SC' | 'SS' | 'SSD'
 export type HealthcareUnitStructure = 'DEPARTMENT' | 'AMBULATORY'
+
+export interface StructureType {
+  value: string
+  labelKey: string
+}

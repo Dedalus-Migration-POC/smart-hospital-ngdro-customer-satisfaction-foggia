@@ -130,6 +130,7 @@ export class SurveyListTableComponent
   columns: string[] = [
     'name',
     'version',
+    'structureType',
     'status',
     'validity',
     'createdAt',
@@ -228,6 +229,10 @@ export class SurveyListTableComponent
       case 'status':
         if (!survey[key]) return ''
         return this.translate.instant('admin.survey-status.' + survey[key])
+      case 'structureType':
+        return this.translate.instant(
+          'admin.survey-structure.' + survey[key]?.toLocaleLowerCase(),
+        )
       default:
         return survey[key] as string
     }

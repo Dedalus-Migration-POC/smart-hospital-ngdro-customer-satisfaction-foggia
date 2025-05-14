@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
-import { catchError, concatMap, map } from 'rxjs/operators'
+import { catchError, concatMap, map, switchMap } from 'rxjs/operators'
 import { of, tap } from 'rxjs'
 import { UnitsListActions } from './actions'
 import { Store } from '@ngrx/store'
@@ -88,4 +88,24 @@ export class UnitListEffects {
       ),
     )
   })
+
+  fetchStructureTypes$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UnitsListActions.fetchStructureTypes),
+      switchMap(() =>
+        this.healthcareUnitService.getDepartments().pipe(
+          map((departments) =>
+            // labelKey can be found *.json => 'admin.survey-structure.'
+            UnitsListActions.fetchStructureTypesSuccess({
+              structureTypes: departments.map((d) => ({
+                value: d,
+                labelKey: `${d.toLowerCase()}`,
+              })),
+            }),
+          ),
+          catchError(() => of(UnitsListActions.fetchStructureTypesFailure())),
+        ),
+      ),
+    ),
+  )
 }

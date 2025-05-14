@@ -114,6 +114,10 @@
       "STOPPED": "Chiuso",
       "EXPIRED": "Scaduto"
     },
+    "survey-structure": {
+      "ambulatory": "Ambulatorio",
+      "department": "Reparto"
+    },
     "mat-paginator-intl": {
       "firstPageLabel": "Prima pagina",
       "itemsPerPageLabel": "Righe per pagina",
@@ -155,6 +159,7 @@
       "table-headers": {
         "name": "Nome questionario",
         "version": "Versione",
+        "structureType": "Tipologia struttura",
         "status": "Stato",
         "validity": "Validità",
         "createdAt": "Data creazione",
@@ -194,6 +199,7 @@
       "survey-description-field": "Descrizione questionario",
       "survey-start-date-field": "Data inizio validità",
       "survey-end-date-field": "Data fine validità",
+      "survey-structure-type": "Tipologia struttura",
       "section-field-label": "Sezione {{index}}",
       "add-section-item": "Aggiungi sezione",
       "remove-section-btn": "Cancella",

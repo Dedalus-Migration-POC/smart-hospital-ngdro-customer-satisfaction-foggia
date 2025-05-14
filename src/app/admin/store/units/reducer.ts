@@ -6,16 +6,19 @@ import {
 } from '@ngrx/store'
 import { UnitsListActions } from './actions'
 import { SurveyAdminState } from '../store'
-import { TablePagination } from '../../support/domain/table-pagination'
-import { FormControl, FormGroup } from '@angular/forms'
-import { PagedList } from '../../repository/dto/paged_list'
-import { HealthcareUnit } from '../../repository/dto/healthcare-unit'
+import {
+  StructureType,
+  HealthcareUnit,
+} from '../../repository/dto/healthcare-unit'
 
 export type State = {
   fetchUnitsListLoading: boolean
   fetchUnitsListError: boolean
   unitsList: HealthcareUnit[] | null
   unitLoading: boolean
+  structureTypes: StructureType[]
+  structureTypesLoading: boolean
+  structureTypesError: boolean
 }
 
 const initialState: State = {
@@ -23,6 +26,9 @@ const initialState: State = {
   fetchUnitsListError: false,
   unitsList: null,
   unitLoading: false,
+  structureTypes: [],
+  structureTypesLoading: false,
+  structureTypesError: false,
 }
 
 export const reducer = createReducer(
@@ -70,6 +76,25 @@ export const reducer = createReducer(
     ...state,
     unitLoading: false,
   })),
+
+  on(UnitsListActions.fetchStructureTypes, (state) => ({
+    ...state,
+    structureTypesLoading: true,
+    structureTypes: [],
+  })),
+  on(
+    UnitsListActions.fetchStructureTypesSuccess,
+    (state, { structureTypes }) => ({
+      ...state,
+      structureTypes,
+      structureTypesLoading: false,
+    }),
+  ),
+  on(UnitsListActions.fetchStructureTypesFailure, (state) => ({
+    ...state,
+    structureTypesError: true,
+    structureTypesLoading: false,
+  })),
 )
 
 export const selectUnitsListState = createFeatureSelector<State>('unitsList')
@@ -85,4 +110,9 @@ export const selectUnitsListLoading = createSelector(
 export const selectUnitsListError = createSelector(
   (state: SurveyAdminState) => state.unitsList,
   ({ fetchUnitsListError }) => fetchUnitsListError,
+)
+
+export const selectStructureTypes = createSelector(
+  selectUnitsListState,
+  (state) => state.structureTypes,
 )

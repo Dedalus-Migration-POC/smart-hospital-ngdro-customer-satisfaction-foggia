@@ -56,10 +56,11 @@
         >{{ 'admin.print-survey-dialog.select-survey-label' | translate }}
       </mat-label>
       <mat-select [formControl]="surveyControl">
-        <mat-option *ngFor="let survey of surveys" [value]="survey"
+        <mat-option *ngFor="let survey of filteredSurveys" [value]="survey"
           >{{ SurveyUtils.getNameAndVersion(surveys, survey) }}
         </mat-option>
       </mat-select>
+
       <mat-error *ngIf="surveyControl.hasError('required')"
         >{{
           'admin.print-survey-dialog.form-validations.required-field'

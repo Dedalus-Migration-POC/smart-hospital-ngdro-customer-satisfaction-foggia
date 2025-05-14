@@ -51,6 +51,8 @@ import { MatTooltip } from '@angular/material/tooltip'
 import { SurveyNameValidator } from '../../support/form-validators'
 import { SectionUtils } from '../../support/section-utils'
 import { SectionActions } from '../../store/section/actions'
+import { UnitsListActions } from '../../store/units/actions'
+import { selectStructureTypes } from '../../store/units/reducer'
 
 export type SurveyForm = FormGroup<{
   id: FormControl<string | null>
@@ -60,6 +62,7 @@ export type SurveyForm = FormGroup<{
   startDate: FormControl<Date | null>
   endDate: FormControl<Date | null>
   sections: FormArray<FormControl<Section | null>>
+  structureType: FormControl<string | null>
 }>
 
 type DateRange = {
@@ -117,6 +120,7 @@ export class SurveyFormComponent
     startDate: new FormControl<Date | null>(null),
     endDate: new FormControl<Date | null>(null),
     sections: this.fb.array<Section | null>([]),
+    structureType: new FormControl<string | null>(null, Validators.required),
   })
 
   state$ = this.store.select(selectSurveyState)
@@ -131,6 +135,7 @@ export class SurveyFormComponent
   operatingStatus$ = this.state$.pipe(
     map(({ operatingStatus }) => operatingStatus?.status),
   )
+  structureTypes$ = this.store.select(selectStructureTypes)
 
   protected dateRange$: BehaviorSubject<DateRange> =
     new BehaviorSubject<DateRange>({
@@ -179,6 +184,7 @@ export class SurveyFormComponent
   ngOnInit() {
     this.startActionsSubscription()
     this.store.dispatch(SectionActions.fetchAllSections())
+    this.store.dispatch(UnitsListActions.fetchStructureTypes())
 
     this.subscriptions.push(
       combineLatest([this.form.valueChanges, this.sections$])
@@ -330,7 +336,7 @@ export class SurveyFormComponent
   protected submit(submitOption: SubmitSurveyOption) {
     this.form.markAllAsTouched()
     if (this.form.valid) {
-      console.log('VALID', this.form.getRawValue())
+      // console.log('VALID', this.form.getRawValue())
       this.store.dispatch(
         SurveyActions.submitSurvey({
           surveyForm: this.form.getRawValue(),

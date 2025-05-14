@@ -1,5 +1,8 @@
 import { createAction, props } from '@ngrx/store'
-import { HealthcareUnit } from '../../repository/dto/healthcare-unit'
+import {
+  HealthcareUnit,
+  StructureType,
+} from '../../repository/dto/healthcare-unit'
 
 const fetchUnitsList = createAction('[UnitsList] Fetch UnitsList')
 
@@ -28,6 +31,17 @@ const deleteUnitSucceeded = createAction('[UnitsList] Delete Unit Succeeded')
 
 const deleteUnitFailed = createAction('[UnitsList] Delete Unit Failed')
 
+export const fetchStructureTypes = createAction(
+  '[UnitsList] fetch Structure Types',
+)
+export const fetchStructureTypesSuccess = createAction(
+  '[UnitsList] fetch Structure Types Success',
+  props<{ structureTypes: StructureType[] }>(),
+)
+export const fetchStructureTypesFailure = createAction(
+  '[UnitsList] fetch Structure Types Failure',
+)
+
 export const UnitsListActions = {
   fetchUnitsList,
   fetchUnitsListSucceeded,
@@ -38,6 +52,9 @@ export const UnitsListActions = {
   deleteUnit,
   deleteUnitSucceeded,
   deleteUnitFailed,
+  fetchStructureTypes,
+  fetchStructureTypesSuccess,
+  fetchStructureTypesFailure,
 }
 
 export type UnitsListActionTypes =
@@ -50,3 +67,6 @@ export type UnitsListActionTypes =
   | typeof deleteUnit
   | typeof deleteUnitSucceeded
   | typeof deleteUnitFailed
+  | typeof fetchStructureTypes
+  | typeof fetchStructureTypesSuccess
+  | typeof fetchStructureTypesFailure
