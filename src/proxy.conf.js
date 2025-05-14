@@ -1,6 +1,6 @@
 module.exports = {
   '/survey': {
-    target: 'http://192.168.10.6:8080',
+    target: 'http://54.155.59.59:5019',
     secure: false,
     changeOrigin: true,
     logLevel: 'debug',
@@ -16,5 +16,7 @@ module.exports = {
     // pathRewrite: {
     //   '^/reports-engine': '/'
     // },
-  }
+  },
 }
+
+// 'http://192.168.10.6:8080'

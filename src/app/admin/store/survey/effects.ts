@@ -27,6 +27,7 @@ const surveyFormToPersistRequest = (
   name: surveyForm.name!,
   description: surveyForm.description ?? undefined,
   version: surveyForm.version!,
+  structureType: surveyForm.structureType!,
   validityDates: {
     startDate: surveyForm.startDate!,
     endDate: surveyForm.endDate ?? undefined,

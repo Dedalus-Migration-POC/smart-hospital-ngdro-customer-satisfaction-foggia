@@ -270,6 +270,7 @@ export class SurveyFormComponent
       description: survey.description,
       startDate: survey.dateRange?.startDate,
       endDate: survey.dateRange?.endDate,
+      structureType: survey.structureType,
     })
 
     survey.sections?.map((section) => {
