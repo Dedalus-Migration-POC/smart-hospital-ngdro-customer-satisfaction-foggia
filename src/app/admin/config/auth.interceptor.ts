@@ -121,6 +121,12 @@ export class AuthInterceptor implements HttpInterceptor {
   private clearAndReauthenticate() {
     localStorage.removeItem('profile')
     localStorage.removeItem('token')
+
+    document.cookie =
+      'access_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    document.cookie =
+      'session_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+
     this.router.navigate(['/login'])
   }
 

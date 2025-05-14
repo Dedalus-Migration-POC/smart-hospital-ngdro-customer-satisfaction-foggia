@@ -33,6 +33,8 @@ export class IamService {
   // }
 
   public login(payload: { username: string; password: string }) {
+    this.clearAuthStorage()
+
     let body = new URLSearchParams()
     body.set('grant_type', 'password')
     body.set('scope', 'openid profile')
@@ -50,18 +52,31 @@ export class IamService {
   }
 
   public logout() {
-    window.document.cookie =
-      'access_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    this.deleteCookie('access_token')
+    this.deleteCookie('session_token')
+
     window.localStorage.removeItem('profile')
     window.localStorage.removeItem('token')
     return of(true)
   }
 
   public getProfile() {
-    console.log('getProfile()')
+    //    console.log('getProfile()')
     const record = window.localStorage.getItem('profile')
-    console.log({ record })
+    //  console.log({ record })
     if (!record) return throwError(() => new Error('Could not get profile'))
     return of(JSON.parse(record) as User)
+  }
+
+  private clearAuthStorage() {
+    localStorage.removeItem('profile')
+    localStorage.removeItem('token')
+
+    this.deleteCookie('access_token')
+    this.deleteCookie('session_token')
+  }
+
+  private deleteCookie(name: string) {
+    window.document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`
   }
 }
