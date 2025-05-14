@@ -1,6 +1,6 @@
 module.exports = {
   '/survey': {
-    target: 'http://54.155.59.59:5019',
+    target: 'http://192.168.10.6:8080',
     secure: false,
     changeOrigin: true,
     logLevel: 'debug',
@@ -18,5 +18,3 @@ module.exports = {
     // },
   },
 }
-
-// 'http://192.168.10.6:8080'
