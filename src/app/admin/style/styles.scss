@@ -5,6 +5,8 @@
 @import 'fonts/material-icons.css';
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined');
 
+@import 'bootstrap-italia/src/scss/bootstrap-italia';
+
 @include mat.core();
 
 html {

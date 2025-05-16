@@ -11,6 +11,8 @@ import { DesignAngularKitModule, IconName } from 'design-angular-kit'
   styleUrls: ['./footer.component.scss'],
 })
 export class FooterComponent {
+  @Input() isCitizen: boolean = true
+
   tenant = {
     name: 'Azienda Ospedaliero Universitaria Policlinico Riuniti di Foggia',
     link: 'https://www.sanita.puglia.it/web/ospedaliriunitifoggia',
@@ -20,12 +22,6 @@ export class FooterComponent {
       height: null,
     },
   }
-  smallPrints = [
-    { name: 'footer.small-prints.media-policy', link: '#' },
-    { name: 'footer.small-prints.legal-notes', link: '#' },
-    { name: 'footer.small-prints.privacy-policy', link: '#' },
-    { name: 'footer.small-prints.site-map', link: '#' },
-  ]
 
   constructor() {}
 }

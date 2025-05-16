@@ -1,6 +1,6 @@
 {
   "name": "customer-satisfaction-foggia",
-  "version": "1.0.0-alpha.14",
+  "version": "1.0.0-alpha.15",
   "description": "Policlinico Foggia - Questionario di gradimento",
   "scripts": {
     "ng": "ng",

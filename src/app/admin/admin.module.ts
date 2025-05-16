@@ -45,6 +45,7 @@ import {
 import { AuthInterceptor } from './config/auth.interceptor'
 import { BaseUrlInterceptor } from '../utils/baseUrl.interceptor'
 import { environment } from 'src/environments/environment'
+import { FooterComponent } from '../components/footer/footer.component'
 
 @NgModule({
   declarations: [AdminComponent],
@@ -65,6 +66,7 @@ import { environment } from 'src/environments/environment'
     SurveyListComponent,
     NotFoundComponent,
     ScaffoldComponent,
+    FooterComponent,
   ],
   providers: [
     MatPaginatorIntl,

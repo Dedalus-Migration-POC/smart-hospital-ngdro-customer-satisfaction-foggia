@@ -3,7 +3,7 @@ $primary: #0066cc !default;
 $header-slim-bg-color: white !default;
 $header-slim-text-color: $primary !default;
 
-$font-family-serif: "Titillium Web", "Montserrat", "Lora", Roboto !default;
+$font-family-serif: 'Titillium Web', 'Montserrat', 'Lora', Roboto !default;
 
 // Importazione libreria SCSS di bootstrap-italia
-@import "bootstrap-italia/src/scss/bootstrap-italia";
+@import 'bootstrap-italia/src/scss/bootstrap-italia';

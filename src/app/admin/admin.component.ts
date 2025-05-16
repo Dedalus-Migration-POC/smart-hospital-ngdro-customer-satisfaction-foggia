@@ -4,6 +4,7 @@ import { SurveyAdminState } from './store/store'
 import { AppActions } from './store/application/actions'
 import { NavigationEnd, Router } from '@angular/router'
 import { filter } from 'rxjs'
+import { selectUser } from './store/application/reducer'
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,8 @@ import { filter } from 'rxjs'
   styleUrl: './admin.component.scss',
 })
 export class AdminComponent implements OnInit {
+  user$ = this.store.select(selectUser)
+
   constructor(
     private store: Store<SurveyAdminState>,
     private router: Router,

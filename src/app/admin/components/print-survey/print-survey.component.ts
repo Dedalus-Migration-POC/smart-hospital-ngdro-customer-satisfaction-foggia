@@ -159,6 +159,9 @@ export class PrintSurveyComponent
     const userHealthcareUnit = this.getUnit()
 
     if (userHealthcareUnit) {
+      this.form.patchValue({
+        healthcareUnit: userHealthcareUnit,
+      })
       // !this.canChooseType(this.getUnit())
       if (userHealthcareUnit.departments.length === 1) {
         this.setStructureAndSurvey(true, userHealthcareUnit)

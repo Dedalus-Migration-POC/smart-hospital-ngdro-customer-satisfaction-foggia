@@ -8,25 +8,57 @@
 
   .accessibility {
     border-left-color: #ad5e65 !important;
-    @media screen and (max-width: 768px) {
-      justify-content: start !important;
-      border-left-width: 0px !important;
-    }
     .h4 a {
       text-transform: none;
       text-decoration: underline;
-      font-weight: 600;
+      &:not(.weight-not-citizen) {
+        font-weight: 600;
+      }
+
+      &.weight-not-citizen {
+        font-weight: 500;
+      }
     }
   }
 }
 
 .it-footer-small-prints {
   background-color: #ffffff;
-  .list-inline-item-link {
-    color: #000000;
+}
+
+@media screen and (max-width: 991.98px) {
+  footer .it-footer-main section {
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+  }
+
+  footer .container-collaboration {
+    flex-wrap: wrap;
+    justify-content: start !important;
+    gap: 1.5rem !important;
+  }
+
+  footer .accessibility {
+    border-left: none !important;
+    padding-left: 0 !important;
+    justify-content: start !important;
+  }
+
+  footer .accessibility .text-nowrap {
+    white-space: normal !important;
+    padding-left: 0 !important;
+  }
+
+  footer .it-footer-small-prints-list {
+    flex-direction: column !important;
+    align-items: center;
   }
 }
 
-.fit-content {
-  width: fit-content;
+@media screen and (max-width: 1400px) {
+  footer .container-collaboration {
+    flex-wrap: wrap;
+    justify-content: start !important;
+    gap: 1.5rem !important;
+  }
 }

@@ -3,4 +3,5 @@
   <div style="padding: 32px 64px">
     <router-outlet></router-outlet>
   </div>
+  <app-footer *ngIf="!!(user$ | async)" [isCitizen]="false"></app-footer>
 </main>

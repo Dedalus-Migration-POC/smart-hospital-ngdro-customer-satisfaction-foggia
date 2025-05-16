@@ -1,83 +1,116 @@
 <footer class="it-footer">
   <div class="it-footer-main">
     <div class="container">
-      <section class="py-4">
-        <div class="row">
-          <div class="col-lg-4 col-md-4 pb-2">
-            <div class="h4 fw-normal">
-              <a
-                [href]="tenant.link"
-                class="d-flex flex-column fit-content"
-                target="_blank"
-              >
-                {{ 'footer.project-of' | translate }}
-                <img
-                  alt=""
-                  [alt]="
-                    (tenant.name | translate) +
-                    '. ' +
-                    ('footer.go-page' | translate)
-                  "
-                  [src]="tenant.logoFooter.path"
-                  [attr.width]="
-                    tenant.logoFooter.width ? tenant.logoFooter.width : null
-                  "
-                  [attr.height]="
-                    tenant.logoFooter.height ? tenant.logoFooter.height : null
-                  "
-                  class="pt-2"
-                />
-              </a>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4 pb-2">
-            <div class="h4 fw-normal">
-              <a
-                href="https://www.dedalus.com/italy/it/"
-                target="_blank"
-                class="d-flex flex-column fit-content"
-              >
-                {{ 'footer.collaboration' | translate }}
-                <img
-                  src="assets/images/dedalus-logo.png"
-                  width="156"
-                  [alt]="'Dedalus' + '. ' + ('footer.go-page' | translate)"
-                  class="pt-2"
-                />
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="col-lg-3 col-md-3 pb-2 accessibility d-flex align-items-center border-start justify-content-end"
+      <section class="py-4 d-flex flex-row gap-5">
+        <div class="h4 fw-normal">
+          <a
+            [href]="tenant.link"
+            class="d-flex flex-column fit-content"
+            target="_blank"
+            [attr.aria-label]="
+              (tenant.name | translate) + ('footer.external-link' | translate)
+            "
           >
-            <div class="h4">
-              <a
-                href="https://www.agid.gov.it/it/design-servizi/accessibilita/dichiarazione-accessibilita"
-              >
-                {{ 'footer.accessibility-statement' | translate }}
-              </a>
-            </div>
+            {{ 'footer.project-of' | translate }}
+            <img
+              alt=""
+              [alt]="tenant.name | translate"
+              [src]="tenant.logoFooter.path"
+              [attr.width]="
+                tenant.logoFooter.width ? tenant.logoFooter.width : null
+              "
+              [attr.height]="
+                tenant.logoFooter.height ? tenant.logoFooter.height : null
+              "
+            />
+          </a>
+        </div>
+
+        <div
+          class="h4 fw-normal d-flex flex-row align-items-end justify-content-center gap-4 flex-grow-1 container-collaboration"
+        >
+          <a
+            href="https://commission.europa.eu/"
+            target="_blank"
+            class="d-flex flex-column fit-content"
+            [attr.aria-label]="
+              ('footer.ue' | translate) + ('footer.external-link' | translate)
+            "
+          >
+            {{ 'footer.collaboration' | translate }}
+            <img
+              src="assets/images/logo_ue.png"
+              [attr.alt]="'footer.ue' | translate"
+              height="53"
+            />
+          </a>
+
+          <a
+            href="https://www.pnrr.salute.gov.it/"
+            target="_blank"
+            class="d-flex flex-column fit-content"
+            [attr.aria-label]="
+              ('footer.mds' | translate) + ('footer.external-link' | translate)
+            "
+          >
+            <img
+              src="assets/images/logo_mds.png"
+              width="150"
+              [attr.alt]="'footer.mds' | translate"
+            />
+          </a>
+
+          <a
+            href="https://www.italiadomani.gov.it/"
+            target="_blank"
+            class="d-flex flex-column fit-content"
+            [attr.aria-label]="
+              ('footer.italia-domani' | translate) +
+              ('footer.external-link' | translate)
+            "
+          >
+            <img
+              src="assets/images/logo_italiadomani.png"
+              width="165"
+              [attr.alt]="'footer.italia-domani' | translate"
+            />
+          </a>
+
+          <a
+            href="https://www.dedalus.com/italy/it/"
+            target="_blank"
+            class="d-flex flex-column fit-content"
+            [attr.aria-label]="'footer.dedalus.aria-label' | translate"
+            [attr.aria-label]="'Dedalus' + ('footer.external-link' | translate)"
+          >
+            <img
+              src="assets/images/dedalus-logo.png"
+              width="156"
+              alt="Dedalus"
+            />
+          </a>
+        </div>
+
+        <div
+          class="accessibility d-flex align-items-center border-start justify-content-end"
+        >
+          <div class="h4 text-nowrap ps-3">
+            <a
+              href="https://www.agid.gov.it/it/design-servizi/accessibilita/dichiarazione-accessibilita"
+              [ngClass]="{ 'weight-not-citizen': !isCitizen }"
+            >
+              {{ 'footer.accessibility-statement' | translate }}
+            </a>
           </div>
         </div>
       </section>
     </div>
   </div>
-  <div class="it-footer-small-prints clearfix" *ngIf="smallPrints">
+  <div class="it-footer-small-prints clearfix" *ngIf="isCitizen">
     <div class="container">
-      <ul
-        [attr.aria-label]="'footer.small-prints.aria-label' | translate"
-        class="it-footer-small-prints-list list-inline mb-0 d-flex flex-column flex-md-row"
-      >
-        <li class="list-inline-item" *ngFor="let prints of smallPrints">
-          <a
-            class="list-inline-item-link"
-            [href]="prints.link"
-            [title]="prints.name | translate"
-            >{{ prints.name | translate }}</a
-          >
-        </li>
-      </ul>
+      <p class="py-2 px-3 mb-0">
+        {{ 'footer.privacy-questionnaire' | translate }}
+      </p>
     </div>
   </div>
 </footer>

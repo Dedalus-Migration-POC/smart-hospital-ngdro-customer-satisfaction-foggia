@@ -26,13 +26,11 @@
     "collaboration": "in collaborazione con",
     "go-page": "Vai al sito",
     "accessibility-statement": "Dichiarazione di Accessibilità",
-    "small-prints": {
-      "aria-label": "Informazioni legali",
-      "media-policy": "Media Policy",
-      "legal-notes": "Note legali",
-      "privacy-policy": "Privacy Policy",
-      "site-map": "Mappa del sito"
-    }
+    "privacy-questionnaire": "Il presente questionario è anonimo. Le risposte fornite non consentono l’identificazione del compilatore né direttamente né indirettamente, in conformità alla normativa vigente in materia di protezione dei dati personali (Regolamento UE 2016/679 – GDPR).",
+    "external-link": " - Collegamento esterno - Apre su nuova scheda",
+    "ue": "Unione Europea",
+    "mds": "Governo Italiano",
+    "italia-domani": "Italia domani piano nazionale ripresa e resilienza"
   },
   "otp": {
     "title": "Questionario di gradimento sul {{questType}}",
