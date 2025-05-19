@@ -14,6 +14,10 @@ import { selectUser } from './store/application/reducer'
 export class AdminComponent implements OnInit {
   user$ = this.store.select(selectUser)
 
+  showHeader = true
+
+  bgClass = ''
+
   constructor(
     private store: Store<SurveyAdminState>,
     private router: Router,
@@ -23,8 +27,7 @@ export class AdminComponent implements OnInit {
     this.store.dispatch(AppActions.initialize())
     this.changeBg()
   }
-  showHeader = true
-  bgClass = ''
+
   changeBg() {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))

@@ -1,6 +1,13 @@
 .it-footer-main {
   background-color: #ffffff;
 
+  .admin-container {
+    padding-left: 48px;
+    padding-right: 48px;
+    width: 100%;
+    max-width: 1900px;
+  }
+
   .h4 a {
     text-transform: none;
     color: #000000;
@@ -60,5 +67,15 @@
     flex-wrap: wrap;
     justify-content: start !important;
     gap: 1.5rem !important;
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .accessibility .h4 {
+    margin-bottom: 0;
+  }
+
+  footer .it-footer-small-prints p {
+    padding-top: 0 !important;
   }
 }

@@ -1,6 +1,6 @@
 <footer class="it-footer">
-  <div class="it-footer-main">
-    <div class="container">
+  <div class="it-footer-main d-flex justify-content-center">
+    <div [ngClass]="styleClass">
       <section class="py-4 d-flex flex-row gap-5">
         <div class="h4 fw-normal">
           <a
@@ -30,6 +30,21 @@
           class="h4 fw-normal d-flex flex-row align-items-end justify-content-center gap-4 flex-grow-1 container-collaboration"
         >
           <a
+            href="https://www.dedalus.com/italy/it/"
+            target="_blank"
+            class="d-flex flex-column fit-content"
+            [attr.aria-label]="'footer.dedalus.aria-label' | translate"
+            [attr.aria-label]="'Dedalus' + ('footer.external-link' | translate)"
+          >
+            {{ 'footer.collaboration' | translate }}
+            <img
+              src="assets/images/dedalus-logo.png"
+              width="170"
+              alt="Dedalus"
+            />
+          </a>
+
+          <a
             href="https://commission.europa.eu/"
             target="_blank"
             class="d-flex flex-column fit-content"
@@ -37,7 +52,6 @@
               ('footer.ue' | translate) + ('footer.external-link' | translate)
             "
           >
-            {{ 'footer.collaboration' | translate }}
             <img
               src="assets/images/logo_ue.png"
               [attr.alt]="'footer.ue' | translate"
@@ -73,20 +87,6 @@
               src="assets/images/logo_italiadomani.png"
               width="165"
               [attr.alt]="'footer.italia-domani' | translate"
-            />
-          </a>
-
-          <a
-            href="https://www.dedalus.com/italy/it/"
-            target="_blank"
-            class="d-flex flex-column fit-content"
-            [attr.aria-label]="'footer.dedalus.aria-label' | translate"
-            [attr.aria-label]="'Dedalus' + ('footer.external-link' | translate)"
-          >
-            <img
-              src="assets/images/dedalus-logo.png"
-              width="156"
-              alt="Dedalus"
             />
           </a>
         </div>

@@ -11,12 +11,14 @@ import {
 import { catchError, EMPTY, Observable, Subject, tap, throwError } from 'rxjs'
 import { User } from '../repository/dto/user'
 import { jwtDecode } from 'jwt-decode'
-import { Router } from '@angular/router'
 import { environment } from 'src/environments/environment'
+import { AppActions } from '../store/application/actions'
+import { SurveyAdminState } from '../store/store'
+import { Store } from '@ngrx/store'
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private router: Router) {}
+  constructor(private store: Store<SurveyAdminState>) {}
   tokenRefreshedSource = new Subject()
   intercept(
     request: HttpRequest<any>,
@@ -127,7 +129,8 @@ export class AuthInterceptor implements HttpInterceptor {
     document.cookie =
       'session_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'
 
-    this.router.navigate(['/login'])
+    // this.router.navigate(['/login'])
+    this.store.dispatch(AppActions.logout())
   }
 
   getRefreshTokenHttpRequest() {

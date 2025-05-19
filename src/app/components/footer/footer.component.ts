@@ -12,6 +12,7 @@ import { DesignAngularKitModule, IconName } from 'design-angular-kit'
 })
 export class FooterComponent {
   @Input() isCitizen: boolean = true
+  @Input() styleClass: string = ''
 
   tenant = {
     name: 'Azienda Ospedaliero Universitaria Policlinico Riuniti di Foggia',

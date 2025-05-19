@@ -1,7 +1,7 @@
 <main [class]="bgClass">
   <app-header *ngIf="showHeader"></app-header>
-  <div style="padding: 32px 64px">
+  <div class="flex-grow-1" style="padding: 32px 64px">
     <router-outlet></router-outlet>
   </div>
-  <app-footer *ngIf="!!(user$ | async)" [isCitizen]="false"></app-footer>
+  <app-footer styleClass="admin-container" [isCitizen]="false"></app-footer>
 </main>
