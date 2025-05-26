@@ -27,9 +27,9 @@ export class UserAdminRouteGuard implements CanActivate {
           this.router.navigate(['/login']).then()
           return of(false)
         }
+        // user?.roles?.length === 1 &&
         if (
           user &&
-          user?.roles?.length === 1 &&
           user.roles.includes('OPERATOR')
         ) {
           this.router.navigate(['/print']).then()

@@ -121,8 +121,7 @@ export class PrintSurveyComponent
   }
 
   ngOnInit() {
-    this.isOperator =
-      this.user?.roles?.length === 1 && this.user.roles.includes('OPERATOR')
+    this.isOperator = this.user!.roles.includes('OPERATOR')
 
     if (this.isOperator) {
       this.unitsOperator = this.data.healthcareUnits.filter((unit) =>
@@ -168,10 +167,6 @@ export class PrintSurveyComponent
     const userHealthcareUnit = this.getUnit()
 
     if (userHealthcareUnit) {
-      if (this.isOperator) {
-        this.healthcareUnitEmitted.emit(userHealthcareUnit);
-      }
-
       this.form.patchValue({
         healthcareUnit: userHealthcareUnit,
       })

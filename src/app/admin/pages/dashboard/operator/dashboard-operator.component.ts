@@ -88,17 +88,17 @@ export class DashboardOperatorComponent
         .subscribe(),
     )
 
-    // combineLatest([this.data$, this.user$])
-    //   .pipe(
-    //     map(([data, user]) => {
-    //       if (user?.unit && user?.unit?.length) {
-    //         this.unit = data?.healthcareUnits.find(
-    //           (healthcareUnit) => healthcareUnit.name === user?.unit![0],
-    //         )?.name
-    //       }
-    //     }),
-    //   )
-    //   .subscribe()
+    combineLatest([this.data$, this.user$])
+      .pipe(
+        map(([data, user]) => {
+          if (user?.unit && user?.unit?.length) {
+            this.unit = data?.healthcareUnits.find(
+              (healthcareUnit) => healthcareUnit.name === user?.unit![0],
+            )?.name
+          }
+        }),
+      )
+      .subscribe()
   }
 
   onHealthcareUnit(healthcareUnit: HealthcareUnit) {
