@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core'
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common'
 import {
   FormBuilder,
@@ -76,6 +76,8 @@ export class PrintSurveyComponent
   @Input({ alias: 'user', required: true }) user!: User | null
   @Input({ alias: 'data', required: true }) data!: PrintDataResponse
 
+  @Output() healthcareUnitEmitted = new EventEmitter<HealthcareUnit>();
+
   protected readonly SurveyUtils = SurveyUtils
 
   form: PrintSurveyForm = this.fb.group({
@@ -105,6 +107,7 @@ export class PrintSurveyComponent
   filteredSurveys: Survey[] = []
 
   isOperator = false
+  unitsOperator: HealthcareUnit[] = [];
 
   constructor(
     private actions: Actions,
@@ -120,6 +123,12 @@ export class PrintSurveyComponent
   ngOnInit() {
     this.isOperator =
       this.user?.roles?.length === 1 && this.user.roles.includes('OPERATOR')
+
+    if (this.isOperator) {
+      this.unitsOperator = this.data.healthcareUnits.filter((unit) =>
+          this.user?.unit?.includes(unit.name),
+        ).sort((a, b) => a.name.localeCompare(b.name));
+    }
 
     this.addSubscriptions(
       this.actions
@@ -159,6 +168,10 @@ export class PrintSurveyComponent
     const userHealthcareUnit = this.getUnit()
 
     if (userHealthcareUnit) {
+      if (this.isOperator) {
+        this.healthcareUnitEmitted.emit(userHealthcareUnit);
+      }
+
       this.form.patchValue({
         healthcareUnit: userHealthcareUnit,
       })
@@ -195,13 +208,17 @@ export class PrintSurveyComponent
         onConfirm: () => this.store.dispatch(AppActions.logout()),
       })
     }
-    if (!this.isOperator) {
+   
       this.addSubscription(
         this.form.controls.healthcareUnit.valueChanges
           .pipe(
             tap((healthcareUnit) => {
               if (!healthcareUnit) {
                 return
+              }
+
+              if (this.isOperator) {
+                this.healthcareUnitEmitted.emit(this.form.controls.healthcareUnit?.value!);
               }
 
               // !this.canChooseType(healthcareUnit)
@@ -225,7 +242,7 @@ export class PrintSurveyComponent
           )
           .subscribe(),
       )
-    }
+ 
   }
 
   // protected canChooseType(unit: HealthcareUnit | undefined): boolean {

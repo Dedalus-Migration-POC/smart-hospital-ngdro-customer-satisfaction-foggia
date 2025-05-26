@@ -16,7 +16,7 @@
             ngSrc="assets/images/area_chart.png"
             alt=""
             style="margin-right: 8px"
-            height="13"
+            height="13" 
             width="14"
           />
           <span>{{ 'admin.survey-list.view-analytics-btn' | translate }}</span>
@@ -29,6 +29,7 @@
         <app-print-survey
           [user]="user$ | async"
           [data]="data"
+          (healthcareUnitEmitted)="onHealthcareUnit($event)"
         ></app-print-survey>
       </ng-container>
       <button

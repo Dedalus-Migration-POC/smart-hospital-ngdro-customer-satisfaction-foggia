@@ -1,7 +1,6 @@
 <form [formGroup]="form" (ngSubmit)="print()">
   <mat-form-field
-    style="width: 100%; display: none"
-    [style.display]="this.isOperator ? 'none' : 'flex'"
+    class="d-flex w-100"
     appearance="outline"
     floatLabel="always"
     *ngIf="form.controls.healthcareUnit; let unit"
@@ -9,7 +8,12 @@
     <mat-label
       >{{ 'admin.print-survey-dialog.select-unit-label' | translate }}
     </mat-label>
-    <mat-select [formControl]="unit" [value]="unit">
+    <mat-select [formControl]="unit" [value]="unit" *ngIf="isOperator">
+      <mat-option *ngFor="let unit of unitsOperator" [value]="unit"
+        >{{ unit.name }}
+      </mat-option>
+    </mat-select>
+     <mat-select [formControl]="unit" [value]="unit" *ngIf="!isOperator">
       <mat-option *ngFor="let unit of data.healthcareUnits" [value]="unit"
         >{{ unit.name }}
       </mat-option>
@@ -20,7 +24,7 @@
       }}
     </mat-error>
   </mat-form-field>
-
+  
   <div style="height: 10px"></div>
 
   <ng-container>
@@ -80,6 +84,7 @@
       [hideSingleSelectionIndicator]="true"
     >
       <mat-button-toggle
+        class="d-flex"
         [disabled]="field.value! < 1"
         [value]="false"
         (click)="handleCopies(field.value! - 1)"
@@ -98,6 +103,7 @@
       </mat-button-toggle>
 
       <mat-button-toggle
+      class="d-flex"
         [value]="false"
         (click)="handleCopies(+field.value! + 1)"
         >&nbsp;&#43;&nbsp;</mat-button-toggle

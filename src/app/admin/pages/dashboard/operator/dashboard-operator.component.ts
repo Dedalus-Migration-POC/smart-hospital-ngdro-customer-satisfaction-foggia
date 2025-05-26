@@ -17,6 +17,7 @@ import { MatButton } from '@angular/material/button'
 import { selectUser } from '../../../store/application/reducer'
 import { ReactiveFormsModule } from '@angular/forms'
 import { AppActions } from 'src/app/admin/store/application/actions'
+import { HealthcareUnit } from 'src/app/admin/repository/dto/healthcare-unit'
 
 @Component({
   selector: 'app-dashboard-operator',
@@ -48,6 +49,8 @@ export class DashboardOperatorComponent
     .pipe(map(({ fetchingPrintData }) => fetchingPrintData))
   protected user$ = this.store.select(selectUser)
 
+  unit: string | undefined
+
   constructor(
     private store: Store<SurveyAdminState>,
     private actions: Actions,
@@ -56,7 +59,8 @@ export class DashboardOperatorComponent
   ) {
     super()
   }
-  unit: string | undefined
+ 
+
   ngOnInit(): void {
     this.store.dispatch(SurveyActions.fetchPrintSurveyData())
 
@@ -84,17 +88,21 @@ export class DashboardOperatorComponent
         .subscribe(),
     )
 
-    combineLatest([this.data$, this.user$])
-      .pipe(
-        map(([data, user]) => {
-          if (user?.unit && user?.unit?.length) {
-            this.unit = data?.healthcareUnits.find(
-              (healthcareUnit) => healthcareUnit.name === user?.unit![0],
-            )?.name
-          }
-        }),
-      )
-      .subscribe()
+    // combineLatest([this.data$, this.user$])
+    //   .pipe(
+    //     map(([data, user]) => {
+    //       if (user?.unit && user?.unit?.length) {
+    //         this.unit = data?.healthcareUnits.find(
+    //           (healthcareUnit) => healthcareUnit.name === user?.unit![0],
+    //         )?.name
+    //       }
+    //     }),
+    //   )
+    //   .subscribe()
+  }
+
+  onHealthcareUnit(healthcareUnit: HealthcareUnit) {
+    this.unit = healthcareUnit.name;
   }
 
   protected viewAnalytics() {
