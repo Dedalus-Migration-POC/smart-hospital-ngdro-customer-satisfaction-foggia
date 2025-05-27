@@ -81,9 +81,9 @@ export class LoginComponent
   }
 
   private getLandingRoute(user: User): string {
-    if (user.roles.includes('ADMIN')) return '/'
-    if (user.roles.includes('OPERATOR')) return '/print'
-    return '/user'
+    if (user.roles && user.roles.includes('ADMIN')) return '/'
+    if (user.roles && user.roles.includes('OPERATOR')) return '/print'
+    return '/support'
   }
 
   protected login() {

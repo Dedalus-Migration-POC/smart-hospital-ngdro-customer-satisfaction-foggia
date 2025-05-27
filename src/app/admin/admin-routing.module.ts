@@ -4,6 +4,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component'
 import { DashboardComponent } from './pages/dashboard/admin/dashboard.component'
 import { UserAdminRouteGuard } from './config/admin.route-guard'
 import { UserOperatorRouteGuard } from './config/operator.route-guard'
+import { NotRoleRouteGuard } from './config/not-role.route-guard'
 
 const routes: Routes = [
   {
@@ -75,6 +76,14 @@ const routes: Routes = [
     loadComponent: () =>
       import('./pages/template-form/template-form.component').then(
         ({ TemplateFormComponent }) => TemplateFormComponent,
+      ),
+  },
+  {
+    path: 'support',
+    canActivate: [NotRoleRouteGuard],
+    loadComponent: () =>
+      import('./pages/role-access-support/role-access-support.component').then(
+        (module) => module.RoleAccessSupportComponent,
       ),
   },
   {

@@ -308,6 +308,10 @@
         "already-exist": "Esiste già un'unità sanitaria con lo stesso nome e tipo",
         "general": "Ci dispiace, è avvenuto un'errore. Chiediamo di riprovare"
       }
+    },
+    "role-access-support": {
+      "title": "Attenzione",
+      "text": "Contattare l'IT per la configurazione dei propri ruoli"
     }
   }
 }

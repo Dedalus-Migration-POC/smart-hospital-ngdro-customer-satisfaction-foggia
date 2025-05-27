@@ -13,7 +13,7 @@
         >{{ unit.name }}
       </mat-option>
     </mat-select>
-     <mat-select [formControl]="unit" [value]="unit" *ngIf="!isOperator">
+    <mat-select [formControl]="unit" [value]="unit" *ngIf="!isOperator">
       <mat-option *ngFor="let unit of data.healthcareUnits" [value]="unit"
         >{{ unit.name }}
       </mat-option>
@@ -24,7 +24,7 @@
       }}
     </mat-error>
   </mat-form-field>
-  
+
   <div style="height: 10px"></div>
 
   <ng-container>
@@ -103,7 +103,7 @@
       </mat-button-toggle>
 
       <mat-button-toggle
-      class="d-flex"
+        class="d-flex"
         [value]="false"
         (click)="handleCopies(+field.value! + 1)"
         >&nbsp;&#43;&nbsp;</mat-button-toggle
