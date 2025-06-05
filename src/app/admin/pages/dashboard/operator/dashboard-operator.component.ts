@@ -59,7 +59,6 @@ export class DashboardOperatorComponent
   ) {
     super()
   }
- 
 
   ngOnInit(): void {
     this.store.dispatch(SurveyActions.fetchPrintSurveyData())
@@ -102,11 +101,14 @@ export class DashboardOperatorComponent
   }
 
   onHealthcareUnit(healthcareUnit: HealthcareUnit) {
-    this.unit = healthcareUnit.name;
+    this.unit = healthcareUnit.name
   }
 
   protected viewAnalytics() {
-    window.open('http://138.66.71.123:3000/auth/login', '_blank')
+    window.open(
+      'https://questionari-test.ospedaliriunitifoggia.it:3000',
+      '_blank',
+    )
   }
 
   protected print() {

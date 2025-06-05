@@ -101,6 +101,9 @@ export class TopRightButtonsComponent
   }
 
   protected viewAnalytics() {
-    window.open('http://138.66.71.123:3000/auth/login', '_blank')
+    window.open(
+      'https://questionari-test.ospedaliriunitifoggia.it:3000',
+      '_blank',
+    )
   }
 }
