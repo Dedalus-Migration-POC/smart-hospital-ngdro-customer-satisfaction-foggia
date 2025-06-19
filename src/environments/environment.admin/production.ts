@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
-  keycloakEndpoint: 'https://questionari.ospedaliriunitifoggia.it:8443',
+  keycloakEndpoint:
+    'https://questionari.ospedaliriunitifoggia.it:8443/realms/foggia_survey-dev',
   viewAnalyticsEndpoint: 'https://questionari.ospedaliriunitifoggia.it:3000',
 }
