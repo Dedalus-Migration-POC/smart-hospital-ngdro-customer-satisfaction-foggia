@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  keycloakEndpoint: 'https://kc.smarthospital.cloud/realms/UOCP-PA',
+  keycloakEndpoint: 'https://questionari.ospedaliriunitifoggia.it:8443',
+  viewAnalyticsEndpoint: 'https://questionari.ospedaliriunitifoggia.it:3000',
 }

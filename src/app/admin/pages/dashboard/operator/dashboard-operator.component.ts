@@ -18,6 +18,7 @@ import { selectUser } from '../../../store/application/reducer'
 import { ReactiveFormsModule } from '@angular/forms'
 import { AppActions } from 'src/app/admin/store/application/actions'
 import { HealthcareUnit } from 'src/app/admin/repository/dto/healthcare-unit'
+import { environment } from 'src/environments/environment'
 
 @Component({
   selector: 'app-dashboard-operator',
@@ -105,10 +106,7 @@ export class DashboardOperatorComponent
   }
 
   protected viewAnalytics() {
-    window.open(
-      'https://questionari-test.ospedaliriunitifoggia.it:3000',
-      '_blank',
-    )
+    window.open(environment.viewAnalyticsEndpoint, '_blank')
   }
 
   protected print() {

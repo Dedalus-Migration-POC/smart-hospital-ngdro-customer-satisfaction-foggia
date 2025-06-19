@@ -24,6 +24,7 @@ import { Survey } from '../../../repository/dto/survey'
 import { WithSubscriptionsComponent } from '../../../support/with-subscriptions-component'
 import { SurveyActions } from '../../../store/survey/actions'
 import { Actions, ofType } from '@ngrx/effects'
+import { environment } from 'src/environments/environment'
 
 @Component({
   selector: 'app-top-right-buttons',
@@ -101,9 +102,6 @@ export class TopRightButtonsComponent
   }
 
   protected viewAnalytics() {
-    window.open(
-      'https://questionari-test.ospedaliriunitifoggia.it:3000',
-      '_blank',
-    )
+    window.open(environment.viewAnalyticsEndpoint, '_blank')
   }
 }
