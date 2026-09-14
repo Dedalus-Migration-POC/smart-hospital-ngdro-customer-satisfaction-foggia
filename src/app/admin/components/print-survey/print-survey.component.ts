@@ -243,7 +243,7 @@ export class PrintSurveyComponent
   //   return !!unit && unit.departments.length > 1
   // }
 
-  private static readonly MAX_COPIES = 999
+  private static readonly MAX_COPIES = 9999
 
   protected handleCopies(copies: number) {
     const parsed = Number.isFinite(copies) ? Math.trunc(copies) : 0
