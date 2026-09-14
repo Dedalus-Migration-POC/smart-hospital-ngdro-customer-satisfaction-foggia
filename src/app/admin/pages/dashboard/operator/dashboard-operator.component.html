@@ -38,6 +38,9 @@
         (click)="print()"
         [disabled]="
           !printSurveyComponent.form.valid ||
+          !printSurveyComponent.form.controls.survey.value ||
+          !printSurveyComponent.form.controls.copies.value ||
+          printSurveyComponent.form.controls.copies.value! < 1 ||
           ((printSurveyComponent.printing$ | async) ?? false)
         "
         *ngIf="printSurveyComponent"

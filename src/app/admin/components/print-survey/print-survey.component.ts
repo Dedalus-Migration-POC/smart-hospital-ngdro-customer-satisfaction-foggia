@@ -87,7 +87,10 @@ export class PrintSurveyComponent
       { value: null, disabled: true },
       Validators.required,
     ),
-    copies: new FormControl<number>(0),
+    copies: new FormControl<number>(0, [
+      Validators.required,
+      Validators.min(1),
+    ]),
   })
 
   state$ = this.store.select(selectSurveyState)

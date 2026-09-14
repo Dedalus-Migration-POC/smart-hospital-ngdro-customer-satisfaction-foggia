@@ -11,6 +11,9 @@
       mat-button
       [disabled]="
         !form.valid ||
+        !form.controls.healthcareUnit.value ||
+        !form.controls.survey.value ||
+        !form.controls.copies.value ||
         form.controls.copies.value! < 1 ||
         ((printSurveyComponent.printing$ | async) ?? false)
       "
