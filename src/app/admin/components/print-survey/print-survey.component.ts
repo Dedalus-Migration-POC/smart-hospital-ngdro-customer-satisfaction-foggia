@@ -8,10 +8,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms'
-import {
-  MatButtonToggle,
-  MatButtonToggleGroup,
-} from '@angular/material/button-toggle'
 import { MatDialog } from '@angular/material/dialog'
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field'
 import { MatOption } from '@angular/material/core'
@@ -52,8 +48,6 @@ export type PrintSurveyForm = FormGroup<{
   standalone: true,
   imports: [
     FormsModule,
-    MatButtonToggle,
-    MatButtonToggleGroup,
     MatError,
     MatFormField,
     MatLabel,
@@ -108,6 +102,7 @@ export class PrintSurveyComponent
 
   isOperator = false
   unitsOperator: HealthcareUnit[] = [];
+  private isPrinting = false
 
   constructor(
     private actions: Actions,
@@ -130,6 +125,10 @@ export class PrintSurveyComponent
     }
 
     this.addSubscriptions(
+      this.printing$
+        .pipe(tap((printing) => (this.isPrinting = printing)))
+        .subscribe(),
+
       this.actions
         .pipe(
           ofType(SurveyActions.printSurveySucceeded),
@@ -244,15 +243,29 @@ export class PrintSurveyComponent
   //   return !!unit && unit.departments.length > 1
   // }
 
+  private static readonly MAX_COPIES = 999
+
   protected handleCopies(copies: number) {
-    this.form.patchValue({ copies })
+    const parsed = Number.isFinite(copies) ? Math.trunc(copies) : 0
+    const clamped = Math.min(
+      Math.max(parsed, 0),
+      PrintSurveyComponent.MAX_COPIES,
+    )
+    this.form.patchValue({ copies: clamped })
   }
 
   protected onCopiesChange(event: any) {
-    if (event.target) this.form.patchValue({ copies: event.target.value })
+    if (!event.target) {
+      return
+    }
+    const parsed = parseInt(event.target.value, 10)
+    this.handleCopies(Number.isNaN(parsed) ? 0 : parsed)
   }
 
   public print() {
+    if (this.isPrinting) {
+      return
+    }
     this.form.markAllAsTouched()
     if (this.form.valid) {
       this.store.dispatch(

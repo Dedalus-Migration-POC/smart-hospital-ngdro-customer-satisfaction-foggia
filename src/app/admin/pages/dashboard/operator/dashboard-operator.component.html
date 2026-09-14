@@ -36,14 +36,19 @@
         class="print-btn"
         mat-flat-button
         (click)="print()"
+        [disabled]="
+          !printSurveyComponent.form.valid ||
+          ((printSurveyComponent.printing$ | async) ?? false)
+        "
         *ngIf="printSurveyComponent"
       >
-        {{
-          ((printSurveyComponent.printing$ | async)
-            ? 'admin.print-survey-dialog.printing'
-            : 'admin.print-survey-dialog.button'
-          ) | translate
-        }}
+        <mat-spinner
+          [diameter]="20"
+          *ngIf="(printSurveyComponent.printing$ | async) ?? false; else canPrint"
+        ></mat-spinner>
+        <ng-template #canPrint>
+          <span>{{ 'admin.print-survey-dialog.button' | translate }}</span>
+        </ng-template>
       </button>
     </mat-card>
   </div>

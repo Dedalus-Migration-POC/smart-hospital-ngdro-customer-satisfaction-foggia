@@ -14,6 +14,7 @@ import { AsyncPipe, NgIf, NgOptimizedImage } from '@angular/common'
 import { selectSurveyState } from '../../../store/survey/reducer'
 import { MatCard } from '@angular/material/card'
 import { MatButton } from '@angular/material/button'
+import { MatProgressSpinner } from '@angular/material/progress-spinner'
 import { selectUser } from '../../../store/application/reducer'
 import { ReactiveFormsModule } from '@angular/forms'
 import { AppActions } from 'src/app/admin/store/application/actions'
@@ -31,6 +32,7 @@ import { environment } from 'src/environments/environment'
     TranslateModule,
     MatCard,
     MatButton,
+    MatProgressSpinner,
     NgOptimizedImage,
     ReactiveFormsModule,
   ],

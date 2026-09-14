@@ -77,37 +77,28 @@
   <div class="structure-type-label" style="margin-bottom: 10px">
     {{ 'admin.print-survey-dialog.copies-to-print' | translate }}
   </div>
-  <span>
-    <mat-button-toggle-group
-      *ngIf="form.controls.copies; let field"
-      [hideMultipleSelectionIndicator]="true"
-      [hideSingleSelectionIndicator]="true"
-    >
-      <mat-button-toggle
-        class="d-flex"
-        [disabled]="field.value! < 1"
-        [value]="false"
-        (click)="handleCopies(field.value! - 1)"
-        >&nbsp;&#8212;&nbsp;</mat-button-toggle
-      >
+  <span class="copies-to-print-group" *ngIf="form.controls.copies; let field">
+    <button
+      type="button"
+      class="copies-btn"
+      [disabled]="field.value! < 1"
+      (click)="handleCopies(field.value! - 1)"
+    >&nbsp;&#8212;&nbsp;</button>
 
-      <mat-button-toggle>
-        <input
-          class="copies-to-print-input"
-          (change)="onCopiesChange($event)"
-          [value]="field.value"
-          maxlength="3"
-          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength); if(this.value.includes('.') || this.value.includes(',') ) this.value= Math.trunc(this.value)"
-          type="number"
-        />
-      </mat-button-toggle>
+    <input
+      class="copies-to-print-input"
+      (change)="onCopiesChange($event)"
+      (input)="onCopiesChange($event)"
+      [value]="field.value"
+      min="0"
+      max="999"
+      type="number"
+    />
 
-      <mat-button-toggle
-        class="d-flex"
-        [value]="false"
-        (click)="handleCopies(+field.value! + 1)"
-        >&nbsp;&#43;&nbsp;</mat-button-toggle
-      >
-    </mat-button-toggle-group>
+    <button
+      type="button"
+      class="copies-btn"
+      (click)="handleCopies(field.value! + 1)"
+    >&nbsp;&#43;&nbsp;</button>
   </span>
 </form>

@@ -3,24 +3,29 @@
   <app-print-survey [data]="data" [user]="user$ | async"></app-print-survey>
 </mat-dialog-content>
 <mat-dialog-actions style="align-self: end">
-  <ng-container
-    *ngIf="(printSurveyComponent?.printing$ | async) ?? false; else notPrinting"
-  >
-    <span>{{ 'admin.print-survey-dialog.printing' | translate }}</span>
+  <ng-container *ngIf="printSurveyComponent?.form as form">
+    <button mat-button mat-dialog-close>
+      {{ 'cancel' | translate }}
+    </button>
+    <button
+      mat-button
+      [disabled]="
+        !form.valid ||
+        form.controls.copies.value! < 1 ||
+        ((printSurveyComponent.printing$ | async) ?? false)
+      "
+      (click)="printSurveyComponent.print()"
+    >
+      <mat-spinner
+        [diameter]="20"
+        *ngIf="
+          (printSurveyComponent.printing$ | async) ?? false;
+          else canPrint
+        "
+      ></mat-spinner>
+      <ng-template #canPrint>
+        <span>{{ 'admin.print-survey-dialog.button' | translate }}</span>
+      </ng-template>
+    </button>
   </ng-container>
-
-  <ng-template #notPrinting>
-    <ng-container *ngIf="printSurveyComponent?.form as form">
-      <button mat-button mat-dialog-close>
-        {{ 'cancel' | translate }}
-      </button>
-      <button
-        mat-button
-        [disabled]="!form.valid || form.controls.copies.value! < 1"
-        (click)="printSurveyComponent.print()"
-      >
-        {{ 'admin.print-survey-dialog.button' | translate }}
-      </button>
-    </ng-container>
-  </ng-template>
 </mat-dialog-actions>
